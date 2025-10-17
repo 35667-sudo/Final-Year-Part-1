@@ -359,3 +359,4 @@
 # [35667-sudo] Refactor code section — 2025-10-17 09:32
 # [35667-sudo] Improve documentation wording — 2025-11-18 12:58
 # [35667-sudo] Improve accessibility — 2025-10-16 15:09
+# [35667-sudo] Improve error display — 2025-10-17 10:45
