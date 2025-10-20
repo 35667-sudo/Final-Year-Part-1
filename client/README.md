@@ -377,3 +377,4 @@
 # [35667-sudo] Improve user feedback — 2025-12-18 16:20
 # [35667-sudo] Minor cleanup — 2025-10-22 16:18
 # [Faizan005Malik] Improve usability — 2025-11-04 13:02
+# [35667-sudo] Update README steps — 2025-10-20 10:57
