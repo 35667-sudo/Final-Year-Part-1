@@ -333,3 +333,4 @@
 # [35667-sudo] Clean code formatting — 2025-11-23 15:40
 # [Muhammad Abdullah/37531] Update helper logic — 2025-12-17 09:54
 # [35667-sudo] Improve documentation clarity — 2025-10-18 13:42
+# [35667-sudo] Update configuration notes — 2025-10-22 16:47
