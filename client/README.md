@@ -960,3 +960,4 @@
 # [Faizan005Malik] Fix UI detail — 2026-01-05 12:28
 # [Faizan005Malik] Improve error feedback — 2026-02-04 12:25
 # [35667-sudo] Fix minor issue — 2026-02-23 09:26
+# [35667-sudo] Update helper logic — 2025-11-01 11:31
