@@ -1100,3 +1100,4 @@
 # [Muhammad Abdullah/37531] Final documentation update — 2026-01-06 11:57
 # [Muhammad Abdullah/37531] Improve usability — 2025-11-09 16:53
 # [35667-sudo] Update comments — 2025-11-29 16:28
+# [35667-sudo] Improve error messages — 2025-11-03 16:20
