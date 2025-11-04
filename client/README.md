@@ -350,3 +350,4 @@
 # [Muhammad Abdullah/37531] Improve layout consistency — 2025-10-26 10:38
 # [35667-sudo] Improve code clarity — 2025-11-12 14:44
 # [Muhammad Abdullah/37531] Clean up code — 2025-12-18 09:37
+# [Faizan005Malik] Cleanup helper code — 2025-11-04 09:36
