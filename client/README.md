@@ -858,3 +858,4 @@
 # [Faizan005Malik] Improve helper functions — 2025-10-16 10:38
 # [35667-sudo] Clean formatting — 2025-11-23 14:30
 # [Faizan005Malik] Improve code clarity — 2026-02-06 14:20
+# [Faizan005Malik] Update README steps — 2025-11-04 16:19
