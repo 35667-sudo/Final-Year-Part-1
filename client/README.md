@@ -838,3 +838,4 @@
 # [35667-sudo] Minor UI fix — 2026-01-18 16:15
 # [Muhammad Abdullah/37531] Fix typo in documentation — 2025-12-07 15:34
 # [35667-sudo] Minor UI improvement — 2025-11-26 12:26
+# [35667-sudo] Update configuration notes — 2025-11-06 14:52
