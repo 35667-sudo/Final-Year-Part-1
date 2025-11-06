@@ -1207,3 +1207,4 @@
 # [Muhammad Abdullah/37531] Improve error handling logic — 2025-10-31 12:35
 # [35667-sudo] Minor cleanup — 2026-03-25 15:07
 # [Faizan005Malik] Improve validation messages — 2026-04-02 13:56
+# [35667-sudo] Update configuration notes — 2025-11-06 09:43
