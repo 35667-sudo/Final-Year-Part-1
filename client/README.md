@@ -697,3 +697,4 @@
 # [35667-sudo] Fix minor bug — 2026-01-09 13:26
 # [35667-sudo] Update comments — 2026-01-24 10:45
 # [Muhammad Abdullah/37531] Improve responsiveness — 2026-03-09 15:12
+# [Faizan005Malik] Update configuration notes — 2025-11-08 13:06
