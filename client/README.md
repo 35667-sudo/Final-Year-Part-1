@@ -357,3 +357,4 @@
 # [35667-sudo] Update README formatting — 2025-10-30 11:24
 # [Faizan005Malik] Update configuration notes — 2025-10-17 14:53
 # [35667-sudo] Refactor code section — 2025-10-17 09:32
+# [35667-sudo] Improve documentation wording — 2025-11-18 12:58
