@@ -799,3 +799,4 @@
 # [Muhammad Abdullah/37531] Update README formatting — 2026-03-15 14:05
 # [Muhammad Abdullah/37531] Improve code clarity — 2026-03-10 10:41
 # [35667-sudo] Update configuration notes — 2026-01-15 13:18
+# [35667-sudo] Improve error display — 2025-11-19 10:39
