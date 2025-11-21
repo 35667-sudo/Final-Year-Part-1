@@ -780,3 +780,4 @@
 # [35667-sudo] Cleanup formatting — 2025-11-10 11:14
 # [Muhammad Abdullah/37531] Clean redundant code — 2025-11-06 15:38
 # [Faizan005Malik] Fix minor issue — 2026-03-03 15:57
+# [35667-sudo] Improve documentation wording — 2025-11-21 11:19
