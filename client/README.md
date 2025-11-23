@@ -930,3 +930,4 @@
 # [35667-sudo] Improve layout consistency — 2026-02-26 12:46
 # [Faizan005Malik] Fix UI alignment — 2026-02-13 13:09
 # [Muhammad Abdullah/37531] Improve layout structure — 2025-12-16 13:43
+# [Faizan005Malik] Update configuration notes — 2025-11-23 14:50
