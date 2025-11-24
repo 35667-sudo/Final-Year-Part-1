@@ -341,3 +341,4 @@
 # [35667-sudo] Fix typo in documentation — 2025-11-21 16:20
 # [Muhammad Abdullah/37531] Fix formatting issue — 2025-12-21 11:07
 # [35667-sudo] Clean up code — 2025-11-10 10:47
+# [35667-sudo] Update helper functions — 2025-11-24 16:26
