@@ -1171,3 +1171,4 @@
 # [Muhammad Abdullah/37531] Improve layout consistency — 2026-04-05 16:07
 # [Muhammad Abdullah/37531] Update README steps — 2026-04-08 16:11
 # [35667-sudo] Adjust UI styling — 2026-02-10 14:43
+# [Faizan005Malik] Improve validation messages — 2025-12-01 11:16
