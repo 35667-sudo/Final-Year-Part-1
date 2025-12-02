@@ -709,3 +709,4 @@
 # [35667-sudo] Small refactor — 2025-12-08 14:24
 # [35667-sudo] Update helper text — 2025-11-02 11:51
 # [35667-sudo] Minor logic cleanup — 2025-11-09 09:54
+# [35667-sudo] Fix formatting issue — 2025-12-02 16:41
