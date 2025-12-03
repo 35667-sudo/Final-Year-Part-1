@@ -568,3 +568,4 @@
 # [35667-sudo] Improve accessibility — 2025-11-19 15:50
 # [Muhammad Abdullah/37531] Improve layout consistency — 2025-11-25 14:54
 # [Faizan005Malik] Improve usability — 2025-11-09 10:13
+# [35667-sudo] Update README examples — 2025-12-03 13:09
