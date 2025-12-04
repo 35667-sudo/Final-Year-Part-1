@@ -1064,3 +1064,4 @@
 # [35667-sudo] Improve performance slightly — 2025-11-08 15:27
 # [Faizan005Malik] Minor UI adjustment — 2026-04-15 15:19
 # [Muhammad Abdullah/37531] Update documentation style — 2026-02-17 14:38
+# [35667-sudo] Improve validation messages — 2025-12-04 12:13
