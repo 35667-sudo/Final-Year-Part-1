@@ -794,3 +794,4 @@
 # [Muhammad Abdullah/37531] Fix validation issue — 2026-01-09 10:05
 # [Muhammad Abdullah/37531] Update documentation notes — 2025-11-08 09:34
 # [Muhammad Abdullah/37531] Fix spacing issue — 2026-03-01 09:46
+# [Muhammad Abdullah/37531] Improve README clarity — 2025-12-05 09:38
