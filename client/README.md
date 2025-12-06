@@ -980,3 +980,4 @@
 # [35667-sudo] Improve loading behavior — 2025-10-17 14:40
 # [Muhammad Abdullah/37531] Improve code structure — 2026-01-02 13:25
 # [35667-sudo] Fix small UI issue — 2025-11-15 15:38
+# [Muhammad Abdullah/37531] Update README formatting — 2025-12-06 09:51
