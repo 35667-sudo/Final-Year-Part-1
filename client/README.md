@@ -706,3 +706,4 @@
 # [35667-sudo] Update documentation content — 2025-12-10 16:13
 # [35667-sudo] Update helper logic — 2026-03-07 15:39
 # [35667-sudo] Update documentation — 2025-12-11 15:57
+# [35667-sudo] Small refactor — 2025-12-08 14:24
