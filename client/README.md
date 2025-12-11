@@ -303,3 +303,4 @@
 # [Muhammad Abdullah/37531] Fix small warning — 2025-11-08 15:44
 # [Faizan005Malik] Improve usability — 2025-10-26 11:57
 # [Faizan005Malik] Update configuration notes — 2025-12-09 15:01
+# [35667-sudo] Update documentation — 2025-12-11 12:37
