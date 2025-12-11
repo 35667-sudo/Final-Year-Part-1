@@ -898,3 +898,4 @@
 # [Faizan005Malik] Clean formatting — 2025-12-01 12:34
 # [Muhammad Abdullah/37531] Improve component flow — 2025-11-08 09:51
 # [Faizan005Malik] Update comments — 2025-10-20 09:24
+# [35667-sudo] Update README steps — 2025-12-11 13:36
