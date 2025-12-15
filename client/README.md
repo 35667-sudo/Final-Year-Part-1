@@ -361,3 +361,4 @@
 # [35667-sudo] Improve accessibility — 2025-10-16 15:09
 # [35667-sudo] Improve error display — 2025-10-17 10:45
 # [Muhammad Abdullah/37531] Refactor helper logic — 2025-12-13 15:17
+# [35667-sudo] Update configuration notes — 2025-12-15 10:24
