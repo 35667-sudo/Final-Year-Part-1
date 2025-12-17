@@ -880,3 +880,4 @@
 # [Faizan005Malik] Update README steps — 2026-02-10 10:17
 # [Faizan005Malik] Fix minor bug — 2025-11-28 13:28
 # [Muhammad Abdullah/37531] Improve code clarity — 2025-11-01 09:15
+# [Muhammad Abdullah/37531] Improve error messages — 2025-12-17 13:53
