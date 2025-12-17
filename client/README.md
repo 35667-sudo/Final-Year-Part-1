@@ -331,3 +331,4 @@
 # [Faizan005Malik] Improve responsiveness — 2025-12-11 12:14
 # [Muhammad Abdullah/37531] Clean unused imports — 2025-12-05 09:54
 # [35667-sudo] Clean code formatting — 2025-11-23 15:40
+# [Muhammad Abdullah/37531] Update helper logic — 2025-12-17 09:54
