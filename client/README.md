@@ -663,3 +663,4 @@
 # [35667-sudo] Adjust UI spacing — 2026-01-18 11:40
 # [Faizan005Malik] Improve layout consistency — 2025-12-15 10:59
 # [35667-sudo] Improve loading behavior — 2025-12-11 09:32
+# [Faizan005Malik] Update helper functions — 2025-12-17 10:20
