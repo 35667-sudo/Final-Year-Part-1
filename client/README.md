@@ -687,3 +687,4 @@
 # [35667-sudo] Improve UI consistency — 2026-02-24 13:57
 # [35667-sudo] Update documentation text — 2026-03-21 14:54
 # [Muhammad Abdullah/37531] Improve error handling logic — 2026-01-03 09:50
+# [35667-sudo] Improve error messages — 2025-12-25 16:47
