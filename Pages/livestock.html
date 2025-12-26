@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDMA Portal - LIVE MARKET RATES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../logo.js"></script>
+    <script>
+        window.FontAwesomeConfig = {
+            autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+        };
+    </script>
+  
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Import the CSS files -->
+    <link rel="stylesheet" href="../styles/components.css">
+
+    
+    <style>
+        * {
+            font-family: "Inter", sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+
+    
+<style>
+    .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+    }
+
+    .edit-button {
+    position: absolute;
+    z-index: 1000;
+    }
+
+     .container1 {
+            max-width: 1290px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top:30px;
+            margin-bottom:20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .table-container {
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .chart-container {
+            height: 400px;
+            margin-top: 30px;
+            margin-bottom:30px;
+        }
+
+         .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .loading::before {
+            content: "🔄";
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: spin 2s linear infinite;
+        }
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+
+
+        .error {
+            color: #d9534f;
+            padding: 10px;
+            background-color: #f9f2f2;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-style: italic;
+            display: none;
+        }
+          .edit-button {
+    position: absolute;
+    z-index: 1000;
+    }
+    @keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 1s ease-out both;
+}
+
+
+    
+</style>
+    
+<script>
+        tailwind.config = {
+            theme: {
+            extend: {
+                colors: {
+                ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+                ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+                },
+            },
+            },
+            variants: {
+            extend: {
+                backgroundColor: ['active', 'group-hover'],
+                textColor: ['active', 'group-hover'],
+            },
+            },
+            plugins: [],
+        };
+</script>
+
+</head>
+
+<body class="bg-white text-gray-900">
+
+   <!-- Enhanced Header -->
+    <header class="site-header">
+  <div class="header-container">
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="../Assets/lims.png" alt="Logo" class="main-logo">
+        <img id="portalLogo" class="portal-logo">
+      </div>
+    </div>
+
+    <nav class="header-nav">
+  <a href="../index1.html" class="header-nav-item">Home</a>
+  <a href="../map.html" class="header-nav-item">Agri Self Analysis</a>
+  <a href="../vector.html" class="header-nav-item">GIS Analysis</a>
+
+  <div class="dropdown1">
+    <button class="header-nav-item dropdown-btn">
+      Agri Services <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="dropdown1-content">
+      <a href="livestock.html" class="header-nav-item">Live Stocks Rate</a>
+     <!--  <a href="dealers.html" class="header-nav-item">Dealers</a> -->
+      <a href="bulk-water.html" class="header-nav-item">Bulk Water Requirement</a>
+      <a href="fertilizer.html" class="header-nav-item">Fertilizer Requirement</a>
+    </div>
+  </div>
+</nav>
+
+
+    <button class="mobile-menu-button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="mobile-menu">
+    <a href="../index1.html">Home</a>
+    <a href="../map.html">Agri Self Analysis</a>
+    <a href="../vector.html">GIS Analysis</a>
+    <details class="mobile-dropdown">
+      <summary>Agri Services</summary>
+      <a href="livestock.html">Live Stocks Rate</a>
+      <a href="dealers.html">Dealers</a>
+      <a href="bulk-water.html">Bulk Water Requirement</a>
+      <a href="fertilizer.html">Fertilizer Requirement</a>
+    </details>
+  </div>
+</header>
+
+
+
+
+
+    <!-- Main content remains the same -->
+<main id="main" class="pt-20 align-content-center">
+  
+<div class="container1">
+      <h2 class="text-3xl font-bold text-center mb-6 text-yellow-600 animate-fade-up  ">🌽 Commodity Price Dashboard</h2> 
+        <div class="error" id="errorMessage"></div>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label for="dateInput">Date:</label>
+                <input type="date" id="dateInput">
+            </div>
+            <div class="filter-group">
+                <label for="citySelect">City:</label>
+                <select id="citySelect">
+                    <option value="all">All Cities</option>
+                    <option value="Rawalpindi">Rawalpindi</option>
+                    <!-- Other cities will be populated dynamically -->
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="commoditySelect">Commodity for Graph:</label>
+                <select id="commoditySelect">
+                    <!-- Will be populated dynamically -->
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <button id="fetchButton">Fetch Data</button>
+            </div>
+        </div>
+        
+          <div id="loadingIndicator" class="loading" style="display: none;">
+                Loading Commodity Prices...
+            </div>
+        <div class="no-data" id="noDataMessage">No data available for the selected filters.</div>
+        
+   <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+
+
+        <div class="table-container">
+            <table id="priceTable">
+                <thead>
+                    <tr>
+                        <th>Commodity</th>
+                        <th>City</th>
+                        <th>Min Price</th>
+                        <th>Max Price</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+</div>
+
+</main>
+
+
+     <!-- JavaScript for dropdown and mobile menu -->
+    <script>
+          // Enhanced Dropdown Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced Dropdown Functionality
+    const dropdownButton = document.getElementById('agriReqDropdown');
+    const dropdownContent = document.querySelector('.dropdown1-content');
+    const dropdownArrow = dropdownButton.querySelector('i');
+
+    if (dropdownButton && dropdownContent && dropdownArrow) {
+        dropdownButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            dropdownContent.classList.toggle('show');
+            dropdownArrow.style.transform = dropdownContent.classList.contains('show') 
+                ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!dropdownButton.contains(e.target) && !dropdownContent.contains(e.target)) {
+                dropdownContent.classList.remove('show');
+                dropdownArrow.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+
+            // Mobile Menu
+           const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuIcon = mobileMenuButton.querySelector('i');
+    
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // Change hamburger to X icon
+        if (mobileMenu.classList.contains('active')) {
+            mobileMenuIcon.classList.remove('fa-bars');
+            mobileMenuIcon.classList.add('fa-times');
+        } else {
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            // Close mobile dropdown when closing mobile menu
+            const mobileAgriContent = document.getElementById('mobileAgriContent');
+            const mobileChevron = document.querySelector('.mobile-chevron');
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Mobile Dropdown (New Addition)
+    const mobileAgriDropdown = document.getElementById('mobileAgriDropdown');
+    const mobileAgriContent = document.getElementById('mobileAgriContent');
+    const mobileChevron = document.querySelector('.mobile-chevron');
+    
+    if (mobileAgriDropdown && mobileAgriContent && mobileChevron) {
+        mobileAgriDropdown.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            mobileAgriContent.classList.toggle('show');
+            mobileChevron.style.transform = mobileAgriContent.classList.contains('show') 
+                ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+    }
+    
+    // Close mobile menu when clicking on mobile menu links
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-item, .mobile-dropdown-item');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (mobileMenu && !mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+    </script>
+
+ <!-- Include Chart.js for graphs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    document.getElementById('dateInput').value = formattedDate;
+
+    let allData = [];
+    let cities = new Set();
+    let commodities = new Set();
+    let priceChart = null;
+    let defaultCommodity = "Rice Basmati Super (New)";
+
+    const dateInput = document.getElementById('dateInput');
+    const citySelect = document.getElementById('citySelect');
+    const commoditySelect = document.getElementById('commoditySelect');
+    const fetchButton = document.getElementById('fetchButton');
+    const tableBody = document.getElementById('tableBody');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const errorMessage = document.getElementById('errorMessage');
+    const noDataMessage = document.getElementById('noDataMessage');
+
+    function formatDateForAPI(dateString) {
+      const date = new Date(dateString);
+      return `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}-${date.getFullYear()}`;
+    }
+
+    function getYesterdayDate(dateString) {
+      const date = new Date(dateString);
+      date.setDate(date.getDate() - 1);
+      return date.toISOString().split('T')[0];
+    }
+
+    async function fetchData(tryPreviousDay = false) {
+      let selectedDate = dateInput.value;
+
+      if (tryPreviousDay) {
+        selectedDate = getYesterdayDate(selectedDate);
+        dateInput.value = selectedDate;
+      }
+
+    const today = new Date();
+    const formattedDate = formatDateForAPI(selectedDate); // MM-DD-YYYY
+    const encodedDate = encodeURIComponent(formattedDate);
+    const storageKey = `priceData_${formattedDate}`; // Create unique key for each date
+
+    // Check if we have data for this date in localStorage
+const cachedData = localStorage.getItem(storageKey);
+if (cachedData) {
+    console.log('Loading data from localStorage for date:', formattedDate);
+    try {
+        allData = JSON.parse(cachedData);
+        processAndDisplayData();
+        return; // Exit early, no need to fetch from API
+    } catch (error) {
+        console.error('Error parsing cached data:', error);
+        // Continue to API call if cached data is corrupted
+    }
+}
+
+    const apiUrl = `http://amis.pk/Androidforpitb/Prices.ashx?date=${encodedDate}&Depart=LIMS`;
+    const corsUrl = `https://corsproxy.io/?${apiUrl}`;
+    
+    loadingIndicator.style.display = 'block';
+      errorMessage.style.display = 'none';
+      noDataMessage.style.display = 'none';
+      tableBody.innerHTML = '';
+      
+
+      try {
+          const response = await fetch(corsUrl); // <- fixed line
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const responseData = await response.json();
+          if (!responseData.data || responseData.data.length === 0) {
+            if (!tryPreviousDay) return fetchData(true);
+            throw new Error('No data for today or yesterday');
+        }
+
+        allData = [];
+        responseData.data.forEach(city => {
+          city.city_detail.forEach(item => {
+            if (item.minimum_price > 0 || item.maximum_price > 0) {
+              allData.push({
+                Commodity: item.commodity_name,
+                City: city.CityName,
+                MinPrice: item.minimum_price,
+                MaxPrice: item.maximum_price,
+                Quantity: item.Quantity,
+                Unit: item.unit
+              });
+            }
+          });
+        });
+
+        // Save data to localStorage with date-specific key
+    localStorage.setItem(storageKey, JSON.stringify(allData));
+    console.log('Data saved to localStorage for date:', formattedDate);
+
+        processAndDisplayData();
+
+      } catch (error) {
+        errorMessage.innerHTML = `<strong>Error Loading Data:</strong><br>${error.message}<br><br>Showing mock data.`;
+        errorMessage.style.display = 'block';
+        allData = getMockData();
+        processAndDisplayData();
+      } finally {
+        loadingIndicator.style.display = 'none';
+        loadingIndicator.style.display = 'none';
+      }
+    }
+
+    function getMockData() {
+      return [
+        { Commodity: "Rice Basmati Super (New)", City: "Lahore", MinPrice: 24500, MaxPrice: 24500, Quantity: 100, Unit: "KG" },
+        { Commodity: "Gram White(local)", City: "Lahore", MinPrice: 27000, MaxPrice: 27000, Quantity: 100, Unit: "KG" },
+        { Commodity: "Gram Black", City: "Lahore", MinPrice: 26000, MaxPrice: 27000, Quantity: 100, Unit: "KG" },
+        { Commodity: "Wheat", City: "Vehari", MinPrice: 5750, MaxPrice: 5875, Quantity: 100, Unit: "KG" },
+        { Commodity: "Rice Basmati Super (New)", City: "Vehari", MinPrice: 26000, MaxPrice: 26500, Quantity: 100, Unit: "KG" },
+        { Commodity: "Rice (IRRI)", City: "Vehari", MinPrice: 10000, MaxPrice: 10700, Quantity: 100, Unit: "KG" }
+      ];
+    }
+
+function processAndDisplayData() {
+  cities = new Set();
+  commodities = new Set();
+
+  allData.forEach(item => {
+    cities.add(item.City);
+    commodities.add(item.Commodity);
+  });
+
+  const currentSelection = citySelect.value;
+  citySelect.innerHTML = '<option value="Rawalpindi">Rawalpindi</option>';
+  let rawalpindiSet = false;
+
+  cities.forEach(city => {
+    const option = document.createElement('option');
+    option.value = city;
+    option.textContent = city;
+
+    if (currentSelection === city) {
+      option.selected = true;
+    } else if (!currentSelection && city === "Rawalpindi") {
+      option.selected = true;
+      rawalpindiSet = true;
+    }
+
+    citySelect.appendChild(option);
+  });
+
+  if (!rawalpindiSet && !currentSelection) {
+    citySelect.value = "Rawalpindi";
+  }
+
+  commoditySelect.innerHTML = '';
+  let found = false;
+  commodities.forEach(commodity => {
+    const option = document.createElement('option');
+    option.value = commodity;
+    option.textContent = commodity;
+    if (commodity === defaultCommodity) {
+      option.selected = true;
+      found = true;
+    }
+    commoditySelect.appendChild(option);
+  });
+  if (!found) commoditySelect.value = [...commodities][0];
+
+  displayData();
+}
+    function displayData() {
+      const selectedCity = citySelect.value;
+      const selectedCommodity = commoditySelect.value;
+
+      let filteredData = allData;
+      if (selectedCity !== 'all') {
+        filteredData = filteredData.filter(item => item.City === selectedCity);
+      }
+
+      if (filteredData.length === 0) {
+        noDataMessage.style.display = 'block';
+        return;
+      } else {
+        noDataMessage.style.display = 'none';
+      }
+
+      tableBody.innerHTML = '';
+      filteredData.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.Commodity}</td>
+          <td>${item.City}</td>
+          <td>${item.MinPrice.toLocaleString()}</td>
+          <td>${item.MaxPrice.toLocaleString()}</td>
+          <td>${item.Quantity}</td>
+          <td>${item.Unit}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      createChart(selectedCommodity);
+    }
+
+    function createChart(commodity) {
+      const chartData = allData.filter(item => item.Commodity === commodity);
+      const cityData = {};
+      chartData.forEach(item => {
+        if (!cityData[item.City]) {
+          cityData[item.City] = { minPrices: [], maxPrices: [] };
+        }
+        cityData[item.City].minPrices.push(item.MinPrice);
+        cityData[item.City].maxPrices.push(item.MaxPrice);
+      });
+
+      const cities = Object.keys(cityData);
+      const minPrices = cities.map(c => Math.min(...cityData[c].minPrices));
+      const maxPrices = cities.map(c => Math.max(...cityData[c].maxPrices));
+
+      const ctx = document.getElementById('priceChart').getContext('2d');
+      if (priceChart) priceChart.destroy();
+
+      priceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: cities,
+          datasets: [
+            {
+              label: 'Min Price',
+              data: minPrices,
+              backgroundColor: 'rgba(54, 162, 235, 0.5)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+            },
+            {
+              label: 'Max Price',
+              data: maxPrices,
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1,
+            }
+          ]
+        },
+       options: {
+  responsive: true,
+  maintainAspectRatio: false, // allow full container height
+  plugins: {
+    title: {
+      display: true,
+      text: `${commodity} Prices by City`
+    },
+    legend: {
+      position: 'top',
+    },
+    tooltip: {
+      mode: 'index',
+      intersect: false
+    }
+  },
+  layout: {
+    padding: {
+      left: 20,
+      right: 20,
+      top: 20,
+      bottom: 10
+    }
+  },
+  scales: {
+    x: {
+      title: { display: false },
+      ticks: {
+        autoSkip: false, // show all labels
+        maxRotation: 45,
+        minRotation: 0,
+      }
+    },
+    y: {
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: 'Price / 100KG'
+      }
+    }
+  }
+}
+      });
+    }
+
+    fetchButton.addEventListener('click', () => fetchData());
+    citySelect.addEventListener('change', displayData);
+    commoditySelect.addEventListener('change', displayData);
+
+    fetchData(); // Initial load
+</script>
+
+    <script src="auth.js"></script>
+<script src="logo.js"></script>
+
+
+</body>
+</html>

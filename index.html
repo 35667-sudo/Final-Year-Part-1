@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agro Farms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/components.css">
+        <link rel="stylesheet" href="styles/chat.css">
+<script src="logo.js"></script>
+<!--<script src="auth.js"></script>-->
+
+
+  <style>
+  
+    .text-gradient {
+      background: linear-gradient(to right, #16a34a, #30c567ff);
+      
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+.logo-container {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  gap: 10px;
+}
+
+/* Logo images */
+.logo {
+  width: 160px;
+  height: auto;
+  object-fit: contain;
+  opacity: 1;
+}
+
+/* Make logos responsive */
+@media (max-width: 768px) {
+  .logo {
+    width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    width: 90px;
+  }
+}
+
+
+@keyframes fadeOne {
+  0%, 45% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes fadeTwo {
+  0%, 45% { opacity: 0; }
+  50%, 95% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Hero content styling */
+.hero-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  color: #065f46;
+  max-width: 90%;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  color: #047857;
+}
+/* Brighter Slideshow */
+#bg-slideshow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 85%;
+  z-index: 0;
+  overflow: hidden;
+}
+#bg-slideshow img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+}
+#bg-slideshow img.active {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  #bg-slideshow {
+    height: 70vh; /* Let it fully fill mobile screen height */
+  }
+  #bg-slideshow img {
+    object-fit: cover; /* Maintain image cover to avoid stretching */
+  }
+}
+
+@media (max-width: 480px) {
+  #bg-slideshow {
+    height: 70vh;
+  }
+}
+
+.fade-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Floating animation */
+.floating-animation {
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+  </style>
+
+</head>
+
+<body class="bg-white text-gray-900">
+  
+    <main class="pt-20">
+
+    <div id="bg-slideshow">
+    <img src="Assets/12.webp" class="active" alt="Background 1" />
+    <img src="Assets/13.webp" alt="Background 2" />
+    <img src="Assets/14.webp" alt="Background 3" />
+    <img src="Assets/15.webp" alt="Background 4" />
+    <img src="Assets/16.webp" alt="Background 5" />
+    <img src="Assets/18.webp" alt="Background 7" />
+    <img src="Assets/19.webp" alt="Background 8" />
+    <img src="Assets/20.webp" alt="Background 9" />
+    <img src="Assets/21.webp" alt="Background 10" />
+    <img src="Assets/22.webp" alt="Background 11" />
+    <img src="Assets/23.webp" alt="Background 12" />
+        <img src="Assets/24.webp" alt="Background 13" />
+
+
+
+  </div>
+        <!-- Hero Section with Enhanced Animations -->
+     <section id="hero" class="hero-bg py-24 relative">
+
+           <div class="logo-container">
+             <img src="Assets/lims.png" class="logo" alt="agri stack logo" />
+        </div>
+
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="max-w-4xl mx-auto text-center" data-aos="fade-up" data-aos-duration="1000">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6 text-gradient leading-tight py-4">
+                     Pakistan Agri Stack 
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+                        Advanced geospatial analysis platform for disaster monitoring and crop management across Pakistan.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="400">
+                        <a href="login.html">
+                        <button class="px-8 py-4 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transform hover:scale-105 transition-all duration-300 pulse-glow">
+                            <i class="fa-solid fa-map mr-2"></i>
+                            Launch Agri Stack
+                        </button>
+                    </a>
+                    </div>
+                </div>
+                
+                <!-- Floating Elements -->
+                <div class="absolute top-20 left-10 floating-animation">
+                    <i class="fa-solid fa-leaf text-green-400 text-3xl opacity-20"></i>
+                </div>
+                <div class="absolute bottom-20 right-10 floating-animation" style="animation-delay: 1s;">
+                    <i class="fa-solid fa-seedling text-green-500 text-4xl opacity-20"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Who We Are Section -->
+        <section id="who-we-are" class="py-24 bg-gray-900 text-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold mb-12 text-center text-gradient">Who We Are</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="glass-effect p-8 rounded-2xl text-center">
+                        <div class="mb-6">
+                            <i class="fa-solid fa-building-shield text-6xl text-green-400"></i>
+                        </div>
+                        <p class="text-lg leading-relaxed text-gray-300">
+Land Information Management System(LIMS) is a dynamic team of seasoned professionals, united by a strong commitment to transforming food security. Our experts come from diverse fields—ranging from human resource development and agronomy to data science, remote sensing, and software engineering. With this multidisciplinary strength and a shared vision, we create innovative solutions that empower farmers, agronomists, and stakeholders alike. Together, we’re not just solving problems—we’re driving meaningful change in agriculture and beyond.                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What We Do Section -->
+        <section id="what-we-do" class="py-24 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold mb-12 text-center text-gradient" data-aos="fade-up">What We Do</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card-hover p-8 bg-white rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                        <div class="floating-animation mb-6">
+                            <i class="fa-solid fa-shield-halved text-4xl text-red-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Disaster Risk Reduction</h3>
+                        <p class="text-gray-600">Proactive strategies to minimize disaster impact and build community resilience</p>
+                    </div>
+                    
+                    <div class="card-hover p-8 bg-white rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                        <div class="floating-animation mb-6">
+                            <i class="fa-solid fa-map text-4xl text-green-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Geospatial Land Mapping</h3>
+                        <p class="text-gray-600">Comprehensive land surveying and mapping using advanced GIS technology</p>
+                    </div>
+                    
+                    <div class="card-hover p-8 bg-white rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="300">
+                        <div class="floating-animation mb-6">
+                            <i class="fa-solid fa-satellite text-4xl text-blue-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Real-time Monitoring</h3>
+                        <p class="text-gray-600">24/7 surveillance systems for immediate threat detection and alerts</p>
+                    </div>
+                    
+                    <div class="card-hover p-8 bg-white rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="400">
+                        <div class="floating-animation mb-6">
+                            <i class="fa-solid fa-hammer text-4xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Recovery Planning</h3>
+                        <p class="text-gray-600">Strategic reconstruction and rehabilitation programs for affected areas</p>
+                    </div>
+                    
+                    <div class="card-hover p-8 bg-white rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="500">
+                        <div class="floating-animation mb-6">
+                            <i class="fa-solid fa-seedling text-4xl text-yellow-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Agricultural Assessment</h3>
+                        <p class="text-gray-600">Crop monitoring and land utilization analysis for sustainable development</p>
+                    </div>
+                    
+                    <div class="card-hover p-8 bg-white rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="600">
+                        <div class="floating-animation mb-6">
+                            <i class="fa-solid fa-users-gear text-4xl text-purple-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Decision Support</h3>
+                        <p class="text-gray-600">Data-driven insights and recommendations for informed governance</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhanced Statistics Section -->
+        <section id="stats" class="gradient-bg py-24 text-white relative overflow-hidden">
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="grid md:grid-cols-4 gap-8 text-center">
+                    <div class="hover-lift" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="stats-counter" data-count="2.5">0</div>
+                        <div class="text-xl font-semibold">Million Hectares</div>
+                        <div class="text-green-200">Monitored</div>
+                    </div>
+                    <div class="hover-lift" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="stats-counter" data-count="150">0</div>
+                        <div class="text-xl font-semibold">Districts</div>
+                        <div class="text-green-200">Covered</div>
+                    </div>
+                    <div class="hover-lift" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="stats-counter">24/7</div>
+                        <div class="text-xl font-semibold">Real-time</div>
+                        <div class="text-green-200">Monitoring</div>
+                    </div>
+                    <div class="hover-lift" data-aos="zoom-in" data-aos-delay="400">
+                        <div class="stats-counter" data-count="95">0</div>
+                        <div class="text-xl font-semibold">Accuracy</div>
+                        <div class="text-green-200">Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Background decorations -->
+            <div class="absolute top-10 left-10 opacity-10">
+                <i class="fa-solid fa-chart-line text-6xl"></i>
+            </div>
+            <div class="absolute bottom-10 right-10 opacity-10">
+                <i class="fa-solid fa-globe text-8xl"></i>
+            </div>
+        </section>
+
+        <!-- Enhanced CTA Section -->
+        <section id="cta" class="py-24 bg-gradient-to-r from-green-50 to-blue-50">
+            <div class="container mx-auto px-4 text-center">
+                <div data-aos="fade-up">
+                    <h2 class="text-4xl font-bold mb-6 text-gradient">Ready to Get Started?</h2>
+                    <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                        Join the platform that's revolutionizing agricultural disaster management in Pakistan
+                    </p>
+                    <!-- <a href="https://www.ndma.gov.pk/">
+                    <button class="px-12 py-4 bg-green-600 text-white rounded-xl font-bold text-lg hover:bg-green-700 transform hover:scale-105 transition-all duration-300 pulse-glow">
+                        <i class="fa-solid fa-rocket mr-2"></i>
+                        Access Portal
+                    </button>
+                </a> -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div data-aos="fade-up">
+                    <div class="footer-logo">
+                        <img src="Assets/logo.webp" alt="LIMS Portal Logo" class="header-logo-image">
+                        <!-- <span class="footer-logo-text">Agri Stack </span> -->
+                    </div>
+                    <p class="footer-description">
+                        Smart Agro Farms.
+                    </p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="footer-column-title">Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="Pages/about.html" class="footer-link">About Us</a>
+                        <a href="https://limspakistan.org/" class="footer-link">Help Center</a>
+                        <a href="Pages/terms.html" class="footer-link">Terms of Service</a>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="footer-column-title">Contact Us</h4>
+                    <div class="footer-links">
+                        <div class="contact-item">
+                            <i class="fas fa-phone text-green-400"></i>
+                            <span>UAN: 051-9286355</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-whatsapp text-green-400"></i>
+                            <span>WhatsApp:  0336-4996661</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope text-green-400"></i>
+                            <a href="mailto:info@ndma.gov.pk" class="footer-link">info@SmartAgroFarms</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h4 class="footer-column-title">Connect With Us</h4>
+                    <div class="footer-social">
+                        <a href=" :https://www.linkedin.com/company/100695481/admin/dashboard/" class="footer-social-icon">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                        <a href="https://www.facebook.com/limscoe/" class="footer-social-icon">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@LIMSCOE" class="footer-social-icon">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                         <a href="https://www.limspakistan.org/" class="footer-social-icon">
+                            <i class="fa-solid fa-globe"></i>
+                        </a>
+                         <a href="https://www.instagram.com/lims_coe/" class="footer-social-icon">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                    </div>
+                       
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div class="footer-copyright">
+                <p>&copy; 2025 Agri-Stack. All rights reserved. Built with ❤️ for Pakistan.</p>
+            </div> -->
+        </div>
+    </footer>
+
+    <!-- Enhanced JavaScript -->
+    <script>
+
+
+// Initialize AOS
+AOS.init({
+    duration: 800,
+    easing: 'ease-in-out',
+    once: true,
+    offset: 100
+});
+
+// Enhanced Header Scroll Effect
+window.addEventListener('scroll', () => {
+    const header = document.querySelector('.site-header');
+    if (window.scrollY > 100) {
+        header.style.background = 'rgba(255, 255, 255, 0.98)';
+        header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+    } else {
+        header.style.background = 'rgba(255, 255, 255, 0.95)';
+        header.style.boxShadow = 'none';
+    }
+});
+
+// Animated Counter
+function animateCounter(element, target, duration = 2000) {
+    let start = 0;
+    const increment = target / (duration / 16);
+    
+    const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+            element.textContent = target;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(start);
+        }
+    }, 16);
+}
+
+// Trigger counters when stats section is visible
+const observerOptions = {
+    threshold: 0.5,
+    rootMargin: '0px 0px -100px 0px'
+};
+
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const counters = entry.target.querySelectorAll('.stats-counter[data-count]');
+            counters.forEach(counter => {
+                const target = parseFloat(counter.dataset.count);
+                animateCounter(counter, target);
+            });
+            statsObserver.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+const statsSection = document.getElementById('stats');
+if (statsSection) {
+    statsObserver.observe(statsSection);
+}
+
+// Add loading animation
+window.addEventListener('load', () => {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease-in-out';
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 100);
+});
+
+    </script>
+
+    <!-- Slideshow Script -->
+  <script>
+    const slides = document.querySelectorAll('#bg-slideshow img');
+    let currentIndex = 0;
+
+    setInterval(() => {
+      slides[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides[currentIndex].classList.add('active');
+    }, 4000); // change every 4 seconds
+  </script>
+</body>
+</html>

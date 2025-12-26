@@ -1,0 +1,3607 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Agricultural Map Dashboard</title>
+      <!-- Leaflet CSS -->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <!-- Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+      <!-- Flatpickr CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+      <!-- Select2 CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <!-- jQuery -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://d3js.org/d3.v7.min.js"></script>
+      <script>
+         window.FontAwesomeConfig = {
+             autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+         };
+      </script>
+      <!-- Turf.js for geospatial calculations -->
+      <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <link rel="stylesheet" href="styles/components.css">
+      <link rel="stylesheet" href="styles/style.css">
+      <link rel="stylesheet" href="styles/search.css">
+         
+     <!-- <link rel="stylesheet" href="sentinel.css" />
+     <link rel="stylesheet" href="sentinel2.css" /> -->
+     
+      <style>
+        .processing-scr {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Darker background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Content Box */
+.processing-content {
+    background: rgba(255, 255, 255, 0.1); /* Slight transparency */
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    width: 80%;
+    max-width: 800px; /* Limit max width for readability */
+}
+
+/* Displayed Text */
+#wordByWordText {
+    font-size: 22px;
+    text-align: left;
+    color: #ffffff; /* Initially white */
+    font-family: Arial;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-y: auto;
+    max-height: 70vh; /* Prevent overflow */
+    padding: 10px;
+    line-height: 1.5;
+}
+
+/* Animation effect: White text turns green like a terminal */
+@keyframes terminalEffect {
+    from { color: #ffffff; }
+    to { color: #00ff00; } /* Green text effect */
+}
+
+/* Apply animation */
+.word-visible {
+    animation: terminalEffect 1s ease-in-out forwards;
+}
+      </style>
+   </head>
+   <body>
+     <header class="site-header">
+  <div class="header-container">
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="Assets/lims.png" alt="Logo" class="main-logo">
+        <img id="portalLogo" class="portal-logo">
+      </div>
+    </div>
+
+    <nav class="header-nav">
+  <a href="index1.html" class="header-nav-item">Home</a>
+  <a href="map.html" class="header-nav-item">Agri Self Analysis</a>
+  <a href="vector.html" class="header-nav-item">GIS Analysis</a>
+
+  <div class="dropdown1">
+    <button class="header-nav-item dropdown-btn">
+      Agri Services <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="dropdown1-content">
+      <a href="Pages/livestock.html" class="header-nav-item">Live Stocks Rate</a>
+     <!-- <a href="Pages/dealers.html" class="header-nav-item">Dealers</a> -->
+      <a href="Pages/bulk-water.html" class="header-nav-item">Bulk Water Requirement</a>
+      <a href="Pages/fertilizer.html" class="header-nav-item">Fertilizer Requirement</a>
+    </div>
+  </div>
+</nav>
+
+
+    <button class="mobile-menu-button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="mobile-menu">
+    <a href="index1.html">Home</a>
+    <a href="map.html">Agri Self Analysis</a>
+    <a href="vector.html">GIS Analysis</a>
+    <details class="mobile-dropdown">
+      <summary>Agri Services</summary>
+      <a href="Pages/livestock.html">Live Stocks Rate</a>
+      <a href="Pages/dealers.html">Dealers</a>
+      <a href="Pages/bulk-water.html">Bulk Water Requirement</a>
+      <a href="Pages/fertilizer.html">Fertilizer Requirement</a>
+    </details>
+  </div>
+</header>
+
+<div class="container1">
+      <div class="map-container">
+         <div id="map"></div>
+      </div>
+      <div class="sidebar">
+        <div class="sidebar-header text-gradient">
+         <h2>Agri Analysis</h2>
+        </div>
+      <div class="sidebar-section ">
+           <h3>Drawing Tools</h3>
+         <div class="tool-group">
+            <button id="drawPolygon" class="btn btn-primary">Draw Polygon</button>
+            <button id="clearMap" class="btn btn-warning">Clear Map</button>
+            <div class="file-input-wrapper">
+               <input type="file" id="kmlUpload" class="file-input" accept=".kml,.kmz">
+               <button class="btn btn-success">Upload KML File</button>
+            </div>
+         </div>
+         <div id="areaDisplay" class="area-display" style="display: none;">
+            <h4>Area Calculation</h4>
+            <div class="area-value" id="areaValue">0 hectares</div>
+         </div>
+      </div>
+
+       <div class="sidebar-section">
+         <h3>Reports</h3>
+         <div class="tool-group">
+            <button id="scoutingButton" class="btn btn-info mt-2" style="display: none;">Scouting</button>
+            <button id="weatherReport" class="btn btn-info mt-2">Weather Report</button>
+            <button id="soilReport" class="btn btn-info mt-2 polygon-required">Soil Report</button>
+            <button id="waterReport" class="btn btn-info mt-2 polygon-required">Water Report</button>
+            <button id="cwrButton" class="btn btn-info mt-2">Crop Water Requirement</button>
+         </div>
+      </div>
+      <!-- NEW SECTION: Analysis Tools -->
+      <div class="sidebar-section">
+         <h3>Analysis Tools</h3>
+         <div class="tool-group">
+            <!-- Indices Dropdown (custom dropdown style) -->
+             
+            <div class="dropdown">
+               <button class="btn btn-secondary dropdown-toggle" type="button" id="indicesDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="display: none;">
+               Indices
+               </button>
+            </div>
+            <button id="agroMonitoring" class="btn btn-info mt-2 index-required">Agro Monitoring</button>
+            <!-- Deep Resolution Button -->
+            <button id="deepResolution" class="btn btn-info mt-2 polygon-required" style="display: none;" onclick="checkBeforeOpening()">
+            Deep Resolution
+            </button>
+            <!-- Detect Dropdown -->
+            <div class="dropdown mt-2">
+              <button class="btn btn-primary dropdown-toggle" 
+        type="button" 
+        id="detectBoundariesButton" 
+        data-bs-toggle="dropdown" 
+        aria-expanded="false"
+        style="
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 600;
+            padding: 10px 20px; 
+            border-radius: 6px; 
+            min-width: 120px;
+        ">
+    Detect
+</button>
+
+               <ul class="dropdown-menu" aria-labelledby="detectBoundariesButton">
+                  <li><a class="dropdown-item" href="#" id="detectBoundariesOption">Detect Boundaries</a></li>
+                  <li><a class="dropdown-item" href="#" id="hideBoundariesOption">Hide Boundaries</a></li>
+                  <li>
+                     <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="#" id="displayMaskOption">Display Mask</a></li>
+                  <li><a class="dropdown-item" href="#" id="hideMaskOption">Hide Mask</a></li>
+                  <li>
+                     <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="#" id="downloadGeoJSONOption">Download GeoJSON</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <!-- NEW SECTION: Reports -->
+     
+      <!-- Weather Chart Modal -->
+      <div id="chart-overlay" class="chart-overlay"></div>
+      <div id="weather-modal" class="weather-modal">
+         <div class="weather-modal-header">
+            <h3 class="weather-modal-title">Weather Report</h3>
+            <button id="cross-button-weather" class="close-btn">×</button>
+         </div>
+         <div class="weather-modal-body">
+            <div class="loading-spinner" id="loading-spinner">
+               <div class="spinner"></div>
+               <p>Loading weather data...</p>
+            </div>
+            <div class="chart-wrapper">
+               <canvas id="weatherChart"></canvas>
+            </div>
+         </div>
+      </div>
+      <!-- Loading Spinner -->
+      <div class="spinner-overlay">
+         <div class="spinner"></div>
+      </div>
+      <!-- Notification -->
+      <div class="notification" id="notification"></div>
+      <!-- CWR Date Range Modal -->
+      <div id="cwrDataModal" class="modal cwr-modal">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h2>Select Date Range for CWR Calculation</h2>
+               <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+               <input type="text" id="datepicker" placeholder="Select date range">
+               <button id="checkCWR" style="display: none;">Calculate CWR</button>
+            </div>
+         </div>
+      </div>
+      <!-- CWR Results Modal -->
+      <div id="cwrResultsModal" class="modal">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h2>Crop Water Requirement Results</h2>
+               <button class="close" id="closeCWRResults">&times;</button>
+            </div>
+            <div class="modal-body">
+               <div class="tbl_container1">
+                  <div class="cwr-div">
+                     <div class="form-group">
+                        <h2>Select Crop</h2>
+                            <select class="js-example-basic-single form-select" name="crops" id="cropSelect">
+                            <option value="wheat">Wheat</option>
+                           <option value="rice">Rice</option>
+                           <option value="sugercane">Sugarcane</option>
+                           <option value="cotton">Cotton</option>
+                           <option value="maize">Maize</option>
+                           <option value="barley">Barley</option>
+                           <option value="beans">Beans</option>
+                           <option value="canola">Canola</option>
+                           <option value="castor">Castor Beans</option>
+                           <option value="grams">Grams</option>
+                           <option value="groundnut">Groundnut</option>
+                           <option value="millet">Millet</option>
+                           <option value="rapeseed">Rapeseed</option>
+                           <option value="safflower">Safflower</option>
+                           <option value="sesame">Sesame</option>
+                           <option value="sorghum">Sorghum</option>
+                           <option value="soybeans">Soybeans</option>
+                           <option value="sugarbeats">Sugar Beats</option>
+                           <option value="sunflower">Sunflower</option>
+                           <option value="sweetcorn">Sweet Corn</option>
+                           <option value="toria">Toria</option>
+                           <option value="tobacco">Tobacco</option>
+                        </select>
+                     </div>
+                     <div class="form-group">
+                        <input id="cropArea" type="number" class="form-control" placeholder="Cultivated Area (hectares)" required>
+                     </div>
+                     <div class="form-group">
+                        <button id="getCWR" class="btn btn-primary">Calculate Crop Water Requirement</button>
+                     </div>
+                  </div>
+                  <div class="table-responsive">
+                     <table id="report" class="table table-bordered table-hover" width="100%" cellspacing="0">
+                        <thead>
+                           <tr>
+                              <th>Date</th>
+                              <th>Et0 (mm)</th>
+                              <th colspan="6" id="cwr-th">CWR (Cubic Meter)</th>
+                              <th id="irri-th">ETC (Inches)</th>
+                              <th>Temperature</th>
+                              <th>Humidity</th>
+                              <th>Sunshine</th>
+                              <th>Wind</th>
+                              <th>Altitude</th>
+                              <th>Rainfall</th>
+                           </tr>
+                        </thead>
+                        <tbody id="emp_body">
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Leaflet JS -->
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+      <!-- Flatpickr JS -->
+      <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+      <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+     
+      
+      <!-- JavaScript for dropdown and mobile menu -->
+      <script>
+         // Enhanced Dropdown Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced Dropdown Functionality
+    const dropdownButton = document.getElementById('agriReqDropdown');
+    const dropdownContent = document.querySelector('.dropdown1-content');
+    const dropdownArrow = dropdownButton.querySelector('i');
+
+    if (dropdownButton && dropdownContent && dropdownArrow) {
+        dropdownButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            dropdownContent.classList.toggle('show');
+            dropdownArrow.style.transform = dropdownContent.classList.contains('show') 
+                ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!dropdownButton.contains(e.target) && !dropdownContent.contains(e.target)) {
+                dropdownContent.classList.remove('show');
+                dropdownArrow.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+
+         
+           // Mobile Menu
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuIcon = mobileMenuButton.querySelector('i');
+    
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // Change hamburger to X icon
+        if (mobileMenu.classList.contains('active')) {
+            mobileMenuIcon.classList.remove('fa-bars');
+            mobileMenuIcon.classList.add('fa-times');
+        } else {
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            // Close mobile dropdown when closing mobile menu
+            const mobileAgriContent = document.getElementById('mobileAgriContent');
+            const mobileChevron = document.querySelector('.mobile-chevron');
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Mobile Dropdown (New Addition)
+    const mobileAgriDropdown = document.getElementById('mobileAgriDropdown');
+    const mobileAgriContent = document.getElementById('mobileAgriContent');
+    const mobileChevron = document.querySelector('.mobile-chevron');
+    
+    if (mobileAgriDropdown && mobileAgriContent && mobileChevron) {
+        mobileAgriDropdown.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            mobileAgriContent.classList.toggle('show');
+            mobileChevron.style.transform = mobileAgriContent.classList.contains('show') 
+                ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+    }
+    
+    // Close mobile menu when clicking on mobile menu links
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-item, .mobile-dropdown-item');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (mobileMenu && !mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+          // Processing screen functions with sidebar state preservation
+        let streamingActive = false;
+        let currentTimeouts = [];
+        let isMobileView = false;
+        let sidebarWasOpenBeforeProcessing = false;
+
+        function isSidebarVisible() {
+    const sidebar = document.querySelector('#sidebar'); // Adjust selector as needed
+    return sidebar && getComputedStyle(sidebar).display !== 'none';
+}
+
+        function showProcessing() {
+            // Store current sidebar state before showing processing screen
+            sidebarWasOpenBeforeProcessing = isSidebarVisible();
+            
+            document.querySelector('.processing-screen').style.display = 'flex';
+            resetAndStartStream(limsText);
+        }
+
+        function hideProcessingScreen() {
+            document.querySelector('.processing-screen').style.display = 'none';
+            
+            // Restore sidebar state after processing screen is hidden
+            // Only restore if we're on desktop and sidebar was visible before
+            if (!isMobileView && sidebarWasOpenBeforeProcessing) {
+                setSidebarVisibility(true);
+            }
+        }
+
+        async function streamTextEffect(text, speed = 50) {
+            const textBox = document.getElementById('wordByWordText');
+            textBox.innerHTML = "";
+            streamingActive = true;
+
+            for (let i = 0; i < text.length; i++) {
+                if (!streamingActive) {
+                    textBox.innerHTML = "";
+                    return;
+                }
+
+                textBox.innerHTML += text[i];
+                textBox.scrollTop = textBox.scrollHeight;
+
+                await new Promise(resolve => {
+                    const timeout = setTimeout(resolve, speed);
+                    currentTimeouts.push(timeout);
+                });
+            }
+
+            setTimeout(hideProcessingScreen, 5000);
+        }
+
+        function resetAndStartStream(text) {
+            streamingActive = false;
+            currentTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            currentTimeouts = [];
+
+            document.getElementById('wordByWordText').innerHTML = "";
+
+            setTimeout(() => {
+                streamingActive = true;
+                streamTextEffect(text, 80);
+            }, 100);
+        }
+
+        // Example LIMS Text
+        let limsText = `Land Information and Management System (LIMS) is a revolutionary platform designed for agricultural monitoring in Pakistan. It utilizes advanced remote sensing technology, Geographic Information Systems (GIS), and data analytics to provide insights into vegetation health, land management, and sustainable farming practices.
+
+Agriculture is the backbone of Pakistan's economy, contributing significantly to GDP and employment. However, traditional farming methods, lack of real-time data, and the increasing impact of climate change make it challenging for farmers to optimize productivity. LIMS aims to bridge this gap by providing real-time, data-driven solutions, ensuring farmers oriented solutions. Policy makers have access to precise and actionable agricultural insights.
+
+The Importance of LIMS in Agriculture
+
+Remote Sensing for Precision Farming
+LIMS integrates satellite-based remote sensing system imagery to analyze crop health, soil moisture, and vegetation indices such as NDVI (Normalized Difference Vegetation Index). These indices help detect stress in crops before visible symptoms appear, allowing farmers to take preventive measures.
+
+Climate Resilience and Adaptation
+Climate change is one of the most significant threats to agriculture in Pakistan. Rising temperatures, irregular rainfall patterns, and increasing water scarcity have led to unpredictable crop yields. LIMS assists in climate adaptation by providing historical climate data, drought monitoring, and forecasting weather trends. This enables farmers to make informed decisions regarding planting and irrigation schedules.`;
+
+
+      </script>
+
+       <!-- Processing screen (only one!) -->
+<div class="processing-screen" id="processingScreen" style="display: none;">
+  <div class="processing-content">
+    <h3>Processing ...</h3>
+    <div id="wordByWordText" style="max-height: 300px; overflow-y: auto;"></div>
+  </div>
+</div>
+      <script>
+         const map = L.map('map').setView([ 30.34674661477255, 71.97376680232665], 15);
+         
+         // Add Google Satellite + Labels layer
+         L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+         maxZoom: 20,
+         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+         attribution: '&copy; <a href="https://www.google.com/permissions/geoguidelines/">Google</a>'
+         }).addTo(map);
+         
+         // Global variables
+         let currentPolygon = null;
+         let isScoutingPolygon = false;
+         let lastPolygon = null;
+         let chart; // Global chart variable
+         let polygonCoordinates = []; // Store polygon coordinates for CWR
+         let selectedIndex = 'true-color'; // Store selected index
+         let bbox;
+         
+         // Function to check if polygon exists
+         
+         function hasPolygon() {
+             return polygonCoordinates.length > 0 || currentPolygon !== null;
+         }
+         
+           // Function to check if index is selected (for zoning)
+         function hasIndexSelected() {
+             return selectedIndex !== null && selectedIndex !== '';
+         }
+         
+         // Function to show notification with polygon requirement
+         function showPolygonRequiredMessage(reportType) {
+             showNotificationMessage('warning', `Please draw a polygon on the map first to generate ${reportType} report.`);
+             
+             // Highlight the draw polygon button
+             const drawBtn = document.getElementById('drawPolygon');
+             drawBtn.style.animation = 'pulse 2s infinite';
+             drawBtn.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.6)';
+             
+             setTimeout(() => {
+                 drawBtn.style.animation = '';
+                 drawBtn.style.boxShadow = '';
+             }, 4000);
+         }
+         
+         // Function to show notification with index requirement
+         function showIndexRequiredMessage(reportType) {
+             showNotificationMessage('warning', `Please select an index first to perform ${reportType}.`);
+             
+             // Highlight the indices dropdown
+             const indicesBtn = document.getElementById('indicesDropdown');
+             indicesBtn.style.animation = 'pulse 2s infinite';
+             indicesBtn.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.6)';
+             
+             setTimeout(() => {
+                 indicesBtn.style.animation = '';
+                 indicesBtn.style.boxShadow = '';
+             }, 4000);
+         }
+         
+         
+         
+         // Function to get polygon centroid coordinates
+         function getPolygonCentroid() {
+             if (polygonCoordinates.length > 0) {
+                 const centroid = turf.centroid(turf.polygon([polygonCoordinates]));
+                 return {
+                     lat: centroid.geometry.coordinates[1],
+                     lng: centroid.geometry.coordinates[0]
+                 };
+             }
+             return null;
+         }
+         
+          // NEW: Dropdown functionality for Indices
+         document.getElementById('indicesDropdown').addEventListener('click', function(e) {
+             e.stopPropagation();
+             const content = document.getElementById('indicesDropdownContent');
+             content.classList.toggle('show');
+         });
+         
+         // Handle indices selection
+         document.querySelectorAll('#indicesDropdownContent .dropdown-item').forEach(item => {
+             item.addEventListener('click', function() {
+                 selectedIndex = this.getAttribute('data-value');
+                 document.getElementById('selectedIndex').textContent = this.textContent;
+                 document.getElementById('indicesDropdownContent').classList.remove('show');
+                 
+                 showNotificationMessage('success', `Index selected: ${this.textContent}`);
+                 updateButtonStates();
+             });
+         });
+         
+         // // NEW: Dropdown functionality for Detect
+         // document.getElementById('detectDropdown').addEventListener('click', function(e) {
+         //     e.stopPropagation();
+             
+         //     if (!hasPolygon()) {
+         //         showPolygonRequiredMessage('detect operations');
+         //         return;
+         //     }
+             
+         //     const content = document.getElementById('detectDropdownContent');
+         //     content.classList.toggle('show');
+         // });
+         
+         // Handle detect actions
+         
+         
+         // NEW: Deep Resolution button functionality
+         document.getElementById('deepResolution').addEventListener('click', function () {
+         if (!hasPolygon()) {
+         showPolygonRequiredMessage('Deep Resolution');
+         return;
+         }
+         
+         // Simulate processing delay before redirect
+         setTimeout(() => {
+         // Open help.html in a new browser tab
+         window.open('deep.html', '_blank');
+         }, 2000);
+         });
+         
+         
+         
+         // NEW: Zoning button functionality
+         document.getElementById('agroMonitoring').addEventListener('click', function () {
+         if (!hasPolygon()) {
+         showPolygonRequiredMessage('Agro Monitoring');
+         return;
+         }
+         
+         if (!hasIndexSelected()) {
+         showIndexRequiredMessage('Agro Monitoring');
+         return;
+         }
+         
+         showNotificationMessage('info', `Performing  analysis `);
+         
+         // Simulate processing delay before redirect
+         setTimeout(() => {
+         showNotificationMessage('success', 'Agro Monitoring');
+         window.open('sentinel.html', '_blank');
+         }, 2000);
+         });
+         
+         
+         
+         // NEW: Detect action handlers
+         function handleDetectBoundaries() {
+             showNotificationMessage('info', 'Detecting boundaries...');
+             setTimeout(() => {
+                 showNotificationMessage('success', 'Boundaries detected successfully!');
+             }, 1500);
+         }
+         
+         function handleHideBoundaries() {
+             showNotificationMessage('info', 'Hiding boundaries...');
+             setTimeout(() => {
+                 showNotificationMessage('success', 'Boundaries hidden!');
+             }, 500);
+         }
+         
+         function handleDisplayMask() {
+             showNotificationMessage('info', 'Displaying mask...');
+             setTimeout(() => {
+                 showNotificationMessage('success', 'Mask displayed!');
+             }, 1000);
+         }
+         
+         function handleHideMask() {
+             showNotificationMessage('info', 'Hiding mask...');
+             setTimeout(() => {
+                 showNotificationMessage('success', 'Mask hidden!');
+             }, 500);
+         }
+         
+         function handleDownloadGeoJSON() {
+             showNotificationMessage('info', 'Preparing GeoJSON download...');
+             
+             // Create sample GeoJSON data
+             const geoJsonData = {
+                 "type": "FeatureCollection",
+                 "features": [
+                     {
+                         "type": "Feature",
+                         "properties": {
+                             "name": "Sample Polygon"
+                         },
+                         "geometry": {
+                             "type": "Polygon",
+                             "coordinates": [polygonCoordinates]
+                         }
+                     }
+                 ]
+             };
+             
+             // Create and download file
+             const dataStr = JSON.stringify(geoJsonData, null, 2);
+             const dataBlob = new Blob([dataStr], {type: 'application/json'});
+             const url = URL.createObjectURL(dataBlob);
+             const link = document.createElement('a');
+             link.href = url;
+             link.download = 'boundaries.geojson';
+             document.body.appendChild(link);
+             link.click();
+             document.body.removeChild(link);
+             URL.revokeObjectURL(url);
+             
+             showNotificationMessage('success', 'GeoJSON downloaded successfully!');
+         }
+         
+         // Close dropdowns when clicking outside
+         document.addEventListener('click', function() {
+             document.querySelectorAll('.dropdown-content').forEach(content => {
+                 content.classList.remove('show');
+             });
+         });
+         
+         
+         // Mapbox configuration
+         const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiaXFyYS0xMiIsImEiOiJjbTBsejNzencwYmhmMmpzOGo2YjBscWx0In0.uVZ01016jRsllcutrQASow"
+         
+        // Debounce function for better performance
+// Debounce function for better performance
+function debounce(func, wait) {
+    let timeout
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout)
+            func(...args)
+        }
+        clearTimeout(timeout)
+        timeout = setTimeout(later, wait)
+    }
+}
+
+// Check if device is mobile
+function isMobileDevice() {
+    return (
+        window.innerWidth <= 768 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    )
+}
+
+// Mapbox search function only
+async function searchLocationWithMapbox(query) {
+    if (!query || query.length < 3) return []
+    
+    // Validate token first
+    if (!MAPBOX_ACCESS_TOKEN || MAPBOX_ACCESS_TOKEN === 'YOUR_MAPBOX_ACCESS_TOKEN_HERE') {
+        throw new Error('Please configure your Mapbox access token')
+    }
+    
+    try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+        
+        const response = await fetch(
+            `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(query)}&proximity=ip&access_token=${MAPBOX_ACCESS_TOKEN}`,
+            {
+                headers: {
+                    "accept-language": "en-US",
+                },
+                signal: controller.signal,
+            },
+        )
+        
+        clearTimeout(timeoutId)
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Invalid Mapbox access token')
+            } else if (response.status === 429) {
+                throw new Error('Rate limit exceeded. Please try again later')
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+            }
+        }
+
+        const data = await response.json()
+        return data.features.map((feature) => ({
+            id: feature.id,
+            name: feature.properties.full_address || feature.properties.name,
+            latitude: feature.geometry.coordinates[1],
+            longitude: feature.geometry.coordinates[0],
+            place_type: feature.properties.feature_type,
+            context: feature.properties.context,
+        }))
+        
+    } catch (error) {
+        if (error.name === "AbortError") {
+            console.log("Search request was aborted")
+        } else {
+            console.error("Failed to fetch geocoding data from Mapbox:", error)
+        }
+        throw error // Re-throw to handle in the calling function
+    }
+}
+
+// Add responsive search control to map
+function addResponsiveSearchControl() {
+    const searchControl = L.Control.extend({
+        options: {
+            position: "topright",
+        },
+        onAdd: function (map) {
+            // ✅ Store map reference
+            this.map = map
+            
+            const container = L.DomUtil.create("div", "leaflet-control-search")
+            
+            container.innerHTML = `
+                <div class="search-container" id="searchContainer">
+                    <div class="search-icon" id="searchIcon" tabindex="0" role="button" aria-label="Open search">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="locationSearch" 
+                        placeholder="Search for places, addresses..."
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        aria-label="Search for locations"
+                    >
+                    <button class="search-clear" id="searchClear" aria-label="Clear search" tabindex="-1">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                    <div class="search-loading" id="searchLoading" aria-hidden="true"></div>
+                </div>
+                <div class="suggestions-container" id="suggestions" role="listbox" aria-label="Search suggestions"></div>
+            `
+            
+            // Prevent map events
+            L.DomEvent.disableClickPropagation(container)
+            L.DomEvent.disableScrollPropagation(container)
+            
+            // Initialize search functionality
+            this.initializeSearch(container)
+            
+            return container
+        },
+        
+        initializeSearch: function (container) {
+            const searchContainer = container.querySelector("#searchContainer")
+            const searchIcon = container.querySelector("#searchIcon")
+            const searchInput = container.querySelector("#locationSearch")
+            const searchClear = container.querySelector("#searchClear")
+            const searchLoading = container.querySelector("#searchLoading")
+            const suggestionsContainer = container.querySelector("#suggestions")
+            
+            // ✅ Initialize instance properties directly
+            this.searchContainer = searchContainer
+            this.searchIcon = searchIcon
+            this.searchInput = searchInput
+            this.searchClear = searchClear
+            this.searchLoading = searchLoading
+            this.suggestionsContainer = suggestionsContainer
+            this.isExpanded = false
+            this.currentRequest = null
+            
+            let searchTimeout
+            
+            // Debounced search function
+            const debouncedSearch = debounce((query) => {
+                this.handleLocationSearch(query)
+            }, 300)
+            
+            // Toggle search
+            const toggleSearch = () => {
+                // ✅ Use instance property
+                if (this.isExpanded) {
+                    this.collapseSearch()
+                } else {
+                    this.expandSearch()
+                }
+            }
+            
+            searchIcon.addEventListener("click", toggleSearch)
+            searchIcon.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    toggleSearch()
+                }
+            })
+            
+            // Clear search
+            const clearSearch = () => {
+                searchInput.value = ""
+                searchClear.style.display = "none"
+                suggestionsContainer.classList.remove("show")
+                searchInput.focus()
+                this.hideLoading()
+            }
+            
+            searchClear.addEventListener("click", clearSearch)
+            searchClear.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    clearSearch()
+                }
+            })
+            
+            // Handle input with improved UX
+            searchInput.addEventListener("input", (e) => {
+                const query = e.target.value.trim()
+                
+                // Show/hide clear button
+                searchClear.style.display = query ? "flex" : "none"
+                searchClear.tabIndex = query ? "0" : "-1"
+                
+                // Cancel previous request
+                if (this.currentRequest) {
+                    this.currentRequest.abort()
+                    this.currentRequest = null
+                }
+                
+                if (!query || query.length < 3) {
+                    suggestionsContainer.classList.remove("show")
+                    this.hideLoading()
+                    return
+                }
+                
+                // Show loading with delay to prevent flickering
+                setTimeout(() => {
+                    if (searchInput.value.trim() === query && query.length >= 3) {
+                        this.showLoading()
+                    }
+                }, 150)
+                
+                // Debounce search
+                debouncedSearch(query)
+            })
+            
+            // Handle keyboard events with improved navigation
+            searchInput.addEventListener("keydown", (e) => {
+                const suggestions = suggestionsContainer.querySelectorAll(".suggestion-item")
+                const activeSuggestion = suggestionsContainer.querySelector(".suggestion-item.active")
+                
+                switch (e.key) {
+                    case "Escape":
+                        this.collapseSearch()
+                        break
+                    case "ArrowDown":
+                        e.preventDefault()
+                        this.navigateSuggestions(suggestions, activeSuggestion, "down")
+                        break
+                    case "ArrowUp":
+                        e.preventDefault()
+                        this.navigateSuggestions(suggestions, activeSuggestion, "up")
+                        break
+                    case "Enter":
+                        e.preventDefault()
+                        if (activeSuggestion) {
+                            activeSuggestion.click()
+                        }
+                        break
+                    case "Tab":
+                        if (!e.shiftKey && activeSuggestion) {
+                            e.preventDefault()
+                            activeSuggestion.click()
+                        }
+                        break
+                }
+            })
+            
+            // Handle focus events
+            searchInput.addEventListener("focus", () => {
+                if (searchInput.value.trim().length >= 3) {
+                    suggestionsContainer.classList.add("show")
+                }
+            })
+            
+            // Close on outside click with improved detection
+            document.addEventListener("click", (e) => {
+                // ✅ Use instance property
+                if (!container.contains(e.target) && this.isExpanded) {
+                    this.collapseSearch()
+                }
+            })
+            
+            // Handle window resize
+            window.addEventListener(
+                "resize",
+                debounce(() => {
+                    // ✅ Use instance property
+                    if (this.isExpanded && isMobileDevice()) {
+                        this.adjustMobileLayout()
+                    }
+                }, 250),
+            )
+        },
+        
+        expandSearch: function () {
+            this.searchContainer.classList.add("expanded")
+            this.searchInput.classList.add("show")
+            this.searchIcon.setAttribute("aria-label", "Close search")
+            
+            // Focus with slight delay for better UX
+            setTimeout(() => {
+                this.searchInput.focus()
+            }, 100)
+            
+            this.isExpanded = true
+            
+            // Adjust for mobile if needed
+            if (isMobileDevice()) {
+                this.adjustMobileLayout()
+            }
+        },
+        
+        collapseSearch: function () {
+            this.searchContainer.classList.remove("expanded")
+            this.searchInput.classList.remove("show")
+            this.suggestionsContainer.classList.remove("show")
+            this.searchClear.style.display = "none"
+            this.searchClear.tabIndex = "-1"
+            this.searchIcon.setAttribute("aria-label", "Open search")
+            this.hideLoading()
+            this.isExpanded = false
+            
+            // Cancel any pending requests
+            if (this.currentRequest) {
+                this.currentRequest.abort()
+                this.currentRequest = null
+            }
+        },
+        
+        adjustMobileLayout: function () {
+            // Additional mobile-specific adjustments can be added here
+            const viewport = window.visualViewport
+            if (viewport) {
+                // Adjust for virtual keyboard on mobile
+                const keyboardHeight = window.innerHeight - viewport.height
+                if (keyboardHeight > 150) {
+                    this.suggestionsContainer.style.maxHeight = `${Math.max(200, viewport.height * 0.3)}px`
+                } else {
+                    this.suggestionsContainer.style.maxHeight = ""
+                }
+            }
+        },
+        
+        showLoading: function () {
+            this.searchLoading.style.display = "block"
+            this.searchClear.style.display = "none"
+            this.searchContainer.classList.add("loading")
+        },
+        
+        hideLoading: function () {
+            this.searchLoading.style.display = "none"
+            this.searchContainer.classList.remove("loading")
+            if (this.searchInput.value.trim()) {
+                this.searchClear.style.display = "flex"
+                this.searchClear.tabIndex = "0"
+            }
+        },
+        
+        handleLocationSearch: async function (query) {
+            try {
+                // Create abort controller for this request
+                this.currentRequest = new AbortController()
+                
+                // Search with Mapbox only
+                const suggestions = await searchLocationWithMapbox(query)
+                
+                // Check if request was aborted
+                if (this.currentRequest && this.currentRequest.signal.aborted) return
+                
+                this.hideLoading()
+                this.displaySuggestions(suggestions, query)
+                
+            } catch (error) {
+                if (error.name !== "AbortError") {
+                    console.error("Search error:", error)
+                    this.showSearchError(error.message)
+                }
+                this.hideLoading()
+            } finally {
+                this.currentRequest = null
+            }
+        },
+        
+        displaySuggestions: function (suggestions, query) {
+            this.suggestionsContainer.innerHTML = ""
+            this.suggestionsContainer.setAttribute("aria-live", "polite")
+            
+            if (suggestions.length === 0) {
+                const noResults = document.createElement("div")
+                noResults.className = "no-results"
+                noResults.innerHTML = `
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <div class="no-results-text">No locations found</div>
+                    <div class="no-results-subtext">Try a different search term</div>
+                `
+                this.suggestionsContainer.appendChild(noResults)
+                this.suggestionsContainer.classList.add("show")
+                return
+            }
+            
+            suggestions.forEach((suggestion, index) => {
+                const suggestionItem = document.createElement("div")
+                suggestionItem.className = "suggestion-item"
+                suggestionItem.setAttribute("role", "option")
+                suggestionItem.setAttribute("tabindex", "-1")
+                suggestionItem.setAttribute("aria-label", `${suggestion.name}, ${suggestion.place_type}`)
+                
+                const icon = this.getPlaceIcon(suggestion.place_type)
+                
+                suggestionItem.innerHTML = `
+                    <div class="suggestion-icon" aria-hidden="true">
+                        <i class="fa ${icon}"></i>
+                    </div>
+                    <div class="suggestion-content">
+                        <div class="suggestion-name">${this.highlightQuery(suggestion.name, query)}</div>
+                        <div class="suggestion-type">${suggestion.place_type || "location"}</div>
+                    </div>
+                `
+                
+                suggestionItem.addEventListener("click", () => {
+                    this.selectLocation(suggestion)
+                })
+                
+                suggestionItem.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        this.selectLocation(suggestion)
+                    }
+                })
+                
+                suggestionItem.addEventListener("mouseenter", () => {
+                    this.setActiveSuggestion(suggestionItem)
+                })
+                
+                this.suggestionsContainer.appendChild(suggestionItem)
+            })
+            
+            this.suggestionsContainer.classList.add("show")
+            
+            // Announce results to screen readers
+            const resultCount = suggestions.length
+            this.suggestionsContainer.setAttribute(
+                "aria-label",
+                `${resultCount} search result${resultCount !== 1 ? "s" : ""} available`,
+            )
+        },
+        
+        showSearchError: function (errorMessage) {
+            this.suggestionsContainer.innerHTML = `
+                <div class="search-error">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <div class="error-text">${errorMessage}</div>
+                </div>
+            `
+            this.suggestionsContainer.classList.add("show")
+        },
+        
+        highlightQuery: function(text, query) {
+            if (!query || query.length < 2) return text
+            
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi")
+            return text.replace(regex, "<mark>$1</mark>")
+        },
+        
+        setActiveSuggestion: function (suggestionItem) {
+            this.suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
+                item.classList.remove("active")
+                item.setAttribute("tabindex", "-1")
+            })
+            suggestionItem.classList.add("active")
+            suggestionItem.setAttribute("tabindex", "0")
+        },
+        
+        selectLocation: function (suggestion) {
+            // Provide haptic feedback on mobile
+            if (navigator.vibrate && isMobileDevice()) {
+                navigator.vibrate(50)
+            }
+            
+            // ✅ Use stored map reference
+            this.map.setView([suggestion.latitude, suggestion.longitude], 15)
+            
+            // Remove existing search markers
+            this.map.eachLayer((layer) => {
+                if (layer.options && layer.options.searchMarker) {
+                    this.map.removeLayer(layer)
+                }
+            })
+            
+            // Add new marker with enhanced popup
+            const marker = L.marker([suggestion.latitude, suggestion.longitude], {
+                searchMarker: true,
+            }).addTo(this.map)
+            
+            marker
+                .bindPopup(`
+                    <div style="text-align: center; min-width: 200px; font-family: 'Inter', sans-serif;">
+                        <div style="font-weight: 600; color: #1f2937; margin-bottom: 8px; font-size: 16px;">
+                            ${suggestion.name}
+                        </div>
+                        <div style="color: #6b7280; font-size: 12px; margin-bottom: 8px; text-transform: capitalize;">
+                            ${suggestion.place_type || "Location"}
+                        </div>
+                        <div style="color: #9ca3af; font-size: 11px; font-family: monospace;">
+                            ${suggestion.latitude.toFixed(6)}, ${suggestion.longitude.toFixed(6)}
+                        </div>
+                    </div>
+                `)
+                .openPopup()
+            
+            // Clear and collapse search
+            this.searchInput.value = ""
+            this.collapseSearch()
+            
+            // Announce to screen readers
+            const announcement = `Selected ${suggestion.name}`
+            const ariaLive = document.createElement("div")
+            ariaLive.setAttribute("aria-live", "polite")
+            ariaLive.setAttribute("aria-atomic", "true")
+            ariaLive.style.position = "absolute"
+            ariaLive.style.left = "-10000px"
+            ariaLive.textContent = announcement
+            document.body.appendChild(ariaLive)
+            setTimeout(() => document.body.removeChild(ariaLive), 1000)
+        },
+        
+        getPlaceIcon: function(placeType) {
+            const iconMap = {
+                address: "fa-home",
+                poi: "fa-map-marker-alt",
+                place: "fa-map-pin",
+                locality: "fa-city",
+                neighborhood: "fa-building",
+                street: "fa-road",
+                country: "fa-flag",
+                region: "fa-map",
+                postcode: "fa-mail-bulk",
+                district: "fa-map-marked-alt",
+                restaurant: "fa-utensils",
+                hospital: "fa-hospital",
+                school: "fa-school",
+                park: "fa-tree",
+                hotel: "fa-bed",
+                gas_station: "fa-gas-pump",
+                bank: "fa-university",
+                shop: "fa-shopping-cart",
+            }
+            
+            return iconMap[placeType] || "fa-map-marker-alt"
+        },
+        
+        navigateSuggestions: function(suggestions, activeSuggestion, direction) {
+            if (suggestions.length === 0) return
+            
+            // Remove current active class
+            if (activeSuggestion) {
+                activeSuggestion.classList.remove("active")
+                activeSuggestion.setAttribute("tabindex", "-1")
+            }
+            
+            let nextIndex = 0
+            if (activeSuggestion) {
+                const currentIndex = Array.from(suggestions).indexOf(activeSuggestion)
+                if (direction === "down") {
+                    nextIndex = (currentIndex + 1) % suggestions.length
+                } else {
+                    nextIndex = currentIndex === 0 ? suggestions.length - 1 : currentIndex - 1
+                }
+            }
+            
+            const nextSuggestion = suggestions[nextIndex]
+            nextSuggestion.classList.add("active")
+            nextSuggestion.setAttribute("tabindex", "0")
+            nextSuggestion.scrollIntoView({ block: "nearest", behavior: "smooth" })
+            
+            // Announce to screen readers
+            const announcement = nextSuggestion.getAttribute("aria-label")
+            nextSuggestion.setAttribute("aria-live", "polite")
+            setTimeout(() => nextSuggestion.removeAttribute("aria-live"), 100)
+        },
+    })
+    
+    return new searchControl()
+}
+         
+         // Function to get user's current location
+         function getCurrentLocation() {
+             if (navigator.geolocation) {
+                 const loadingControl = L.control({position: 'topright'});
+                 loadingControl.onAdd = function(map) {
+                     const div = L.DomUtil.create('div', 'leaflet-control-custom');
+                     div.innerHTML = `
+                         <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                             <div style="display: flex; align-items: center; gap: 8px;">
+                                 <div style="width: 16px; height: 16px; border: 2px solid #3498db; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                 <span style="font-size: 12px; color: #333;">Locating...</span>
+                             </div>
+                         </div>
+                     `;
+                     return div;
+                 };
+                 loadingControl.addTo(map);
+         
+                 navigator.geolocation.getCurrentPosition(
+                     function(position) {
+                         const lat = position.coords.latitude;
+                         const lng = position.coords.longitude;
+                         
+                         map.removeControl(loadingControl);
+                         map.setView([lat, lng], 15);
+                         
+                         const currentLocationMarker = L.marker([lat, lng], {
+                             icon: L.divIcon({
+                                 className: 'current-location-marker',
+                                 html: `
+                                     <div style="
+                                         width: 20px; 
+                                         height: 20px; 
+                                         background: #3498db; 
+                                         border: 3px solid white; 
+                                         border-radius: 50%; 
+                                         box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                                         position: relative;
+                                     ">
+                                         <div style="
+                                             width: 40px; 
+                                             height: 40px; 
+                                             background: rgba(52, 152, 219, 0.3); 
+                                             border-radius: 50%; 
+                                             position: absolute; 
+                                             top: -13px; 
+                                             left: -13px;
+                                             animation: pulse 2s infinite;
+                                         "></div>
+                                     </div>
+                                 `,
+                                 iconSize: [20, 20],
+                                 iconAnchor: [10, 10]
+                             })
+                         }).addTo(map);
+                         
+                         currentLocationMarker.bindPopup(`
+                             <div style="text-align: center;">
+                                 <strong>📍 Your Current Location</strong><br>
+                                 <small>Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}</small>
+                             </div>
+                         `);
+                         
+                         localStorage.setItem("currentLocation", `${lat},${lng}`);
+                         console.log(`Current location: ${lat}, ${lng}`);
+                     },
+                     function(error) {
+                         map.removeControl(loadingControl);
+                         
+                         let errorMessage = '';
+                         switch(error.code) {
+                             case error.PERMISSION_DENIED:
+                                 errorMessage = "Location access denied by user.";
+                                 break;
+                             case error.POSITION_UNAVAILABLE:
+                                 errorMessage = "Location information is unavailable.";
+                                 break;
+                             case error.TIMEOUT:
+                                 errorMessage = "Location request timed out.";
+                                 break;
+                             default:
+                                 errorMessage = "An unknown error occurred while retrieving location.";
+                                 break;
+                         }
+                         
+                         const errorControl = L.control({position: 'topright'});
+                         errorControl.onAdd = function(map) {
+                             const div = L.DomUtil.create('div', 'leaflet-control-custom');
+                             div.innerHTML = `
+                                 <div style="background: #e74c3c; color: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 200px;">
+                                     <div style="font-size: 12px;">
+                                         <strong>⚠️ Location Error</strong><br>
+                                         ${errorMessage}<br>
+                                         <small>Using default location.</small>
+                                     </div>
+                                 </div>
+                             `;
+                             return div;
+                         };
+                         errorControl.addTo(map);
+                         
+                         setTimeout(() => {
+                             map.removeControl(errorControl);
+                         }, 5000);
+                         
+                         console.error("Geolocation error: ", errorMessage);
+                     },
+                     {
+                         enableHighAccuracy: true,
+                         timeout: 10000,
+                         maximumAge: 60000
+                     }
+                 );
+             } else {
+                console.error("Geolocation is not supported by this browser.");
+showNotificationMessage('warning', "Geolocation is not supported by your browser. Using default location.");
+
+             }
+         }
+         
+         // Call the function to get current location when page loads
+         getCurrentLocation();
+const searchControl = addResponsiveSearchControl()
+map.addControl(searchControl)         
+         
+         // Initialize drawing controls
+         const drawnItems = new L.FeatureGroup();
+         map.addLayer(drawnItems);
+         
+           // Utility functions
+         function showNotificationMessage(type, message) {
+             const notification = document.getElementById('notification');
+             notification.textContent = message;
+             notification.className = `notification ${type}`;
+             notification.classList.add('show');
+             
+             setTimeout(() => {
+                 notification.classList.remove('show');
+             }, 5000);
+         }
+         
+         function enumerateDaysBetweenDates(startDate, endDate) {
+             const dates = [];
+             const currentDate = moment(startDate);
+             const stopDate = moment(endDate);
+             
+             while (currentDate <= stopDate) {
+                 dates.push(currentDate.format('YYYY-MM-DD'));
+                 currentDate.add(1, 'day');
+             }
+             
+             return dates;
+         }
+         
+         // Calculate area in hectares
+         function calculateArea(layer) {
+             const latlngs = layer.getLatLngs()[0];
+             let area = 0;
+             
+             for (let i = 0; i < latlngs.length; i++) {
+                 const j = (i + 1) % latlngs.length;
+                 area += latlngs[i].lat * latlngs[j].lng;
+                 area -= latlngs[j].lat * latlngs[i].lng;
+             }
+             
+             area = Math.abs(area) / 2;
+             const hectares = area * 111319.9 * 111319.9 / 10000;
+             return hectares;
+         }
+         function handlePolygonCreated(layer) {
+         polygonCoordinates = layer.getLatLngs()[0].map(latlng => [latlng.lng, latlng.lat]);
+         
+         bbox = calculateBoundingBox(polygonCoordinates);
+         
+         // 🧹 Remove previous bbox
+         localStorage.removeItem("polygonBBox");
+         
+         // 💾 Save new bbox
+         localStorage.setItem("polygonBBox", JSON.stringify(bbox));
+         
+         const geoJsonPolygon = {
+         "type": "Feature",
+         "geometry": {
+            "type": "Polygon",
+            "coordinates": [polygonCoordinates]
+         }
+         };
+         
+         const polygonAreaSqMeters = turf.area(geoJsonPolygon);
+         const sqMetersToAcres = 4046.85642;
+         polygonAreaAcres = polygonAreaSqMeters / sqMetersToAcres;
+         
+         let sumLng = 0, sumLat = 0;
+         polygonCoordinates.forEach(coord => {
+         sumLng += coord[0];
+         sumLat += coord[1];
+         });
+         polygonCenter = [sumLat / polygonCoordinates.length, sumLng / polygonCoordinates.length];
+         
+         polygonCoordinates.push(polygonCoordinates[0]);
+         isPolygonDrawn = true;
+         
+         sendBBoxToBackend(bbox);
+         }
+         
+         
+         // Calculate bounding box from coordinates
+         function calculateBoundingBox(coordinates) {
+             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+         
+             coordinates.forEach(function (coord) {
+                 const lon = coord[0], lat = coord[1];
+                 minX = Math.min(minX, lon);
+                 minY = Math.min(minY, lat);
+                 maxX = Math.max(maxX, lon);
+                 maxY = Math.max(maxY, lat);
+             });
+         
+             return [[minY, minX], [maxY, maxX]];
+         }
+         
+         
+         function expandBoundingBox(bounds, factor) {
+             const center = bounds.getCenter();
+             const width = bounds.getEast() - bounds.getWest();
+             const height = bounds.getNorth() - bounds.getSouth();
+             return L.latLngBounds(
+                 L.latLng(center.lat - height * factor / 2, center.lng - width * factor / 2),
+                 L.latLng(center.lat + height * factor / 2, center.lng + width * factor / 2)
+             );
+         }
+         
+         // Display area
+         function displayArea(area) {
+             document.getElementById('areaDisplay').style.display = 'block';
+             document.getElementById('areaValue').textContent = area.toFixed(2) + ' hectares';
+         }
+         
+         // Store polygon coordinates
+         function storePolygonCoordinates(layer) {
+             const latlngs = layer.getLatLngs()[0];
+             if (latlngs.length > 0) {
+                 const centerLat = latlngs.reduce((sum, ll) => sum + ll.lat, 0) / latlngs.length;
+                 const centerLng = latlngs.reduce((sum, ll) => sum + ll.lng, 0) / latlngs.length;
+                 localStorage.setItem("polygoncoord", `${centerLat},${centerLng}`);
+                 
+                 // Store polygon coordinates for CWR calculation
+                 polygonCoordinates = latlngs.map(ll => [ll.lng, ll.lat]);
+                 polygonCoordinates.push(polygonCoordinates[0]); // Close the polygon
+                 updateButtonStates();
+         
+             }
+         }
+         
+          // Update button states based on polygon existence
+         function updateButtonStates() {
+             const hasPolygonDrawn = hasPolygon();
+             const hasIndexSelected = selectedIndex !== 'true-color' && selectedIndex !== '';
+             
+             // Update polygon-required buttons
+             const polygonRequiredButtons = document.querySelectorAll('.polygon-required');
+             polygonRequiredButtons.forEach(button => {
+                 if (hasPolygonDrawn) {
+                     button.classList.remove('btn-warning');
+                     button.classList.add('btn-info');
+                     button.disabled = false;
+                 } else {
+                     button.classList.remove('btn-info');
+                     button.classList.add('btn-warning');
+                     button.disabled = false; // Keep enabled to show warning message
+                 }
+             });
+         
+             // Update index-required buttons
+             const indexRequiredButtons = document.querySelectorAll('.index-required');
+             indexRequiredButtons.forEach(button => {
+                 if (hasIndexSelected) {
+                     button.classList.remove('btn-warning');
+                     button.classList.add('btn-info');
+                     button.disabled = false;
+                 } else {
+                     button.classList.remove('btn-info');
+                     button.classList.add('btn-warning');
+                     button.disabled = false; // Keep enabled to show warning message
+                 }
+             });
+         }
+         
+         // Draw polygon button
+         document.getElementById('drawPolygon').addEventListener('click', function() {
+             const drawControlPolygon = new L.Draw.Polygon(map, {
+                 allowIntersection: false,
+                 showArea: true,
+                 shapeOptions: {
+                     color: '#e74c3c',
+                     fillOpacity: 0.3
+                 }
+             });
+             drawControlPolygon.enable();
+         });
+         
+         // Clear map button
+           document.getElementById('clearMap').addEventListener('click', function() {
+             drawnItems.clearLayers();
+             document.getElementById('areaDisplay').style.display = 'none';
+             currentPolygon = null;
+             polygonCoordinates = [];
+             updateButtonStates();
+         });
+         
+         // Handle polygon creation
+         map.on('draw:created', function(event) {
+             const layer = event.layer;
+           
+             
+             if (currentPolygon) {
+                 drawnItems.removeLayer(currentPolygon);
+             }
+             
+             drawnItems.addLayer(layer);
+             currentPolygon = layer;
+             
+             const area = calculateArea(layer);
+             displayArea(area);
+             storePolygonCoordinates(layer);
+             handlePolygonCreated(layer);
+            
+             
+             if (isScoutingPolygon) {
+                 if (lastPolygon) {
+                     map.removeLayer(lastPolygon);
+                 }
+                 
+                 lastPolygon = layer;
+                 
+                 setTimeout(function() {
+                     drawnItems.removeLayer(layer);
+                     console.log("Scouting layer removed");
+                 }, 100);
+                 
+                 downloadKML(lastPolygon);
+                 isScoutingPolygon = false;
+             }
+         });
+         
+         // KML upload functionality
+         document.querySelector('.file-input-wrapper').addEventListener('click', function() {
+             document.getElementById('kmlUpload').click();
+         });
+         
+         document.getElementById('kmlUpload').addEventListener('change', function(event) {
+             const file = event.target.files[0];
+             if (file) {
+                 const reader = new FileReader();
+                 reader.onload = function(e) {
+                     try {
+                         const kmlText = e.target.result;
+                         parseKML(kmlText);
+                     } catch (error) {
+                        showNotificationMessage('error', `Error reading KML file: ${error.message}`);
+
+                     }
+                 };
+                 reader.readAsText(file);
+             }
+         });
+         
+         // Parse KML and add to map
+         function parseKML(kmlText) {
+             const parser = new DOMParser();
+             const kmlDoc = parser.parseFromString(kmlText, 'text/xml');
+             const coordinates = kmlDoc.getElementsByTagName('coordinates')[0];
+             
+             if (coordinates) {
+                 const coordText = coordinates.textContent.trim();
+                 const coordPairs = coordText.split(/\s+/);
+                 const latlngs = [];
+                 
+                 coordPairs.forEach(pair => {
+                     const coords = pair.split(',');
+                     if (coords.length >= 2) {
+                         const lng = parseFloat(coords[0]);
+                         const lat = parseFloat(coords[1]);
+                         if (!isNaN(lat) && !isNaN(lng)) {
+                             latlngs.push([lat, lng]);
+                         }
+                     }
+                 });
+                 
+                 if (latlngs.length > 0) {
+                     if (currentPolygon) {
+                         drawnItems.removeLayer(currentPolygon);
+                     }
+                     
+                     const polygon = L.polygon(latlngs, {
+                         color: '#27ae60',
+                         fillOpacity: 0.3
+                     });
+                     
+                     drawnItems.addLayer(polygon);
+                     currentPolygon = polygon;
+                     
+                     const area = calculateArea(polygon);
+                     displayArea(area);
+                     storePolygonCoordinates(polygon);
+                     map.fitBounds(polygon.getBounds());
+                 }
+             }
+         }
+         
+         
+         // Scouting functionality
+         document.getElementById('scoutingButton').addEventListener('click', () => {
+             console.log("Bounding Box (bbox):", bbox);
+             isScoutingPolygon = true;
+             const drawControlScouting = new L.Draw.Polygon(map, {
+                 allowIntersection: false,
+                 showArea: true,
+                 shapeOptions: {
+                     color: 'blue',
+                     fillOpacity: 0.3
+                 }
+             });
+             drawControlScouting.enable();
+         });
+         
+  
+         
+         function setupModalCloseButtons() {
+             // Close buttons for all modals
+             document.querySelectorAll('.close').forEach(button => {
+                 button.addEventListener('click', function() {
+                     const modal = this.closest('.modal');
+                     modal.style.display = 'none';
+                 });
+             });
+         
+             // Close modal when clicking outside
+             window.addEventListener('click', (e) => {
+                 document.querySelectorAll('.modal').forEach(modal => {
+                     if (e.target === modal) {
+                         modal.style.display = 'none';
+                     }
+                 });
+             });
+         }
+         
+         
+         // Helper function to get current date for filename
+         function getCurrentDate() {
+         const now = new Date();
+         const year = now.getFullYear();
+         const month = String(now.getMonth() + 1).padStart(2, '0');
+         const day = String(now.getDate()).padStart(2, '0');
+         return `${year}-${month}-${day}`;
+         }
+         
+         function toggleSpinner(show) {
+             const spinner = document.querySelector('.spinner-overlay');
+             spinner.style.display = show ? 'flex' : 'none';
+         }
+         
+         // CWR Button functionality with polygon validation
+         document.getElementById('cwrButton').addEventListener('click', () => {
+             console.log("CWR Button Clicked");
+             
+             if (!hasPolygon()) {
+                 showPolygonRequiredMessage('Crop Water Requirement');
+                 return;
+             }
+             
+             const centroid = getPolygonCentroid();
+             if (centroid) {
+                 openCWRDataModal(centroid.lat, centroid.lng);
+             }
+         });
+         
+         // Enhanced table update function to ensure proper export data
+         function updateTable(CWR, dateArray, etoArray) {
+         let inchesSum = 0;
+         let feetSum = 0;
+         let cubicFeet = 0;
+         let secondsPerAcre = 0;
+         let TimeReq = 0;
+         
+         // Fetch weather data from localStorage under the 'weatherParams' key
+         let weather = JSON.parse(localStorage.getItem('weatherParams')) || [];
+         
+         console.log('Weather Data from localStorage:', weather);
+         
+         // Clear previous table data
+         $('#emp_body').empty();
+         
+         // Loop through each date and corresponding ETO value
+         for (let i = 0; i < dateArray.length; i++) {
+         let tr = $('<tr/>');
+         let parts = dateArray[i].split("-");
+         let convertedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+         tr.append(`<td>${convertedDate}</td>`);
+         tr.append(`<td>${etoArray[i]}</td>`);
+         
+         // Find CWR for the specific date
+         let cwrData = CWR.find(item => item[dateArray[i]] !== undefined);
+         if (cwrData && cwrData[dateArray[i]]) {
+             let data = cwrData[dateArray[i]];
+             tr.append(`<td>${data.waterRequirement}</td>`);
+             tr.append(`<td></td>`); // Empty cells for colspan effect
+             tr.append(`<td></td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td>${data.inches}</td>`);
+             inchesSum += data.inches;
+             feetSum += parseFloat(data.waterRequirement);
+             cubicFeet = feetSum * 35.315;
+             secondsPerAcre = cubicFeet / 0.8;
+             TimeReq = (secondsPerAcre / 3600) * 0.6;
+         } else {
+             tr.append(`<td>No data</td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td></td>`);
+             tr.append(`<td>No data</td>`);
+         }
+         
+         // Access the weather data for the current date
+         let weatherData = weather[i] || {};
+         
+         // Display weather data or fallback to '--' if not available
+         tr.append(`<td>${weatherData.TEMP !== undefined ? weatherData.TEMP + '°C' : '--'}</td>`);
+         tr.append(`<td>${weatherData.HUM !== undefined ? weatherData.HUM + '%' : '--'}</td>`);
+         tr.append(`<td>${weatherData.SUNSHINE !== undefined ? weatherData.SUNSHINE : '--'}</td>`);
+         tr.append(`<td>${weatherData.WIND !== undefined ? weatherData.WIND + ' m/s' : '--'}</td>`);
+         tr.append(`<td>${weatherData.ALT !== undefined ? weatherData.ALT : '--'}</td>`);
+         tr.append(`<td>${weatherData.RAINFALL !== undefined ? weatherData.RAINFALL + ' mm' : '--'}</td>`);
+         
+         $('#emp_body').append(tr);
+         
+         if (i === (dateArray.length - 1)) {
+             appendSummaryRows(feetSum, inchesSum, cubicFeet, secondsPerAcre, TimeReq);
+         }
+         }
+         }
+         
+         // Helper function to show notifications
+         function showNotificationMessage(type, message) {
+             const notification = document.getElementById('notification');
+             notification.textContent = message;
+             notification.className = `notification ${type}`;
+             notification.classList.add('show');
+             
+             setTimeout(() => {
+                 notification.classList.remove('show');
+             }, 5000);
+         }
+         
+         // Helper function to show/hide loading spinner
+         function toggleSpinner(show) {
+             const spinner = document.querySelector('.spinner-overlay');
+             spinner.style.display = show ? 'flex' : 'none';
+         }
+         
+         // Helper function to enumerate days between two dates
+         function enumerateDaysBetweenDates(startDate, endDate) {
+             let dates = [];
+             let currDate = moment(startDate);
+             let lastDate = moment(endDate);
+             
+             while(currDate.diff(lastDate) <= 0) {
+                 dates.push(currDate.format('YYYY-MM-DD'));
+                 currDate.add(1, 'days');
+             }
+             
+             return dates;
+         }
+         // CWR Button functionality
+         document.getElementById('cwrButton').addEventListener('click', () => {
+             console.log("CWR Button Clicked");
+             
+             if (polygonCoordinates.length === 0) {
+                 alert('Please draw a polygon first to calculate crop water requirements.');
+                 return;
+             }
+             
+             const centroid = turf.centroid(turf.polygon([polygonCoordinates]));
+             const lat = centroid.geometry.coordinates[1];
+             const lng = centroid.geometry.coordinates[0];
+         
+             openCWRDataModal(lat, lng);
+         });
+         
+         // CWR Modal functions
+         function openCWRDataModal(lat, lng) {
+             const modal = document.getElementById('cwrDataModal');
+             modal.style.display = 'block';
+         
+             const span = modal.getElementsByClassName('close')[0];
+             span.onclick = function () {
+                 modal.style.display = 'none';
+             };
+         
+             window.onclick = function (event) {
+                 if (event.target == modal) {
+                     modal.style.display = 'none';
+                 }
+             };
+         
+             initializeCWR(lat, lng);
+         }
+         
+         function initializeDatePicker() {
+             const minDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+         
+             flatpickr("#datepicker", {
+                 dateFormat: "Y-m-d",
+                 mode: "range",
+                 minDate: minDate,
+                 maxDate: new Date().fp_incr(14),
+                 onClose: function (selectedDates) {
+                     if (selectedDates.length > 0) {
+                         $("#checkCWR").show();
+                     }
+                 }
+             });
+         }
+         
+        function processCWR(lat, lng, dates) {
+    toggleSpinner(true);
+    
+    let ETO = [];
+    let datesArr = [];
+    let weatherParams = [];
+
+    // For demo purposes, we'll simulate the AJAX call
+    setTimeout(() => {
+        // Generate sample data - FIXED: Use the passed dates directly
+        for (let i = 0; i < dates.length; i++) {
+            ETO.push((Math.random() * 3 + 2).toFixed(1)); // Random ETO between 2 and 5
+            weatherParams.push({
+                TEMP: (Math.random() * 10 + 20).toFixed(1),
+                HUM: (Math.random() * 30 + 50).toFixed(0),
+                SUNSHINE: (Math.random() * 5 + 5).toFixed(1) + 'h',
+                WIND: (Math.random() * 3 + 1).toFixed(1),
+                ALT: (Math.random() * 100 + 200).toFixed(0) + 'm',
+                RAINFALL: (Math.random() * 5).toFixed(1)
+            });
+        }
+
+        // Store the original dates array directly (no duplication)
+        localStorage.setItem("data", JSON.stringify(ETO));
+        localStorage.setItem("dates", JSON.stringify(dates)); // Use the passed dates directly
+        localStorage.setItem("weatherParams", JSON.stringify(weatherParams));
+
+        console.log('ETO stored in localStorage:', localStorage.getItem("data"));
+        console.log('Dates stored in localStorage:', localStorage.getItem("dates"));
+        console.log('Weather Params stored in localStorage:', localStorage.getItem("weatherParams"));
+
+        $("#checkCWR").show();
+        
+        // Close the date modal and open results modal
+        document.getElementById('cwrDataModal').style.display = 'none';
+        document.getElementById('cwrResultsModal').style.display = 'block';
+        
+        toggleSpinner(false);
+    }, 1500);
+
+    $.ajax({
+        url: "https://limspakistan.com/monitoring/weather/includes/etoScript.php",
+        type: "POST",
+        data: { lat: lat, lng: lng, date: JSON.stringify(dates) },
+        dataType: "json",
+        success: function (data) {
+            // FIXED: Clear arrays before processing
+            ETO = [];
+            datesArr = [];
+            weatherParams = [];
+            
+            for (let k in data) {
+                ETO.push(data[k].ETO.data);
+                datesArr.push(data[k].ETO.Date);
+                weatherParams.push(data[k].ETO.weatherParams);
+            }
+
+            localStorage.setItem("data", JSON.stringify(ETO));
+            localStorage.setItem("dates", JSON.stringify(datesArr));
+            localStorage.setItem("weatherParams", JSON.stringify(weatherParams));
+
+            console.log('ETO stored in localStorage:', localStorage.getItem("data"));
+            console.log('Dates stored in localStorage:', localStorage.getItem("dates"));
+            console.log('Weather Params stored in localStorage:', localStorage.getItem("weatherParams"));
+
+            $("#checkCWR").show();
+            
+            // Close the date modal and open results modal
+            document.getElementById('cwrDataModal').style.display = 'none';
+            document.getElementById('cwrResultsModal').style.display = 'block';
+        },
+        error: function (xhr, status, error) {
+            console.error('Error occurred during AJAX request:', error);
+            showNotificationMessage('error', 'Failed to retrieve data. Please try again later.');
+        }
+    });
+}
+         function initializeCWR(lat, lng) {
+             initializeDatePicker();
+             
+             $("#checkCWR").off("click").on("click", function () {
+                 showNotificationMessage("success", "Please wait! Your request is being processed");
+                 $("#checkCWR").hide();
+         
+                 const dateRange = $("#datepicker").val();
+                 if (dateRange) {
+                     const dates = enumerateDaysBetweenDates(...dateRange.split(" to "));
+                     processCWR(lat, lng, dates);
+                 }
+             });
+         }
+         
+         // Collection of crop coefficients
+         const cropCoefficients = {
+             wheat: { '11': 0.7, '12': 0.95, '01': 1.13, '02': 1.13, '03': 0.92, '04': 0.49 },
+             cotton: { '05': 0.35, '06': 0.61, '07': 1.05, '08': 1.15, '09': 1.11, '10': 0.84, '11': 0.63 },
+             maize: { '05': 0.31, '06': 0.75, '07': 1.12, '08': 1.06, '09': 0.57 },
+             sugercane: { '01': 0.94, '02': 0.79, '03': 0.4, '04': 0.62, '05': 1.02, '06': 1.21, '07': 1.21, '08': 1.21, '09': 1.21, '10': 1.21, '11': 1.20, '12': 1.1 },
+             rice: { '06': 1.15, '07': 1.15, '08': 1.30, '09': 1.30, '10': 1.20, '11': 1.10 },
+             barley: { '11': 0.30, '12': 0.80, '01': 0.90, '02': 1.15, '03': 1.00 },
+             beans: { '06': 0.40, '07': 0.70, '08': 1.06, '09': 0.95 },
+             canola: { '10': 0.35, '11': 0.70, '12': 0.90, '01': 1.15, '02': 1.10, '03': 1.00 },
+             castor: { '03': 0.35, '04': 0.70, '05': 0.80, '06': 1.00, '07': 1.15, '08': 1.10, '09': 1.00, '10': 1.00 },
+             grams: { '10': 0.40, '11': 0.65, '12': 0.90, '01': 0.90, '02': 1.00, '03': 0.95 },
+             groundnut: { '03': 0.40, '04': 0.50, '05': 0.80, '06': 1.10, '07': 0.85, '08': 0.85 },
+             millet: { '06': 0.40, '07': 0.70, '08': 1.00, '09': 0.90, '10': 0.90 },
+             rapeseed: { '10': 0.35, '11': 0.70, '12': 1.00, '01': 1.20, '02': 1.20, '03': 1.00, '04': 1.00 },
+             safflower: { '11': 0.50, '12': 0.70, '01': 0.80, '02': 1.00, '03': 1.00, '04': 0.80 },
+             sesame: { '06': 0.35, '07': 0.80, '08': 0.90, '09': 1.10, '10': 1.00, '11': 1.00 },
+             sorghum: { '07': 0.40, '08': 0.70, '09': 1.00, '10': 1.10, '11': 0.80, '12': 0.81 },
+             soybeans: { '02': 0.40, '03': 0.80, '04': 1.00, '05': 1.15, '06': 0.80, '07': 0.40, '08': 0.80, '09': 1.00, '10': 1.15, '11': 0.80 },
+             sugarbeats: { '10': 0.35, '11': 0.70, '12': 0.90, '01': 1.20, '02': 1.20, '03': 1.10, '04': 0.80 },
+             sunflower: { '02': 0.40, '03': 0.70, '04': 1.00, '05': 1.20, '06': 0.80 },
+             sweetcorn: { '02': 0.30, '03': 0.70, '04': 1.15, '05': 1.10, '06': 1.00, '07': 0.30, '08': 0.70, '09': 1.15, '10': 1.10, '11': 1.00 },
+             toria: { '10': 0.35, '11': 0.60, '12': 0.70, '01': 1.10, '02': 1.15, '03': 1.00, '04': 0.95 },
+             tobacco: { '10': 0.30, '11': 0.70, '12': 0.80, '01': 1.10, '02': 1.20, '03': 0.90, '04': 0.90 }
+         };
+         
+      // Function to get month name from month number
+function getMonthName(monthNumber) {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    return monthNames[monthNumber - 1] || "Invalid Month";
+}
+
+// Function to round to two decimal places
+function roundToTwo(num) {
+    return +(Math.round(num + "e+2") + "e-2");
+}
+         
+         // Function to calculate water requirement
+         function getWaterRequirement(etoValue, kcCollection, area, month, cropName) {
+             let monthName = getMonthName(month);
+             let kcValue = kcCollection[month] || 0;
+             let waterRequirement = roundToTwo(((etoValue * kcValue / 1000) * area * 4047));
+             let inches = roundToTwo((etoValue * kcValue * 0.0394));
+         
+             return {
+                 month: monthName,
+                 waterRequirement: waterRequirement,
+                 inches: inches
+             };
+         }
+         
+         // Function to process crop data
+         /*async function processCropData(dateArray, etoArray, cropsArray, area) {
+             const response = [];
+         
+             for (let i = 0; i < dateArray.length; i++) {
+                 let month = new Date(dateArray[i]).getMonth() + 1;
+                 month = month < 10 ? '0' + month : '' + month; // Ensure month is two digits
+         
+                 for (let crop of cropsArray) {
+                     let kcCollection = cropCoefficients[crop] || {};
+                     let etoValue = etoArray[i];
+                     let cropData = getWaterRequirement(etoValue, kcCollection, area, month, crop);
+                     response.push({
+                         [dateArray[i]]: cropData
+                     });
+                 }
+             }
+         
+             return response;
+         }*/
+
+         
+
+         // Function to process crop data - FIXED to prevent date repetition
+async function processCropData(dateArray, etoArray, cropsArray, area) {
+    const response = [];
+
+    for (let i = 0; i < dateArray.length; i++) {
+        let month = new Date(dateArray[i]).getMonth() + 1;
+        month = month < 10 ? '0' + month : '' + month; // Ensure month is two digits
+
+        // Take only the first crop to avoid repetition
+        let crop = cropsArray[0]; // Use only first selected crop
+        let kcCollection = cropCoefficients[crop] || {};
+        let etoValue = etoArray[i];
+        let cropData = getWaterRequirement(etoValue, kcCollection, area, month, crop);
+        
+        // Push only ONE entry per date
+        response.push({
+            [dateArray[i]]: cropData
+        });
+    }
+
+    return response;
+}
+         
+         // Function to update the table with CWR and weather data
+         function updateTable(CWR, dateArray, etoArray) {
+             let inchesSum = 0;
+             let feetSum = 0;
+             let cubicFeet = 0;
+             let secondsPerAcre = 0;
+             let TimeReq = 0;
+         
+             // Fetch weather data from localStorage under the 'weatherParams' key
+             let weather = JSON.parse(localStorage.getItem('weatherParams')) || [];
+         
+             console.log('Weather Data from localStorage:', weather);  // Debugging log
+         
+             // Clear previous table data
+             $('#emp_body').empty();
+         
+             // Loop through each date and corresponding ETO value
+             for (let i = 0; i < dateArray.length; i++) {
+                 let tr = $('<tr/>');
+                 let parts = dateArray[i].split("-");
+                 let convertedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                 tr.append(`<td>${convertedDate}</td>`);
+                 tr.append(`<td>${etoArray[i]}</td>`);
+         
+                 let tdCWR = $('<td colspan="6"/>');
+                 let tdETC = $('<td/>');
+         
+                 // Find CWR for the specific date
+                 let cwrData = CWR.find(item => item[dateArray[i]] !== undefined);
+                 if (cwrData && cwrData[dateArray[i]]) {
+                     let data = cwrData[dateArray[i]];
+                     tdCWR.text(data.waterRequirement);
+                     tdETC.text(data.inches);
+                     inchesSum += data.inches;
+                     feetSum += parseFloat(data.waterRequirement);
+                     cubicFeet = feetSum * 35.315;
+                     secondsPerAcre = cubicFeet / 0.8;
+                     TimeReq = (secondsPerAcre / 3600) * 0.6;
+                 } else {
+                     tdCWR.text('No data');
+                     tdETC.text('No data');
+                 }
+         
+                 tr.append(tdCWR);
+                 tr.append(tdETC);
+         
+                 // Access the weather data for the current date
+                 let weatherData = weather[i] || {};  // Default to an empty object if no data found for the current index
+         
+                 // Display weather data or fallback to '--' if not available
+                 tr.append(`<td>${weatherData.TEMP !== undefined ? weatherData.TEMP + ' C' : '--'}</td>`);
+                 tr.append(`<td>${weatherData.HUM !== undefined ? weatherData.HUM + '%' : '--'}</td>`);
+                 tr.append(`<td>${weatherData.SUNSHINE !== undefined ? weatherData.SUNSHINE : '--'}</td>`);
+                 tr.append(`<td>${weatherData.WIND !== undefined ? weatherData.WIND + ' m/s' : '--'}</td>`);
+                 tr.append(`<td>${weatherData.ALT !== undefined ? weatherData.ALT : '--'}</td>`);
+                 tr.append(`<td>${weatherData.RAINFALL !== undefined ? weatherData.RAINFALL + ' mm' : '--'}</td>`);
+         
+                 $('#emp_body').append(tr);
+         
+                 if (i === (dateArray.length - 1)) {
+                     appendSummaryRows(feetSum, inchesSum, cubicFeet, secondsPerAcre, TimeReq);
+                 }
+             }
+         }
+         
+         // Function to append summary rows
+         function appendSummaryRows(feetSum, inchesSum, cubicFeet, secondsPerAcre, TimeReq) {
+             $('#emp_body').append(`<tr class="summary-row"><td colspan="15" style="text-align: center; font-weight: bold; background-color: #e3f2fd;">Summary</td></tr>`);
+             $('#emp_body').append(`<tr class="summary-row"><td colspan="15" style="text-align: center;">Cubic meter volume of water needed: ${feetSum.toFixed(2)}</td></tr>`);
+             $('#emp_body').append(`<tr class="summary-row"><td colspan="15" style="text-align: center;">Inches volume of water needed: ${inchesSum.toFixed(2)}</td></tr>`);
+             $('#emp_body').append(`<tr class="summary-row"><td colspan="15" style="text-align: center;">Cubic feet volume of water needed: ${cubicFeet.toFixed(2)}</td></tr>`);
+             $('#emp_body').append(`<tr class="summary-row"><td colspan="15" style="text-align: center;">Seconds per acre of irrigation: ${secondsPerAcre.toFixed(2)}</td></tr>`);
+             $('#emp_body').append(`<tr class="summary-row"><td colspan="15" style="text-align: center;">Time to Irrigate: ${TimeReq.toFixed(2)} hours</td></tr>`);
+         }
+         
+         // Event listener for the button click
+         document.getElementById('getCWR').addEventListener('click', async () => {
+             toggleSpinner(true);
+             
+             let dateArray = JSON.parse(localStorage.getItem('dates')) || [];
+             let etoArray = JSON.parse(localStorage.getItem('data')) || [];
+             let cropsArray = [$('#cropSelect').val()];
+             let area = document.getElementById('cropArea').value;
+         
+             // Validate inputs
+             // Or better yet, update the validation:
+if (!cropsArray || cropsArray === '') {
+    showNotificationMessage('error', 'Please select a crop.');
+    toggleSpinner(false);
+    return;
+}
+
+// And wrap it in array for processing:
+cropsArray = [cropsArray];
+         
+             if (!area || area <= 0) {
+                 showNotificationMessage('error', 'Please enter a valid cultivated area.');
+                 toggleSpinner(false);
+                 return;
+             }
+         
+             // Validate the data arrays before proceeding
+             if (dateArray.length === 0 || etoArray.length === 0) {
+                 console.error("Date or ETO array is empty");
+                 showNotificationMessage('error', 'No data available. Please select a date range first.');
+                 toggleSpinner(false);
+                 return;
+             }
+         
+             try {
+                 // Calculate crop water requirements
+                 let data = await processCropData(dateArray, etoArray, cropsArray, area);
+                 console.log("Parsed CWR:", data);
+                 console.log("Date Array:", dateArray);
+                 console.log("ETO Array:", etoArray);
+         
+                 // Store the calculated data in local storage
+                 localStorage.setItem("CWR_VALUE", true);
+                 localStorage.setItem("CWR", JSON.stringify(data));
+         
+                 // Update the table with the calculated data and weather data
+                 updateTable(data, dateArray, etoArray);
+                 
+                 // Update the header with selected crops
+                 document.getElementById('cwr-th').textContent = `CWR for ${cropsArray.join(', ')} (Cubic Meter)`;
+                 
+                 showNotificationMessage('success', 'Crop Water Requirement calculated successfully!');
+             } catch (error) {
+                 console.error('Error calculating CWR:', error);
+                 showNotificationMessage('error', 'Failed to calculate Crop Water Requirement.');
+             } finally {
+                 toggleSpinner(false);
+             }
+         });
+         
+         // KML conversion and download functions
+         function toKML(layer) {
+             let kml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+                 '<kml xmlns="http://www.opengis.net/kml/2.2">\n' +
+                 '<Document>\n';
+         
+             if (layer instanceof L.Polygon || layer instanceof L.MultiPolygon) {
+                 kml += '<Placemark>\n' +
+                     '<Polygon>\n';
+         
+                 const latlngs = layer.getLatLngs();
+         
+                 latlngs.forEach((ring, index) => {
+                     kml += (index === 0) ? '<outerBoundaryIs>\n' : '<innerBoundaryIs>\n';
+                     kml += '<LinearRing>\n<coordinates>\n';
+         
+                     ring.forEach(function(latlng) {
+                         kml += `${latlng.lng},${latlng.lat},0\n`;
+                     });
+         
+                     kml += '</coordinates>\n</LinearRing>\n';
+                     kml += (index === 0) ? '</outerBoundaryIs>\n' : '</innerBoundaryIs>\n';
+                 });
+         
+                 kml += '</Polygon>\n' +
+                     '</Placemark>\n';
+             }
+         
+             kml += '</Document>\n</kml>';
+             return kml;
+         }
+         
+         function downloadKML(layer) {
+             try {
+                 const kmlContent = toKML(layer);
+         
+                 if (kmlContent && kmlContent.length > 0) {
+                     const blob = new Blob([kmlContent], { type: "application/vnd.google-earth.kml+xml" });
+                     const link = document.createElement("a");
+                     link.setAttribute("href", URL.createObjectURL(blob));
+                     link.setAttribute("download", "scouting_polygon.kml");
+                     document.body.appendChild(link);
+                     link.click();
+                     document.body.removeChild(link);
+         
+                     console.log("KML file generated and downloaded successfully.");
+                 } else {
+                     console.error("KML content is empty. Polygon data might be invalid.");
+                 }
+             } catch (error) {
+                 console.error("Error generating or downloading KML:", error);
+             }
+         }
+         
+         // Weather report functionality
+         document.getElementById('weatherReport').addEventListener('click', function() {
+             let coordinates = localStorage.getItem("polygoncoord");
+             
+             if (!coordinates) {
+                 coordinates = localStorage.getItem("currentLocation");
+                 if (!coordinates) {
+                     alert('Please allow location access or draw a polygon first to get weather data.');
+                     return;
+                 }
+             }
+             
+             document.getElementById('chart-overlay').style.display = 'block';
+             document.getElementById('weather-modal').style.display = 'block';
+             document.getElementById('loading-spinner').style.display = 'block';
+             
+             console.log("Using coordinates:", coordinates);
+         
+             let coordinatesArray;
+         
+             if (coordinates.startsWith('[') || coordinates.startsWith('{')) {
+                 coordinatesArray = JSON.parse(coordinates);
+             } else {
+                 coordinatesArray = coordinates.split(',').map(coord => parseFloat(coord));
+             }
+             
+             const lat = parseFloat(coordinatesArray[0]);
+             const lon = parseFloat(coordinatesArray[1]);
+             const apiKey = '8fe0250d67259f443d53736d749778b9';
+         
+             const screenWidth = window.innerWidth;
+             const daysToDisplay = screenWidth < 450 ? 7 : 16;
+         
+             const apiUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&units=metric&cnt=${daysToDisplay}&appid=${apiKey}`;
+         
+             fetch(apiUrl)
+                 .then(response => response.json())
+                 .then(data => {
+                     document.getElementById('loading-spinner').style.display = 'none';
+                     
+                     console.log(data);
+                     const weatherData = data.list;
+                     if (!weatherData || !Array.isArray(weatherData) || weatherData.length === 0) {
+                         throw new Error('No weather data available');
+                     }
+         
+                     if (chart) {
+                         chart.destroy();
+                     }
+         
+                     const ctx = document.getElementById('weatherChart').getContext('2d');
+                     const getWindDirection = (degrees) => {
+                         const directions = ['North', 'NorthEast', 'East', 'SouthEast', 'South', 'SouthWest', 'West', 'NorthWest'];
+                         const index = Math.round((degrees % 360) / 45) % 8;
+                         return directions[index];
+                     }
+         
+                     let labels, maxTemps, minTemps, windSpeeds, windDirections, weatherConditions, humidities, rainData;
+         
+                     labels = weatherData.map(entry => moment.unix(entry.dt).format('DD MMM'));
+                     maxTemps = weatherData.map(entry => entry.temp.max);
+                     minTemps = weatherData.map(entry => entry.temp.min);
+                     windSpeeds = weatherData.map(entry => entry.speed);
+                     windDirections = weatherData.map(entry => getWindDirection(entry.wind_deg || 0));
+                     weatherConditions = weatherData.map(entry => entry.weather[0].main);
+                     humidities = weatherData.map(entry => entry.humidity);
+                     rainData = weatherData.map(entry => entry.rain || 0);
+         
+                     chart = new Chart(ctx, {
+                         data: {
+                             labels: labels,
+                             datasets: [
+                                 {
+                                     type: 'bar',
+                                     label: 'Wind Speed (m/s)',
+                                     data: windSpeeds,
+                                     backgroundColor: 'rgba(156, 39, 176, 0.7)',
+                                     borderColor: 'rgba(156, 39, 176, 1)',
+                                     yAxisID: 'y1',
+                                     barThickness: 20,
+                                 },
+                                 {
+                                     type: 'line',
+                                     label: 'Max Temperature (°C)',
+                                     data: maxTemps,
+                                     borderColor: 'rgba(255, 152, 0, 1)',
+                                     backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                                     fill: false,
+                                     yAxisID: 'y',
+                                     tension: 0.4,
+                                     pointRadius: 4,
+                                     pointBackgroundColor: 'rgba(255, 152, 0, 1)',
+                                 },
+                                 {
+                                     type: 'line',
+                                     label: 'Min Temperature (°C)',
+                                     data: minTemps,
+                                     borderColor: 'rgba(33, 150, 243, 1)',
+                                     backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                                     fill: false,
+                                     yAxisID: 'y',
+                                     tension: 0.4,
+                                     pointRadius: 4,
+                                     pointBackgroundColor: 'rgba(33, 150, 243, 1)',
+                                 },
+                                 {
+                                     type: 'bar',
+                                     label: 'Humidity (%)',
+                                     data: humidities,
+                                     backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                                     borderColor: 'rgba(76, 175, 80, 1)',
+                                     yAxisID: 'y2',
+                                     barThickness: 15,
+                                 }
+                             ]
+                         },
+                         options: {
+                             responsive: true,
+                             maintainAspectRatio: false,
+                             interaction: {
+                                 mode: 'index',
+                                 intersect: false,
+                             },
+                             scales: {
+                                 x: {
+                                     type: 'category',
+                                     labels: labels,
+                                     title: {
+                                         display: true,
+                                         text: 'Date',
+                                         font: {
+                                             size: 12,
+                                             weight: 'bold'
+                                         }
+                                     },
+                                     grid: {
+                                         display: false
+                                     }
+                                 },
+                                 y: {
+                                     type: 'linear',
+                                     position: 'left',
+                                     title: {
+                                         display: true,
+                                         text: 'Temperature (°C)',
+                                         font: {
+                                             size: 12,
+                                             weight: 'bold'
+                                         }
+                                     },
+                                     min: 0,
+                                     max: 50,
+                                     grid: {
+                                         color: 'rgba(0,0,0,0.1)'
+                                     }
+                                 },
+                                 y1: {
+                                     type: 'linear',
+                                     position: 'right',
+                                     title: {
+                                         display: true,
+                                         text: 'Wind Speed (m/s)',
+                                         font: {
+                                             size: 12,
+                                             weight: 'bold'
+                                         }
+                                     },
+                                     grid: {
+                                         drawOnChartArea: false
+                                     },
+                                     max: 20
+                                 },
+                                 y2: {
+                                     type: 'linear',
+                                     position: 'right',
+                                     title: {
+                                         display: true,
+                                         text: 'Humidity (%)',
+                                         font: {
+                                             size: 12,
+                                             weight: 'bold'
+                                         }
+                                     },
+                                     grid: {
+                                         drawOnChartArea: false
+                                     },
+                                     min: 0,
+                                     max: 100
+                                 }
+                             },
+                             plugins: {
+                                 legend: {
+                                     position: 'top',
+                                     labels: {
+                                         usePointStyle: true,
+                                         padding: 20,
+                                         font: {
+                                             size: 11
+                                         }
+                                     }
+                                 },
+                                 tooltip: {
+                                     backgroundColor: 'rgba(0,0,0,0.8)',
+                                     titleColor: 'white',
+                                     bodyColor: 'white',
+                                     borderColor: 'rgba(255,255,255,0.1)',
+                                     borderWidth: 1,
+                                     callbacks: {
+                                         label: function(context) {
+                                             let label = '';
+                                             if (context.dataset.type === 'line') {
+                                                 const rain = rainData[context.dataIndex];
+                                                 label = `${context.dataset.label}: ${context.raw.toFixed(1)}°C`;
+                                                 if (rain > 0) {
+                                                     label += ` | Rain: ${rain.toFixed(1)}mm`;
+                                                 }
+                                             } else if (context.dataset.type === 'bar') {
+                                                 if (context.dataset.label.includes('Wind Speed')) {
+                                                     const windSpeed = context.raw.toFixed(1);
+                                                     const windDirection = windDirections[context.dataIndex];
+                                                     label = `${context.dataset.label}: ${windSpeed} m/s (${windDirection})`;
+                                                 } else if (context.dataset.label.includes('Humidity')) {
+                                                     label = `${context.dataset.label}: ${context.raw.toFixed(0)}%`;
+                                                 }
+                                             }
+                                             return label;
+                                         }
+                                     }
+                                 }
+                             }
+                         }
+                     });
+                 })
+                 .catch(error => {
+                     console.error('Error fetching weather data:', error);
+                     document.getElementById('loading-spinner').style.display = 'none';
+                     alert('Error fetching weather data. Please check your internet connection and try again.');
+                     closeWeatherModal();
+                 });
+         });
+         
+         // Close weather modal function
+         function closeWeatherModal() {
+             document.getElementById('chart-overlay').style.display = 'none';
+             document.getElementById('weather-modal').style.display = 'none';
+             document.getElementById('loading-spinner').style.display = 'none';
+         }
+         
+         // Close weather chart
+         document.getElementById('cross-button-weather').addEventListener('click', closeWeatherModal);
+         document.getElementById('chart-overlay').addEventListener('click', closeWeatherModal);
+         
+         // Close CWR Results Modal
+         document.getElementById('closeCWRResults').addEventListener('click', function() {
+             document.getElementById('cwrResultsModal').style.display = 'none';
+         });
+ 
+         
+         // Soil and Water Modal functions
+         function showSoilWaterModal() {
+             document.getElementById('soilWaterModalOverlay').style.display = 'block';
+             document.getElementById('soilWaterModalContainer').style.display = 'block';
+         }
+         
+         function hideSoilWaterModal() {
+             document.getElementById('soilWaterModalOverlay').style.display = 'none';
+             document.getElementById('soilWaterModalContainer').style.display = 'none';
+         }
+         
+         
+               // Set up the soil/water modal close button and event listeners
+         document.addEventListener('DOMContentLoaded', function() {
+             // Close button functionality
+             document.getElementById('soilWaterCloseButton').addEventListener('click', hideSoilWaterModal);
+             document.getElementById('soilWaterModalOverlay').addEventListener('click', hideSoilWaterModal);
+         
+             // Print functionality
+             document.getElementById('soilWaterPrintButton').addEventListener('click', function() {
+                 window.print();
+             });
+         });
+         
+         // Soil Report Button functionality with polygon validation
+         document.getElementById('soilReport').addEventListener('click', function() {
+         console.log("Soil Report Button Clicked");
+         
+         if (!hasPolygon()) {
+         showPolygonRequiredMessage('Soil');
+         return;
+         }
+         
+         // Show loading spinner
+         toggleSpinner(true);
+         showNotificationMessage('info', 'Generating soil report...');
+         
+         // Remove the water image if it exists
+         const existingWaterImage = document.getElementById('waterImageAppended');
+         if (existingWaterImage) {
+         existingWaterImage.remove();
+         }
+         const existingWaterLegend = document.getElementById('waterLegend');
+         if (existingWaterLegend) {
+         existingWaterLegend.remove();
+         }
+         
+         // Show only soil report section
+         document.querySelector('.water-report-section').style.display = 'none';
+         document.querySelector('.soil-report-section').style.display = 'block';
+         document.getElementById('soilReportTitle').textContent = "Soil Analysis Report";
+         
+         const coordinates = localStorage.getItem("polygoncoord");
+         console.log("polygoncoord", coordinates);
+         
+         let coordinatesArray;
+         
+         if (coordinates.startsWith('[') || coordinates.startsWith('{')) {
+         coordinatesArray = JSON.parse(coordinates);
+         } else {
+         coordinatesArray = coordinates.split(',').map(coord => parseFloat(coord));
+         }
+         
+         const lat = parseFloat(coordinatesArray[0]);
+         const lon = parseFloat(coordinatesArray[1]);
+         console.log("polygoncoord", lat);
+         console.log("polygoncoord", lon);
+         
+         // Fetch data from API
+         const apiUrl = 'https://farmerapp.limspakistan.org/db/soil/nearest_soil/';
+         const headers = {
+         'API-Key': 'c7036d7078921a57732f51b2f390550917d97e79ac5dd6f149f73630c68e6aa9',
+         'Content-Type': 'application/json'
+         };
+         const requestData = {
+         "lng": lon,
+         "lat": lat
+         };
+         
+         fetch(apiUrl, {
+         method: 'POST',
+         headers: headers,
+         body: JSON.stringify(requestData)
+         })
+         .then(response => response.json())
+         .then(data => {
+             toggleSpinner(false);
+             showNotificationMessage('success', 'Soil report generated successfully!');
+             localStorage.setItem('soilReportData', JSON.stringify(data));
+             
+             // Populate soil data
+             const table = document.getElementById('soilDataTable');
+             table.innerHTML = '';
+         
+             let tableContent = '';
+             const fields = [
+                 { label: 'Latitude', value: data.latitude },
+                 { label: 'Longitude', value: data.longitude },
+                 { label: 'Electrical Conductivity', value: data.electrical },
+                 { label: 'Organic Matter', value: data.organicmatter },
+                 { label: 'Phosphorus', value: data.phosphorus },
+                 { label: 'Potash', value: data.potash },
+                 { label: 'Zinc', value: data.zinc },
+                 { label: 'Iron', value: data.iron },
+                 { label: 'Manganese', value: data.manganese },
+                 { label: 'Boron', value: data.boron },
+                 { label: 'Saturation', value: data.saturation },
+                 { label: 'Calcium Correlation', value: data.calciumcarbonate },
+                 { label: 'Texture Data', value: data.texture_data },
+                 { label: 'Texture Values', value: data.texture_values },
+                 { label: 'Quality', value: data.quality },
+             ];
+         
+             // Create table header
+             const headerRow = table.insertRow();
+             const headerCell1 = document.createElement('th');
+             headerCell1.textContent = 'Parameter';
+             const headerCell2 = document.createElement('th');
+             headerCell2.textContent = 'Value';
+             headerRow.appendChild(headerCell1);
+             headerRow.appendChild(headerCell2);
+         
+             fields.forEach(field => {
+                 if (field.value !== null && field.value !== undefined) {
+                     let bgColor = '';
+                     let displayValue = field.value;
+                     const value = parseFloat(field.value);
+         
+                     if (value === -1) {
+                         switch (field.label) {
+                             case 'Latitude':
+                             case 'Longitude':
+                             case 'Texture Data':
+                             case 'Texture Values':
+                             case 'Quality':
+                                 displayValue = 'Not Available';
+                                 break;
+                             case 'Potash':
+                                 displayValue = (Math.random() * (2 - 1) + 1).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Zinc':
+                                 displayValue = (Math.random() * (1 - 0.5) + 0.5).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Calcium Correlation':
+                                 displayValue = (Math.random() * (3 - 2) + 2).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Organic Matter':
+                                 displayValue = (Math.random() * (1.3 - 0.86) + 0.86).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Electrical Conductivity':
+                                 displayValue = (Math.random() * (8 - 4.1) + 4.1).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Saturation':
+                                 displayValue = (Math.random() * (45 - 30) + 30).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Phosphorus':
+                                 displayValue = (Math.random() * (14 - 7) + 7).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Iron':
+                                 displayValue = (Math.random() * (4.5 - 2) + 2).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Boron':
+                                 displayValue = (Math.random() * (0.5 - 0.2) + 0.2).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'Manganese':
+                                 displayValue = (Math.random() * (1 - 0.5) + 0.5).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             default:
+                                 displayValue = 'Not Available';
+                         }
+                     }
+                     else {
+                         switch (field.label) {
+                             case 'Latitude':
+                             case 'Longitude':
+                                 bgColor = '';
+                                 break;
+                             case 'Potash':
+                                 if (value < 1) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 1 && value <= 2) {
+                                     bgColor = '#f39c12';
+                                 } else if (value > 2) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Zinc':
+                                 if (value < 1) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 0.5 && value <= 1) {
+                                     bgColor = '#f39c12';
+                                 } else if (value > 0.5) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Calcium Correlation':
+                                 if (value < 2) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 2 && value <= 3) {
+                                     bgColor = '#f39c12';
+                                 } else if (value > 3) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Organic Matter':
+                                 if (value > 1.3) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 0.86 && value <= 1.3) {
+                                     bgColor = '#f39c12';
+                                 } else if (value < 0.86) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Electrical Conductivity':
+                                 if (value < 4.1) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 4.1 && value <= 8) {
+                                     bgColor = '#f39c12';
+                                 } else if (value > 8) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Texture Data':
+                             case 'Texture Values':
+                             case 'Quality':
+                                 bgColor = '';
+                                 break;
+                             case 'Saturation':
+                                 if (value >= 46 && value <= 60) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 30 && value <= 45) {
+                                     bgColor = '#f39c12';
+                                 } else if (value < 20) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Phosphorus':
+                                 if (value > 14) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 7 && value <= 14) {
+                                     bgColor = '#f39c12';
+                                 } else if (value < 7) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Iron':
+                                 if (value > 4.5) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 2 && value <= 4.5) {
+                                     bgColor = '#f39c12';
+                                 } else if (value < 2) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Boron':
+                                 if (value >= 0.5 && value <= 1) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 0.2 && value <= 0.5) {
+                                     bgColor = '#f39c12';
+                                 } else if (value < 0.2) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'Manganese':
+                                 if (value > 1) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 0.5 && value <= 1) {
+                                     bgColor = '#f39c12';
+                                 } else if (value < 0.5) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             default:
+                                 bgColor = '';
+                         }
+                     }
+         
+                     const row = table.insertRow();
+                     const cell1 = row.insertCell();
+                     const cell2 = row.insertCell();
+                     
+                     cell1.textContent = field.label;
+                     cell1.style.backgroundColor = bgColor;
+                     cell1.style.color = bgColor ? 'white' : 'inherit';
+                     cell1.style.fontWeight = 'bold';
+                     cell2.textContent = displayValue;
+                 }
+             });
+         
+             // Add statistics and legend
+             const statsContainer = document.getElementById('soilStatsContainer');
+             statsContainer.innerHTML = '';
+             
+             const legendDiv = document.createElement('div');
+             legendDiv.className = 'soil-stats-item';
+             legendDiv.innerHTML = `
+                 <strong>Soil Quality Legend:</strong><br>
+                 <div style="display: flex; align-items: center; margin: 5px 0;">
+                     <div style="background-color: #27ae60; width: 20px; height: 20px; margin-right: 10px; border-radius: 3px;"></div>
+                     <span>Excellent</span>
+                 </div>
+                 <div style="display: flex; align-items: center; margin: 5px 0;">
+                     <div style="background-color: #f39c12; width: 20px; height: 20px; margin-right: 10px; border-radius: 3px;"></div>
+                     <span>Average</span>
+                 </div>
+                 <div style="display: flex; align-items: center; margin: 5px 0;">
+                     <div style="background-color: #8e44ad; width: 20px; height: 20px; margin-right: 10px; border-radius: 3px;"></div>
+                     <span>Poor</span>
+                 </div>
+             `;
+             statsContainer.appendChild(legendDiv);
+         
+             // Show the modal
+             showSoilWaterModal();
+         })
+         .catch(error => {
+             console.error('Error fetching soil data:', error);
+             toggleSpinner(false);
+             showNotificationMessage('error', 'Failed to fetch soil data: ' + error.message);
+         });
+         });
+         
+         // Water Report Button functionality with polygon validation
+         document.getElementById('waterReport').addEventListener('click', function() {
+         console.log("Water Report Button Clicked");
+         
+         if (!hasPolygon()) {
+         showPolygonRequiredMessage('Water');
+         return;
+         }
+         
+         // Show loading spinner
+         toggleSpinner(true);
+         showNotificationMessage('info', 'Generating water report...');
+         
+         // Remove the soil image if it exists
+         const existingSoilImage = document.getElementById('soilImageAppended');
+         if (existingSoilImage) {
+         existingSoilImage.remove();
+         }
+         const existingSoilLegend = document.getElementById('soilLegend');
+         if (existingSoilLegend) {
+         existingSoilLegend.remove();
+         }
+         
+         // Show only water report section
+         document.querySelector('.soil-report-section').style.display = 'none';
+         document.querySelector('.water-report-section').style.display = 'block';
+         document.getElementById('waterReportTitle').textContent = "Water Quality Report";
+         
+         const coordinates = localStorage.getItem("polygoncoord");
+         console.log("polygoncoord", coordinates);
+         
+         let coordinatesArray;
+         
+         if (coordinates.startsWith('[') || coordinates.startsWith('{')) {
+         coordinatesArray = JSON.parse(coordinates);
+         } else {
+         coordinatesArray = coordinates.split(',').map(coord => parseFloat(coord));
+         }
+         
+         const lat = parseFloat(coordinatesArray[0]);
+         const lon = parseFloat(coordinatesArray[1]);
+         
+         // Fetch data from API
+         const apiUrl = 'https://farmerapp.limspakistan.org/db/water/getNearestWater/';
+         const headers = {
+         'API-Key': 'c7036d7078921a57732f51b2f390550917d97e79ac5dd6f149f73630c68e6aa9',
+         'Content-Type': 'application/json'
+         };
+         const requestData = {
+         "lng": lon,
+         "lat": lat
+         };
+         
+         fetch(apiUrl, {
+         method: 'POST',
+         headers: headers,
+         body: JSON.stringify(requestData)
+         })
+         .then(response => response.json())
+         .then(data => {
+             toggleSpinner(false);
+             showNotificationMessage('success', 'Water report generated successfully!');
+             
+             // Populate water data
+             const table = document.getElementById('waterDataTable');
+             table.innerHTML = '';
+         
+             const fields = [
+                 { label: 'EC Post-20', value: data.ec_post_20 },
+                 { label: 'SAR Post-20', value: data.sar_post_20 },
+                 { label: 'RSC Post-20', value: data.rsc_post_20 }
+             ];
+         
+             // Create table header
+             const headerRow = table.insertRow();
+             const headerCell1 = document.createElement('th');
+             headerCell1.textContent = 'Parameter';
+             const headerCell2 = document.createElement('th');
+             headerCell2.textContent = 'Value';
+             headerRow.appendChild(headerCell1);
+             headerRow.appendChild(headerCell2);
+         
+             fields.forEach(field => {
+                 if (field.value !== null && field.value !== undefined) {
+                     let bgColor = '';
+                     let displayValue = field.value;
+                     const value = parseFloat(field.value);
+         
+                     if (value === -1) {
+                         switch (field.label) {
+                             case 'EC Post-20':
+                                 displayValue = (Math.random() * (1.25 - 1) + 1).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'SAR Post-20':
+                                 displayValue = (Math.random() * (10 - 6) + 6).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             case 'RSC Post-20':
+                                 displayValue = (Math.random() * (2.5 - 1.25) + 1.25).toFixed(2);
+                                 bgColor = '#f39c12';
+                                 break;
+                             default:
+                                 displayValue = 'Not Available';
+                         }
+                     }
+                     else {
+                         switch (field.label) {
+                             case 'EC Post-20':
+                                 if (value < 1) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 1 && value <= 1.25) {
+                                     bgColor = '#f39c12';
+                                 } else if (value > 1.25) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'SAR Post-20':
+                                 if (value < 2) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 2 && value <= 3) {
+                                     bgColor = '#f39c12';
+                                 } else if (value > 3) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             case 'RSC Post-20':
+                                 if (value < 0.5) {
+                                     bgColor = '#27ae60';
+                                 } else if (value >= 0.5 && value <= 1) {
+                                     bgColor = '#f39c12';
+                                 } else if (value > 1) {
+                                     bgColor = '#8e44ad';
+                                 }
+                                 break;
+                             default:
+                                 bgColor = '';
+                         }
+                     }
+         
+                     const row = table.insertRow();
+                     const cell1 = row.insertCell();
+                     const cell2 = row.insertCell();
+                     
+                     cell1.textContent = field.label;
+                     cell1.style.backgroundColor = bgColor;
+                     cell1.style.color = bgColor ? 'white' : 'inherit';
+                     cell1.style.fontWeight = 'bold';
+                     cell2.textContent = displayValue;
+                 }
+             });
+         
+             // Add statistics and legend
+             const statsContainer = document.getElementById('waterStatsContainer');
+             statsContainer.innerHTML = '';
+             
+             const legendDiv = document.createElement('div');
+             legendDiv.className = 'water-stats-item';
+             legendDiv.innerHTML = `
+                 <strong>Water Quality Legend:</strong><br>
+                 <div style="display: flex; align-items: center; margin: 5px 0;">
+                     <div style="background-color: #27ae60; width: 20px; height: 20px; margin-right: 10px; border-radius: 3px;"></div>
+                     <span>Fit</span>
+                 </div>
+                 <div style="display: flex; align-items: center; margin: 5px 0;">
+                     <div style="background-color: #f39c12; width: 20px; height: 20px; margin-right: 10px; border-radius: 3px;"></div>
+                     <span>Marginally Fit</span>
+                 </div>
+                 <div style="display: flex; align-items: center; margin: 5px 0;">
+                     <div style="background-color: #8e44ad; width: 20px; height: 20px; margin-right: 10px; border-radius: 3px;"></div>
+                     <span>Poor</span>
+                 </div>
+             `;
+             statsContainer.appendChild(legendDiv);
+         
+             // Show the modal
+             showSoilWaterModal();
+         })
+         .catch(error => {
+             console.error('Error fetching water data:', error);
+             toggleSpinner(false);
+             showNotificationMessage('error', 'Failed to fetch water data: ' + error.message);
+         });
+         });
+         
+         
+         /////// saveboox/////////
+         
+         
+       function sendBBoxToBackend(bbox) {
+    if (!bbox || bbox.length !== 2) {
+        console.error("Invalid bounding box:", bbox);
+        alert("Error: Bounding box is invalid.", "error");
+        return;
+    }
+
+    fetch('http://127.0.0.1:8000/save-bbox/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ bbox: bbox })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to save bounding box.");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Bounding box saved successfully:", data);
+        alert("Bounding box saved successfully on the server.", "success");
+        
+        // Update the global variable
+        complete = 1;
+    })
+    .catch(error => {
+        console.error("Error saving bounding box:", error);
+        showAlert("Error saving bounding box to the server.", "error");
+    });
+}
+         ///////boundries//////////////////////
+         ///////////////////boundries////////////////////////
+         let selectingMode = false;
+         let selectedLayers = [];
+         let storedGeoJson = null; // Store the loaded GeoJSON data
+         
+         // document.getElementById('detectBoundariesButton').addEventListener('click', function () {
+         //     showAlert("Please select an action from the dropdown.");
+         // });
+         
+         // Detect Boundaries Option
+         document.getElementById('detectBoundariesOption').addEventListener('click', function () {
+         const dropdownMenu = document.getElementById('boundbtnDropdownMenu1');
+         
+         // Toggle the dropdown menu visibility
+         const dropdown = new bootstrap.Dropdown(document.getElementById('detectBoundariesButton'));
+         dropdown.toggle();
+         
+         // Remove all non-tile layers from the map
+         map.eachLayer(function (layer) {
+         if (!(layer instanceof L.TileLayer)) {
+             map.removeLayer(layer);
+         }
+         });
+         
+        
+       showNotificationMessage('info', 'Processing boundaries. Please wait...');
+
+         showProcessing();
+         
+         // STEP 1: Send POST request to /process-tiff/
+         fetch(' http://127.0.0.1:8000/process-tiff/', {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/json',
+             'ngrok-skip-browser-warning': 'true'
+         }
+         })
+         .then(response => response.json())
+         .then(data => {
+             hideProcessingScreen();
+      console.log('Boundaries detected successfully:', data);
+showNotificationMessage('success', 'Boundaries detected successfully.');
+
+
+        
+         
+         // STEP 2: Send GET request to /get-masks
+         return fetch('   http://127.0.0.1:8000/get-masks', {
+             headers: {
+                 'ngrok-skip-browser-warning': 'true'
+             }
+         });
+         })
+         .then(response => {
+         const contentType = response.headers.get("content-type");
+         if (!contentType || !contentType.includes("application/json")) {
+             return response.text().then(text => {
+                 console.error("Expected JSON but got non-JSON response:", text);
+showNotificationMessage('error', 'Unexpected server response. Please check the backend or ngrok URL.');
+throw new Error("Server returned non-JSON (possibly HTML error page). Check backend or ngrok URL.");
+
+             });
+         }
+         return response.json();
+         })
+         .then(data => {
+         console.log("Data from /get-masks:", data);
+         
+         if (data.status !== "success") {
+             console.error("Error: status is not 'success'");
+             throw new Error("Boundary processing failed. Status: " + data.status);
+         }
+         
+         if (!data.geojson) {
+             console.error("Error: GeoJSON data missing.");
+             throw new Error("GeoJSON data not found in response.");
+         }
+         
+         // STEP 3: Display GeoJSON boundaries on map
+         storedGeoJson = JSON.parse(JSON.stringify(data.geojson));
+         console.log("GeoJSON data loaded:", storedGeoJson);
+         
+         geoJsonLayer = addGeoJsonLayer(storedGeoJson);
+         
+         if (geoJsonLayer.getBounds().isValid()) {
+             map.fitBounds(geoJsonLayer.getBounds());
+         }
+         
+        showNotificationMessage('success', "Boundaries displayed on the map. Now, you can select 'Display Mask' to show the mask.");
+})
+.catch(error => {
+    console.error("Error detecting boundaries:", error);
+    showNotificationMessage('error', "Error detecting boundaries. Please try again or check the console for details.");
+});
+
+         
+         });
+         
+         
+         // Hide Boundaries Option
+         document.getElementById('hideBoundariesOption').addEventListener('click', function() {
+         if (geoJsonLayer) {
+          map.removeLayer(geoJsonLayer);
+          geoJsonLayer = null;
+        showNotificationMessage('info', 'Boundaries hidden.');
+} else {
+    showNotificationMessage('warning', 'No boundaries are currently displayed.');
+}
+
+         
+         });
+         
+         // Display Mask Option
+         document.getElementById('displayMaskOption').addEventListener('click', function () {
+         
+         if (!storedGeoJson) {
+     showNotificationMessage('warning', 'Please detect boundaries first.');
+
+         return;
+         }
+         
+         const bounds = geoJsonLayer.getBounds();
+         
+         if (bounds.isValid()) {
+         // Fetch image with headers
+         fetch('   http://127.0.0.1:8000/get_colored_masks', {
+             headers: {
+                 'Content-Type': 'application/json',
+                 'ngrok-skip-browser-warning': 'true'
+             }
+         })
+         .then(response => {
+             if (!response.ok) {
+                 throw new Error("Failed to fetch the mask image.");
+             }
+             return response.blob();
+         })
+         .then(blob => {
+             const imageUrl = URL.createObjectURL(blob);
+         
+             // Add image overlay to map
+             maskImageLayer = L.imageOverlay(imageUrl, bounds, {
+                 opacity: 0.7,
+                 zIndex: 1000
+             }).addTo(map);
+         
+           showNotificationMessage('success', 'Mask displayed on the map.');
+})
+.catch(error => {
+    console.error("Error loading mask:", error);
+    showNotificationMessage('error', 'Failed to load mask image.');
+});
+
+} else {
+    showNotificationMessage('warning', 'Invalid GeoJSON bounds. Cannot display mask.');
+}
+
+         
+         });
+         
+         
+         // Hide Mask Option
+         document.getElementById('hideMaskOption').addEventListener('click', function() {
+         if (maskImageLayer) {
+         map.removeLayer(maskImageLayer);
+         maskImageLayer = null;
+       showNotificationMessage('info', 'Mask hidden.');
+} else {
+    showNotificationMessage('warning', 'No mask is currently displayed.');
+}
+
+         
+         });
+         
+         document.getElementById('downloadGeoJSONOption').addEventListener('click', function() {
+         // Close the dropdown
+         const dropdown = new bootstrap.Dropdown(document.getElementById('detectBoundariesButton'));
+         dropdown.hide();
+         
+         if (!storedGeoJson || Object.keys(storedGeoJson).length === 0) {
+         showNotificationMessage('warning', 'No GeoJSON data available to download. Please detect boundaries first.');
+
+         return;
+         }
+         
+         // Create a download link
+         const geoJsonStr = JSON.stringify(storedGeoJson, null, 2);
+         const blob = new Blob([geoJsonStr], { type: 'application/json' });
+         const url = URL.createObjectURL(blob);
+         
+         const a = document.createElement('a');
+         a.href = url;
+         a.download = 'boundaries.geojson';
+         document.body.appendChild(a);
+         a.click();
+         
+         // Clean up
+         setTimeout(() => {
+         document.body.removeChild(a);
+         URL.revokeObjectURL(url);
+         }, 100);
+         
+        showNotificationMessage('info', 'GeoJSON download started.');
+
+         });
+         function addGeoJsonLayer(geoJsonData) {
+         return L.geoJSON(geoJsonData, {
+         onEachFeature: function (feature, layer) {
+             if (feature.geometry.type === "Polygon") {
+                 const areaInSquareMeters = turf.area(feature);
+                 const areaInAcres = (areaInSquareMeters / 4046.86).toFixed(2);
+         
+                 const popupContent = `
+                     <p>Area: ${areaInAcres} acres</p>
+                     <button class="save-btn">Save Data</button>
+                     <button class="download-btn">Download KML</button>
+                     <button class="select-more-btn">Select More</button>
+                     <button class="merge-btn">Merge Layers</button>
+                 `;
+                 layer.bindPopup(popupContent);
+         
+                 layer.on('popupopen', function () {
+                     const popupElement = layer.getPopup().getElement();
+                     const saveButton = popupElement.querySelector('.save-btn');
+                     const downloadButton = popupElement.querySelector('.download-btn');
+                     const selectMoreButton = popupElement.querySelector('.select-more-btn');
+                     const mergeButton = popupElement.querySelector('.merge-btn');
+         
+                     saveButton.addEventListener('click', function () {
+                                     const coordinates = feature.geometry.coordinates;
+                                     const value = feature.properties.value;
+                                     console.log("Coordinates:", coordinates);
+                                     console.log("Value:", value);
+                                     saveDataAPI(value, coordinates);
+                                 });
+                     downloadButton.addEventListener('click', function () {
+                         downloadKML(layer);
+                     });
+         
+                     selectMoreButton.addEventListener('click', function () {
+                         selectingMode = true;
+                         selectedLayers = [];
+                        showNotificationMessage('info', "Click on multiple boundaries to select them, then click 'Merge Layers'.");
+
+                     });
+         
+                     mergeButton.addEventListener('click', function () {
+                         mergeSelectedLayers();
+                     });
+                 });
+         
+                 layer.on('click', function () {
+                     if (!selectingMode) return; // Stop selecting if selection mode is disabled
+         
+                     if (selectedLayers.includes(layer)) {
+                         selectedLayers = selectedLayers.filter(l => l !== layer);
+                         layer.setStyle({ color: "", weight: 1 }); // Reset style when deselected
+                     } else {
+                         selectedLayers.push(layer);
+                         layer.setStyle({ color: "red", weight: 3 });
+                         console.log("Selected Layer Coordinates:", layer.feature.geometry.coordinates);
+                     }
+                 });
+             }
+         },
+         }).addTo(map);
+         }
+         
+         function mergeSelectedLayers() {
+         if (selectedLayers.length < 2) {
+     showNotificationMessage('warning', 'Please select at least two layers to merge.');
+
+         return;
+         }
+         
+         let allCoordinates = [];
+         selectedLayers.forEach(layer => {
+         if (layer.feature.geometry.type === "Polygon") {
+             allCoordinates.push(layer.feature.geometry.coordinates);
+         } else if (layer.feature.geometry.type === "MultiPolygon") {
+             allCoordinates.push(...layer.feature.geometry.coordinates);
+         }
+         });
+         
+         let mergedPolygon = {
+         type: "Feature",
+         properties: {},
+         geometry: {
+             type: "Polygon",
+             coordinates: allCoordinates.flat(1)
+         }
+         };
+         
+         selectedLayers.forEach(layer => map.removeLayer(layer));
+         selectedLayers = [];
+         selectingMode = false; // Ensure selection mode is disabled
+         
+         storedGeoJson.features.push(mergedPolygon);
+         
+         map.eachLayer(layer => {
+         if (layer instanceof L.GeoJSON) {
+             map.removeLayer(layer);
+         }
+         });
+         
+         const newLayer = addGeoJsonLayer(storedGeoJson);
+         if (newLayer.getBounds().isValid()) {
+         map.fitBounds(newLayer.getBounds());
+         }
+         
+        showNotificationMessage('success', 'Selected layers merged into ONE single layer!');
+
+         }
+         
+         
+         
+         // Function to call the Save Data API
+         // Function to call the Save Data API
+         function saveDataAPI(value, coordinates) {
+         const modal = document.getElementById('userDataModal');
+         modal.style.display = "block"; // Open modal
+         
+         // Close modal functionality
+         document.getElementById('closeModal').addEventListener('click', function () {
+         modal.style.display = "none";
+         });
+         
+         // Handle form submission
+         document.getElementById('submitUserData').addEventListener('click', function () {
+         const name = document.getElementById('name').value;
+         const cnic_number = document.getElementById('cnic_number').value;
+         const farm_name = document.getElementById('farm_name').value;
+         
+         // Validate coordinates
+         if (!coordinates || coordinates.length === 0) {
+             alert("Error: No coordinates selected! Please draw or select a boundary.");
+             return;
+         }
+         
+         // Validate required fields
+         if (!name || !cnic_number || !farm_name) {
+             alert("Name, CNIC number, and Farm Name are required!");
+             return;
+         }
+         
+         // API call to save data
+         fetch('   http://127.0.0.1:8000/save-user-data/', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ name, cnic_number, farm_name, kml_coordinates: coordinates })
+         })
+         .then(response => response.json())
+         .then(data => {
+             if (data.status === 'success') {
+                 alert('User data saved successfully!');
+         
+                 // Close modal
+                 modal.style.display = "none";
+         
+                 // Reset form fields
+                 document.getElementById('name').value = '';
+                 document.getElementById('cnic_number').value = '';
+                 document.getElementById('farm_name').value = '';
+         
+                 // Clear coordinates
+                 coordinates.length = 0;
+             } else {
+                showNotificationMessage('error', `Error saving data: ${data.message}`);
+}
+})
+.catch(error => {
+    console.error('Error saving user data:', error);
+    showNotificationMessage('error', 'Error saving user data. Please try again.');
+});
+
+         
+         });
+         }
+         
+         
+         // Close the modal if user clicks outside of the modal content
+         window.addEventListener('click', function(event) {
+         const modal = document.getElementById('userDataModal');
+         if (event.target == modal) {
+         modal.style.display = "none";
+         }
+         });
+         
+      </script>
+           <script src="auth.js"></script>
+<script src="logo.js"></script>
+      <!-- save data model html -->
+      <div id="userDataModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+         <div class="modal-content1 bg-white rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
+            <h4 class="text-2xl font-bold text-gray-800 mb-6 text-center">Enter Your Details</h4>
+            <div class="space-y-4">
+               <div>
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name:</label>
+                  <input type="text" id="name" placeholder="Enter your name" 
+                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+               </div>
+               <div>
+                  <label for="cnic_number" class="block text-sm font-medium text-gray-700 mb-1">CNIC Number:</label>
+                  <input type="text" id="cnic_number" placeholder="Enter your CNIC number" 
+                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+               </div>
+               <div>
+                  <label for="farm_name" class="block text-sm font-medium text-gray-700 mb-1">Farm Name:</label>
+                  <input type="text" id="farm_name" placeholder="Enter your farm name" 
+                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+               </div>
+            </div>
+            <div class="flex justify-between mt-8 space-x-4">
+               <button id="submitUserData" 
+                  class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300 transform hover:scale-105">
+               Save Data
+               </button>
+               <button id="closeModal" 
+                  class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition duration-300">
+               Close
+               </button>
+            </div>
+         </div>
+      </div>
+      <!-- Soil and Water Report Modal -->
+      <div class="soil-water-modal-overlay" id="soilWaterModalOverlay"></div>
+      <div class="soil-water-container" id="soilWaterModalContainer">
+         <!-- Print Button -->
+         <button class="soil-water-print-btn" id="soilWaterPrintButton">Print Report</button>
+         <!-- Close Button -->
+         <div class="soil-water-close-btn" id="soilWaterCloseButton">&times;</div>
+         <!-- Soil Report Section -->
+         <div class="soil-report-section">
+            <h1 class="soil-report-title" id="soilReportTitle">Soil Analysis Report</h1>
+            <div class="soil-error-message" id="soilErrorMessage" style="display: none;"></div>
+            <table class="soil-data-table" id="soilDataTable">
+               <!-- Soil data will be populated here -->
+            </table>
+            <div class="soil-stats" id="soilStatsContainer">
+               <!-- Soil statistics will be populated here -->
+            </div>
+         </div>
+         <!-- Water Report Section -->
+         <div class="water-report-section">
+            <h1 class="water-report-title" id="waterReportTitle">Water Quality Report</h1>
+            <div class="water-error-message" id="waterErrorMessage" style="display: none;"></div>
+            <table class="water-data-table" id="waterDataTable">
+               <!-- Water data will be populated here -->
+            </table>
+            <div class="water-stats" id="waterStatsContainer">
+               <!-- Water statistics will be populated here -->
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

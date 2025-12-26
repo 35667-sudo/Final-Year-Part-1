@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDMA Portal - LIVE MARKET RATES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../logo.js"></script>
+    <script>
+        window.FontAwesomeConfig = {
+            autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+        };
+    </script>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Import the CSS files -->
+    <link rel="stylesheet" href="../styles/components.css">
+
+    
+    <style>
+        * {
+            font-family: "Inter", sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+
+    
+<style>
+    .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+    }
+
+    .edit-button {
+    position: absolute;
+    z-index: 1000;
+    }
+    @keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 1s ease-out both;
+}
+
+    
+</style>
+
+    
+<style>
+   :root {
+          
+
+          /* Success colors */
+          --color-success: #10b981;
+          --color-success-50: #ecfdf5;
+          --color-success-100: #d1fae5;
+          --color-success-200: #a7f3d0;
+          --color-success-300: #6ee7b7;
+          --color-success-400: #34d399;
+          --color-success-500: #10b981;
+          --color-success-600: #059669;
+          --color-success-700: #047857;
+          --color-success-800: #065f46;
+          --color-success-900: #064e3b;
+          --color-success-focus: #059669;
+          --color-success-content: #ffffff;
+   }
+</style>
+
+    
+<style>
+/* Dark theme */
+        .dark {
+          /* Base colors */
+         
+
+          /* Success colors */
+          --color-success: #34d399;
+          --color-success-50: #064e3b;
+          --color-success-100: #065f46;
+          --color-success-200: #047857;
+          --color-success-300: #059669;
+          --color-success-400: #10b981;
+          --color-success-500: #34d399;
+          --color-success-600: #6ee7b7;
+          --color-success-700: #a7f3d0;
+          --color-success-800: #d1fae5;
+          --color-success-900: #ecfdf5;
+          --color-success-focus: #10b981;
+          --color-success-content: #1f2937;
+
+      
+        }
+</style>
+
+    
+<script>
+        tailwind.config = {
+            theme: {
+            extend: {
+                colors: {
+                ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+                ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+                },
+            },
+            },
+            variants: {
+            extend: {
+                backgroundColor: ['active', 'group-hover'],
+                textColor: ['active', 'group-hover'],
+            },
+            },
+            plugins: [],
+        };
+</script>
+
+</head>
+
+<body class="h-full text-base-content">
+    <!-- Header with green gradient background -->
+
+    <header class="site-header">
+  <div class="header-container">
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="../Assets/lims.png" alt="Logo" class="main-logo">
+        <img id="portalLogo" class="portal-logo">
+      </div>
+    </div>
+
+    <nav class="header-nav">
+  <a href="../index1.html" class="header-nav-item">Home</a>
+  <a href="../map.html" class="header-nav-item">Agri Self Analysis</a>
+  <a href="../vector.html" class="header-nav-item">GIS Analysis</a>
+
+  <div class="dropdown1">
+    <button class="header-nav-item dropdown-btn">
+      Agri Services <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="dropdown1-content">
+      <a href="livestock.html" class="header-nav-item">Live Stocks Rate</a>
+     <!--  <a href="dealers.html" class="header-nav-item">Dealers</a> -->
+      <a href="bulk-water.html" class="header-nav-item">Bulk Water Requirement</a>
+      <a href="fertilizer.html" class="header-nav-item">Fertilizer Requirement</a>
+    </div>
+  </div>
+</nav>
+
+
+    <button class="mobile-menu-button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="mobile-menu">
+    <a href="../index1.html">Home</a>
+    <a href="../map.html">Agri Self Analysis</a>
+    <a href="../vector.html">GIS Analysis</a>
+    <details class="mobile-dropdown">
+      <summary>Agri Services</summary>
+      <a href="livestock.html">Live Stocks Rate</a>
+      <a href="dealers.html">Dealers</a>
+      <a href="bulk-water.html">Bulk Water Requirement</a>
+      <a href="fertilizer.html">Fertilizer Requirement</a>
+    </details>
+  </div>
+</header>
+
+
+    <!-- Main content remains the same -->
+<main id="main" class="pt-20">
+        
+<div class="w-full max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto p-6 mt-10 bg-white shadow-xl rounded-3xl border border-gray-300  ">
+    <h2 class="text-3xl font-bold text-center mb-6 text-green-700 animate-fade-up">🌿 Fertilizer Recommendation System</h2>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Select Crop:</label>
+        <select id="cropSelect" onchange="toggleYieldInput()" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500">
+          <option value="wheat">Wheat</option>
+          <option value="cotton">Cotton</option>
+          <option value="maize">Maize</option>
+          <option value="rice">Rice</option>
+          <option value="sugarcane">Sugarcane</option>
+        </select>
+      </div>
+
+      <div id="targetYieldGroup" class="hidden">
+        <label class="block text-sm font-medium text-gray-700">Target Yield (Monds/acre):</label>
+        <input type="number" id="targetYield" step="0.1" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Organic Matter (%):</label>
+        <input type="number" id="om" step="0.1" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Available Phosphorus (ppm):</label>
+        <input type="number" id="avp" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Available Potassium (ppm):</label>
+        <input type="number" id="avk" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"/>
+      </div>
+
+      <div class="text-center space-x-4">
+
+      <div class="flex justify-between items-center">
+        <button onclick="loadSoilData()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all">
+          🌱	Load Soil Data
+        </button>
+        <span id="soilDataStatus" class="text-sm text-gray-500">No soil data loaded</span>
+      </div>
+
+        <button onclick="calculate()" class="mt-4 px-6 py-2 bg-success-900 text-white border border-gray-300 rounded-lg shadow hover:bg-green-700 transition-all">
+          🌾 Calculate Recommendations
+        </button>
+        <button onclick="generatePDF()" id="pdfButton" class="mt-4 px-6 py-2 bg-red-600 text-white border border-gray-300 rounded-lg shadow hover:bg-red-700 transition-all hidden">
+          📄 Generate PDF Report
+        </button>
+        
+      </div>
+    </div>
+
+    <div class="mt-10 p-6 bg-green-50 border border-green-200 rounded-2xl transition-all" id="results">
+      <h3 class="text-2xl font-semibold text-green-800 mb-4">📋 Recommendations (per acre):</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+        <p><strong>Nitrogen (N):</strong> <span id="nResult">-</span> kg</p>
+        <p><strong>Phosphorus (P):</strong> <span id="pResult">-</span> kg</p>
+        <p><strong>Potassium (K):</strong> <span id="kResult">-</span> kg</p>
+      </div>
+
+      <h4 class="mt-6 text-xl font-medium text-green-800">🧪 Fertilizer Bags Needed:</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+        <p><strong>Urea (46% N):</strong> <span id="urea">-</span> bags</p>
+        <p><strong>DAP (18% N, 46% P):</strong> <span id="dap">-</span> bags</p>
+        <p><strong>SOP (50% K):</strong> <span id="sop">-</span> bags</p>
+      </div>
+
+      <div class="mt-4 text-sm text-red-600 font-semibold space-y-1">
+        <p>* Models perform best near mid-range values</p>
+        <p>* Always consult agricultural experts before application</p>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    </main>
+
+
+    <!-- JavaScript for dropdown and mobile menu -->
+    <script>
+          // Enhanced Dropdown Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced Dropdown Functionality
+    const dropdownButton = document.getElementById('agriReqDropdown');
+    const dropdownContent = document.querySelector('.dropdown1-content');
+    const dropdownArrow = dropdownButton.querySelector('i');
+
+    if (dropdownButton && dropdownContent && dropdownArrow) {
+        dropdownButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            dropdownContent.classList.toggle('show');
+            dropdownArrow.style.transform = dropdownContent.classList.contains('show') 
+                ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!dropdownButton.contains(e.target) && !dropdownContent.contains(e.target)) {
+                dropdownContent.classList.remove('show');
+                dropdownArrow.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuIcon = mobileMenuButton.querySelector('i');
+    
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // Change hamburger to X icon
+        if (mobileMenu.classList.contains('active')) {
+            mobileMenuIcon.classList.remove('fa-bars');
+            mobileMenuIcon.classList.add('fa-times');
+        } else {
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            // Close mobile dropdown when closing mobile menu
+            const mobileAgriContent = document.getElementById('mobileAgriContent');
+            const mobileChevron = document.querySelector('.mobile-chevron');
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Mobile Dropdown (New Addition)
+    const mobileAgriDropdown = document.getElementById('mobileAgriDropdown');
+    const mobileAgriContent = document.getElementById('mobileAgriContent');
+    const mobileChevron = document.querySelector('.mobile-chevron');
+    
+    if (mobileAgriDropdown && mobileAgriContent && mobileChevron) {
+        mobileAgriDropdown.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            mobileAgriContent.classList.toggle('show');
+            mobileChevron.style.transform = mobileAgriContent.classList.contains('show') 
+                ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+    }
+    
+    // Close mobile menu when clicking on mobile menu links
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-item, .mobile-dropdown-item');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (mobileMenu && !mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+    </script>
+
+
+  <script>
+    const { jsPDF } = window.jspdf;
+
+    // Load soil data from localStorage
+    function loadSoilData() {
+const savedSoilData = JSON.parse(localStorage.getItem('soilReportData'));
+console.log('Soildata',savedSoilData);
+
+if (savedSoilData) {
+        document.getElementById('om').value = savedSoilData.organicmatter || '';
+        document.getElementById('avp').value = savedSoilData.phosphorus || '';
+        document.getElementById('avk').value = savedSoilData.potash || '';
+        document.getElementById('soilDataStatus').textContent = 'Soil data loaded successfully';
+        document.getElementById('soilDataStatus').className = 'text-sm text-green-600';
+      } else {
+        document.getElementById('soilDataStatus').textContent = 'No soil data found in storage';
+        document.getElementById('soilDataStatus').className = 'text-sm text-red-600';
+      }
+    }
+    
+    function toggleYieldInput() {
+      const crop = document.getElementById('cropSelect').value;
+      document.getElementById('targetYieldGroup').classList.toggle('hidden', crop === 'wheat');
+    }
+
+    function calculate() {
+      const crop = document.getElementById('cropSelect').value;
+      const om = parseFloat(document.getElementById('om').value) || 0;
+      const avp = parseFloat(document.getElementById('avp').value) || 0;
+      const avk = parseFloat(document.getElementById('avk').value) || 0;
+      const targetYield = parseFloat(document.getElementById('targetYield').value) || 0;
+
+      let n, p, k;
+      switch (crop) {
+        case 'wheat':
+          n = wheatNitrogen(om);
+          p = wheatPhosphorus(avp);
+          k = wheatPotassium(avk);
+          break;
+        case 'cotton':
+          n = cottonNitrogen(targetYield, om);
+          p = cottonPhosphorus(targetYield, avp);
+          k = cottonPotassium(avk);
+          break;
+        case 'maize':
+          n = maizeNitrogen(targetYield, om);
+          p = maizePhosphorus(targetYield, avp);
+          k = maizePotassium(targetYield, avk);
+          break;
+        case 'rice':
+          n = riceNitrogen(targetYield, om);
+          p = ricePhosphorus(targetYield, avp);
+          k = ricePotassium(avk);
+          break;
+        case 'sugarcane':
+          n = sugarcaneNitrogen(targetYield, om);
+          p = sugarcanePhosphorus(targetYield, avp);
+          k = sugarcanePotassium(avk);
+          break;
+      }
+
+      const urea = calculateBags(n, 46);
+      const dap = calculateBags(p, 46);
+      const sop = calculateBags(k, 50);
+
+      document.getElementById('nResult').textContent = n.toFixed(1);
+      document.getElementById('pResult').textContent = p.toFixed(1);
+      document.getElementById('kResult').textContent = k.toFixed(1);
+      document.getElementById('urea').textContent = urea.toFixed(1);
+      document.getElementById('dap').textContent = dap.toFixed(1);
+      document.getElementById('sop').textContent = sop.toFixed(1);
+      
+      // Show PDF button after calculation
+      document.getElementById('pdfButton').classList.remove('hidden');
+    }
+
+    function generatePDF() {
+      const crop = document.getElementById('cropSelect').value;
+      const cropName = document.getElementById('cropSelect').options[document.getElementById('cropSelect').selectedIndex].text;
+      const om = document.getElementById('om').value || 'Not provided';
+      const avp = document.getElementById('avp').value || 'Not provided';
+      const avk = document.getElementById('avk').value || 'Not provided';
+      const targetYield = document.getElementById('targetYield').value || 'Not applicable';
+      
+      // Create a new PDF
+      const doc = new jsPDF();
+       // Set up a custom background color for the PDF
+  doc.setFillColor(255, 255, 204); // Light yellow background
+  doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F'); // Full page background
+  
+  // Add a border resembling a wooden frame
+  doc.setLineWidth(5);
+  doc.setDrawColor(100, 50, 0); // Brown color for the border
+  doc.rect(10, 10, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 20);
+  
+  // Title with a subtle green gradient effect
+  doc.setFontSize(20);
+  doc.setTextColor(34, 139, 34); // Forest green for the title
+  doc.text('Fertilizer Recommendation Report', 105, 20, { align: 'center' });
+  
+    // Crop information section with earthy tones
+  doc.setFontSize(14);
+  doc.setTextColor(0, 100, 0); // Dark green text
+  doc.text(`Crop: ${cropName}`, 20, 50);
+  doc.text(`Target Yield: ${targetYield} Monds/acre`, 20, 60);
+  
+  // Add soil parameters section
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0); // Black text
+  doc.text('Soil Parameters:', 20, 75);
+  doc.text(`- Organic Matter: ${om}%`, 25, 85);
+  doc.text(`- Available Phosphorus: ${avp} ppm`, 25, 95);
+  doc.text(`- Available Potassium: ${avk} ppm`, 25, 105);
+  
+  // Add the recommendations with a green header
+  doc.setFontSize(16);
+  doc.setTextColor(34, 139, 34); // Forest green header color
+  doc.text('Recommendations (per acre):', 20, 125);
+  
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0); // Black text
+  doc.text(`- Nitrogen (N): ${document.getElementById('nResult').textContent} kg`, 25, 135);
+  doc.text(`- Phosphorus (P): ${document.getElementById('pResult').textContent} kg`, 25, 145);
+  doc.text(`- Potassium (K): ${document.getElementById('kResult').textContent} kg`, 25, 155);
+   // Add fertilizer bags section
+  doc.setFontSize(16);
+  doc.setTextColor(34, 139, 34); // Forest green header color
+  doc.text('Fertilizer Bags Needed:', 20, 175);
+  
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0); // Black text
+  doc.text(`- Urea (46% N): ${document.getElementById('urea').textContent} bags`, 25, 185);
+  doc.text(`- DAP (18% N, 46% P): ${document.getElementById('dap').textContent} bags`, 25, 195);
+  doc.text(`- SOP (50% K): ${document.getElementById('sop').textContent} bags`, 25, 205);
+  
+  // Add footer notes with a lighter red text
+  doc.setFontSize(10);
+  doc.setTextColor(255, 0, 0); // Red text for warning
+  doc.text('* Models perform best near mid-range values', 20, 220);
+  doc.text('* Always consult agricultural experts before application', 20, 225);
+  
+  // Add date with a muted brown color
+  const today = new Date();
+  doc.setTextColor(139, 69, 19); // Brown color
+  doc.text(`Report generated on: ${today.toLocaleDateString()}`, 20, 280);
+  
+  // Save the PDF
+  doc.save(`Fertilizer_Recommendation_${cropName}_${today.getFullYear()}${(today.getMonth()+1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}.pdf`);
+}
+
+
+    // Your existing functions below
+    function wheatNitrogen(om) {
+      let kgHa;
+      if (om > 1.6) kgHa = 27;
+      else if (om > 0.1) kgHa = -24.9 * om + 69.8;
+      else if (om > 0) kgHa = 67;
+      else return 0;
+      return (kgHa * 2.5) * 0.404686;
+    }
+    function wheatPhosphorus(avp) {
+      let kgHa;
+      if (avp > 18) kgHa = 25.5;
+      else if (avp > 0.1) kgHa = -1.18 * avp + 46.5;
+      else if (avp > 0.01) kgHa = 45.7;
+      else return 0;
+      return (kgHa * 2.5) * 0.404686;
+    }
+    function wheatPotassium(avk) {
+      let kgHa;
+      if (avk > 180) kgHa = 0;
+      else if (avk > 75) kgHa = -0.23 * avk + 41.73;
+      else if (avk > 0) kgHa = 24;
+      else return 0;
+      return (kgHa * 2.5) * 0.404686;
+    }
+
+    function cottonNitrogen(yieldVal, om) {
+      return (7.6 * yieldVal - 124) + (40 * (0.5 - om));
+    }
+    function cottonPhosphorus(yieldVal, avp) {
+      return (3.032 * yieldVal - 56.4) + (2.2 * (8 - avp));
+    }
+    function cottonPotassium(avk) {
+      return (-0.16 * avk + 60.8);
+    }
+
+    function maizeNitrogen(yieldVal, om) {
+      return (1.64 * yieldVal - 40.4) + (50 * (0.44 - om));
+    }
+    function maizePhosphorus(yieldVal, avp) {
+      return (1.16 * yieldVal - 32.8) + (2 * (5 - avp));
+    }
+    function maizePotassium(yieldVal, avk) {
+      return (0.8 * yieldVal - 33.2) + (0.14 * (136 - avk));
+    }
+
+    function riceNitrogen(yieldVal, om) {
+      return (1.64 * yieldVal - 46.8) + (17.52 * (1.5 - om));
+    }
+    function ricePhosphorus(yieldVal, avp) {
+      return (1.4 * yieldVal - 40.8) + (1.32 * (13 - avp));
+    }
+    function ricePotassium(avk) {
+      return (-0.12 * avk + 33.6);
+    }
+
+    function sugarcaneNitrogen(yieldVal, om) {
+      return (0.104 * yieldVal - 4) + (68 * (0.7 - om));
+    }
+    function sugarcanePhosphorus(yieldVal, avp) {
+      return (0.052 * yieldVal - 3.2) + (2.8 * (9 - avp));
+    }
+    function sugarcanePotassium(avk) {
+      return (-0.096 * avk + 56.4);
+    }
+
+    function calculateBags(kgRequired, fertilizerPercent) {
+      return (kgRequired * 100) / (50 * fertilizerPercent);
+    }
+
+
+       // Try to load soil data automatically when page loads
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSoilData();
+    });
+  </script>
+    <script src="auth.js"></script>
+<script src="logo.js"></script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDMA Portal - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/components.css">
+
+
+
+    <style>
+
+       
+    </style>
+  
+</head>
+
+<body class="bg-white text-gray-900">
+ <header class="site-header">
+  <div class="header-container">
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="../Assets/lims.png" alt="Logo" class="main-logo">
+        <img id="portalLogo" class="portal-logo">
+      </div>
+    </div>
+
+    <nav class="header-nav">
+  <a href="../index1.html" class="header-nav-item">Home</a>
+  <a href="../map.html" class="header-nav-item">Agri Self Analysis</a>
+  <a href="../vector.html" class="header-nav-item">GIS Analysis</a>
+
+  <div class="dropdown1">
+    <button class="header-nav-item dropdown-btn">
+      Agri Services <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="dropdown1-content">
+      <a href="livestock.html" class="header-nav-item">Live Stocks Rate</a>
+     <!--  <a href="dealers.html" class="header-nav-item">Dealers</a> -->
+      <a href="bulk-water.html" class="header-nav-item">Bulk Water Requirement</a>
+      <a href="fertilizer.html" class="header-nav-item">Fertilizer Requirement</a>
+    </div>
+  </div>
+</nav>
+
+
+    <button class="mobile-menu-button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="mobile-menu">
+    <a href="../index1.html">Home</a>
+    <a href="../map.html">Agri Self Analysis</a>
+    <a href="../vector.html">GIS Analysis</a>
+    <details class="mobile-dropdown">
+      <summary>Agri Services</summary>
+      <a href="livestock.html">Live Stocks Rate</a>
+      <a href="dealers.html">Dealers</a>
+      <a href="bulk-water.html">Bulk Water Requirement</a>
+      <a href="fertilizer.html">Fertilizer Requirement</a>
+    </details>
+  </div>
+</header>
+
+
+
+
+     <!-- Enhanced Main Content -->
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section class="hero-section py-20 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center" data-aos="fade-up">
+                    <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+                        <span class="text-green-300">NDMA</span>
+                    </h1>
+                    <p class="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
+                        National Land & Disaster Management Authority - Uniting disaster preparedness with land intelligence for a resilient Pakistan
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Who We Are Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="section-card p-8 md:p-12" data-aos="fade-up">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Who We Are</h2>
+                        <div class="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                                The National Land & Disaster Management Authority (NLDMA) is the result of a visionary merger between two pivotal institutions:
+                            </p>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg">
+                                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-shield-alt text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">NDMA</h4>
+                                        <p class="text-gray-700">Pakistan's federal authority for disaster risk management</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start space-x-4 p-4 bg-green-50 rounded-lg">
+                                    <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-satellite text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">LIMS</h4>
+                                        <p class="text-gray-700">A geospatial intelligence initiative supporting land, agriculture, and environmental monitoring</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-64 h-64 mx-auto bg-gradient-to-br from-green-400 to-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-handshake text-white text-6xl"></i>
+                            </div>
+                            <p class="mt-6 text-gray-700 font-medium">
+                                This merger brings together emergency preparedness, land use data, and GIS technology under one national platform for comprehensive resilience building.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission & Vision Section -->
+        <section class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Mission -->
+                    <div class="section-card p-8" data-aos="fade-right">
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-bullseye text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-900">Our Mission</h3>
+                        </div>
+                        <blockquote class="text-xl text-gray-700 text-center italic leading-relaxed">
+                            "To harness land intelligence and disaster management for the safety, sustainability, and prosperity of Pakistan."
+                        </blockquote>
+                    </div>
+                    
+                    <!-- Vision -->
+                    <div class="section-card p-8" data-aos="fade-left">
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-eye text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-900">Our Vision</h3>
+                        </div>
+                        <blockquote class="text-xl text-gray-700 text-center italic leading-relaxed">
+                            A climate-resilient Pakistan where data, technology, and coordination protect every life, livelihood, and landscape.
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
+                    <div class="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="value-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-search text-green-600 text-2xl mr-3"></i>
+                            <h4 class="text-xl font-semibold text-gray-900">Transparency</h4>
+                        </div>
+                        <p class="text-gray-700">Transparency in land and risk data</p>
+                    </div>
+                    
+                    <div class="value-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-handshake text-green-600 text-2xl mr-3"></i>
+                            <h4 class="text-xl font-semibold text-gray-900">Collaboration</h4>
+                        </div>
+                        <p class="text-gray-700">Collaboration across federal and provincial systems</p>
+                    </div>
+                    
+                    <div class="value-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-brain text-green-600 text-2xl mr-3"></i>
+                            <h4 class="text-xl font-semibold text-gray-900">Innovation</h4>
+                        </div>
+                        <p class="text-gray-700">Innovation through AI, satellite imagery & GIS</p>
+                    </div>
+                    
+                    <div class="value-item" data-aos="fade-up" data-aos-delay="400">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-crosshairs text-green-600 text-2xl mr-3"></i>
+                            <h4 class="text-xl font-semibold text-gray-900">Precision</h4>
+                        </div>
+                        <p class="text-gray-700">Precision in planning, mapping, and responding</p>
+                    </div>
+                    
+                    <div class="value-item" data-aos="fade-up" data-aos-delay="500">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-leaf text-green-600 text-2xl mr-3"></i>
+                            <h4 class="text-xl font-semibold text-gray-900">Sustainability</h4>
+                        </div>
+                        <p class="text-gray-700">Sustainability at the heart of every action</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="section-card p-8 md:p-12" data-aos="fade-up">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Our History</h2>
+                        <div class="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <div class="border-l-4 border-green-600 pl-6">
+                                <h4 class="text-xl font-semibold text-gray-900 mb-2">NDMA Legacy</h4>
+                                <p class="text-gray-700 leading-relaxed">
+                                    NDMA has long been the nation's first line of defense in disaster preparedness, response, and recovery.
+                                </p>
+                            </div>
+                            
+                            <div class="border-l-4 border-blue-600 pl-6">
+                                <h4 class="text-xl font-semibold text-gray-900 mb-2">LIMS Innovation</h4>
+                                <p class="text-gray-700 leading-relaxed">
+                                    LIMS, a modern land and resource intelligence system, empowered ministries and stakeholders with spatial data for development.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-blue-50 p-8 rounded-lg">
+                            <h4 class="text-xl font-semibold text-gray-900 mb-4">Unified Approach</h4>
+                            <p class="text-gray-700 leading-relaxed">
+                                By merging these missions, NLDMA leads with an integrated approach to climate challenges, land productivity, urban planning, and disaster mitigation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leadership & Partners Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Leadership & Partners</h2>
+                    <div class="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
+                    <p class="text-xl text-gray-600 mt-6">Working together for a resilient Pakistan</p>
+                </div>
+                
+                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex flex-wrap justify-center items-center">
+                        <span class="partner-badge">Prime Minister's Office</span>
+                        <span class="partner-badge">Ministry of Climate Change</span>
+                        <span class="partner-badge">SUPARCO</span>
+                        <span class="partner-badge">Armed Forces</span>
+                        <span class="partner-badge">Provincial Disaster Management Authorities</span>
+                        <span class="partner-badge">UNDP</span>
+                        <span class="partner-badge">FAO</span>
+                        <span class="partner-badge">WFP</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div data-aos="fade-up">
+                    <div class="footer-logo">
+                        <img src="../Assets/logo1.png" alt="NDMA Portal Logo" class="header-logo-image">
+                        <span class="footer-logo-text">NDMA Portal</span>
+                    </div>
+                    <p class="footer-description">
+                        National Disaster Management Authority Agricultural Portal - Leading Pakistan's disaster management and agricultural monitoring initiatives with cutting-edge technology.
+                    </p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="footer-column-title">Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="about.html" class="footer-link">About Us</a>
+                        <a href="https://www.ndma.gov.pk/" class="footer-link">Help Center</a>
+                        <a href="terms.html" class="footer-link">Terms of Service</a>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="footer-column-title">Contact Us</h4>
+                    <div class="footer-links">
+                        <div class="contact-item">
+                            <i class="fas fa-phone text-green-400"></i>
+                            <span>UAN: 051-111-157-157</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-whatsapp text-green-400"></i>
+                            <span>WhatsApp: 0300-0881641</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope text-green-400"></i>
+                            <a href="mailto:info@ndma.gov.pk" class="footer-link">info@ndma.gov.pk</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h4 class="footer-column-title">Connect With Us</h4>
+                    <div class="footer-social">
+                        <a href=" https://x.com/ndmapk?t=LGzfxeTtt8abLmYAuLh0-Q&s=08" class="footer-social-icon">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="https://www.facebook.com/share/15p3SfkFUj/" class="footer-social-icon">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@ndmapakistan" class="footer-social-icon">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                        <a href="https://www.ndma.gov.pk/" class="footer-social-icon">
+                            <i class="fa-solid fa-globe"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-copyright">
+                <p>&copy; 2025 NDMA Agricultural Portal. All rights reserved. Built with ❤️ for Pakistan.</p>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- Enhanced JavaScript -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Enhanced Header Scroll Effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.site-header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+    </script>
+    
+    <script>
+        // Enhanced Dropdown Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownButton = document.getElementById('agriReqDropdown');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            const dropdownArrow = dropdownButton.querySelector('i');
+            
+            dropdownButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                dropdownContent.classList.toggle('show');
+                dropdownArrow.style.transform = dropdownContent.classList.contains('show') 
+                    ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!dropdownButton.contains(e.target) && !dropdownContent.contains(e.target)) {
+                    dropdownContent.classList.remove('show');
+                    dropdownArrow.style.transform = 'rotate(0deg)';
+                }
+            });
+
+           const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuIcon = mobileMenuButton.querySelector('i');
+    
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // Change hamburger to X icon
+        if (mobileMenu.classList.contains('active')) {
+            mobileMenuIcon.classList.remove('fa-bars');
+            mobileMenuIcon.classList.add('fa-times');
+        } else {
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            // Close mobile dropdown when closing mobile menu
+            const mobileAgriContent = document.getElementById('mobileAgriContent');
+            const mobileChevron = document.querySelector('.mobile-chevron');
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Mobile Dropdown (New Addition)
+    const mobileAgriDropdown = document.getElementById('mobileAgriDropdown');
+    const mobileAgriContent = document.getElementById('mobileAgriContent');
+    const mobileChevron = document.querySelector('.mobile-chevron');
+    
+    if (mobileAgriDropdown && mobileAgriContent && mobileChevron) {
+        mobileAgriDropdown.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            mobileAgriContent.classList.toggle('show');
+            mobileChevron.style.transform = mobileAgriContent.classList.contains('show') 
+                ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+    }
+    
+    // Close mobile menu when clicking on mobile menu links
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-item, .mobile-dropdown-item');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (mobileMenu && !mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.remove('active');
+            mobileMenuIcon.classList.remove('fa-times');
+            mobileMenuIcon.classList.add('fa-bars');
+            
+            // Close mobile dropdown
+            if (mobileAgriContent && mobileChevron) {
+                mobileAgriContent.classList.remove('show');
+                mobileChevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+    </script>
+        <script src="auth.js"></script>
+<script src="logo.js"></script>
+</body>
+</html>
