@@ -783,3 +783,4 @@
 # [35667-sudo] Improve documentation wording — 2025-11-21 11:19
 # [35667-sudo] Clean formatting — 2026-01-01 15:17
 # [Muhammad Abdullah/37531] Refactor small module — 2026-01-28 13:56
+# [35667-sudo] Improve validation messages — 2025-12-26 15:25
