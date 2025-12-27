@@ -541,3 +541,4 @@
 # [Faizan005Malik] Improve error display — 2026-03-02 15:49
 # [35667-sudo] Improve error handling logic — 2026-03-17 14:02
 # [35667-sudo] Update helper logic — 2025-10-18 15:36
+# [35667-sudo] Refactor utility function — 2025-12-27 15:37
