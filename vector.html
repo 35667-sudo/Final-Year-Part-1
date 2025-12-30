@@ -151,8 +151,8 @@
        
    
     <a class="dropdown-item" id="cottonBtn" href="#"><i class="fas fa-tshirt"></i> Cotton</a>
-    <!-- <a class="dropdown-item" id="dropdownSugarcaneFull" href="#"><i class="fas fa-seedling"></i> Sugarcane</a>
-    <a class="dropdown-item" id="dropdownWheatFull" href="#"><i class="fas fa-bread-slice"></i>  Wheat</a> -->
+    <a class="dropdown-item" id="dropdownSugarcaneFull" href="#"><i class="fas fa-seedling"></i> Sugarcane</a>
+    <a class="dropdown-item" id="dropdownWheatFull" href="#"><i class="fas fa-bread-slice"></i>  Wheat</a>
    
     
   </div>
@@ -165,6 +165,20 @@
       <span>Extreme events</span>
       <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 0.50rem !important;"></i>
     </button>
+    <div class="dropdown" style="position: relative; display: inline-block;">
+
+  <button class="btn btn-sm btn-warning d-flex align-items-center w-100" id="climateDropdownBtn" style="gap: 10px; margin-top: 10px;">
+    <i class="fas fa-sun"></i>
+    <span>Climate Change</span>
+    <i class="fas fa-chevron-down ms-auto" style="font-size: 0.50rem !important;"></i>
+  </button>
+
+  <div class="dropdown-menu" id="climateMenu" style="display: none; position: absolute; z-index: 999; background: white; border: 1px solid #ccc;">
+    <a class="dropdown-item" data-type="temp">Max Temperature</a>
+    <a class="dropdown-item" data-type="rain">Max Rainfall</a>
+    <a class="dropdown-item text-danger" data-type="none">Hide Climate Layer</a>
+  </div>
+</div>
     <div class="dropdown-menu" id="floodMenu" style="display: none; position: absolute; z-index: 999; background: white; border: 1px solid #ccc;">
       <a class="dropdown-item" data-file="flood2022.json">Flood 2022</a>
       <a class="dropdown-item" data-file="flooded_vec.geojson">Flood 2025</a>
@@ -966,7 +980,7 @@ function loadFloodLayer(dataFile) {
       </script>
 
         <script>
-           
+            const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiaXFyYS0xMiIsImEiOiJjbTBsejNzencwYmhmMmpzOGo2YjBscWx0In0.uVZ01016jRsllcutrQASow";
 
             // Initialize PROJ4 projections
             proj4.defs("EPSG:32641", "+proj=utm +zone=41 +datum=WGS84 +units=m +no_defs");
@@ -2272,57 +2286,57 @@ document.getElementById("cannel").addEventListener("click", (event) => {
     }
 });
 // Show Wheat Dropdown
-// document.getElementById("dropdownWheatFull").addEventListener("click", (event) => {
-//     const geo = drawnPolygon?.toGeoJSON().geometry ||
-//                 selectedMauzaGeometry?.geometry || selectedMauzaGeometry ||
-//                 selectedTehsilGeometry?.geometry || selectedTehsilGeometry ||
-//                 selectedDistrictGeometry?.geometry || selectedDistrictGeometry ||
-//                 selectedProvinceGeometry?.geometry || selectedProvinceGeometry 
-//                 // pakistanBoundaryGeometry; // ✅ fallback to Pakistan boundary
+document.getElementById("dropdownWheatFull").addEventListener("click", (event) => {
+    const geo = drawnPolygon?.toGeoJSON().geometry ||
+                selectedMauzaGeometry?.geometry || selectedMauzaGeometry ||
+                selectedTehsilGeometry?.geometry || selectedTehsilGeometry ||
+                selectedDistrictGeometry?.geometry || selectedDistrictGeometry ||
+                selectedProvinceGeometry?.geometry || selectedProvinceGeometry 
+                // pakistanBoundaryGeometry; // ✅ fallback to Pakistan boundary
 
-//     if (!geo) {
-//         showNotification("error", "Action Required", "Pakistan boundary not loaded yet");
-//         return;
-//     }
+    if (!geo) {
+        showNotification("error", "Action Required", "Pakistan boundary not loaded yet");
+        return;
+    }
 
-//     hideSelectionLayers();
-//     displayClippedRaster("	gis:punjab wheat", "Land Cover Classification", event); // Full Pakistan
+    hideSelectionLayers();
+    displayClippedRaster("	gis:punjab wheat", "Land Cover Classification", event); // Full Pakistan
 
-//     const name = getSelectedLevelName();
-//     if (selectedTehsilGeometry && name) {
-//         displayClassAndAreaByTehsil(name, "Wheat");
-//     } else if (selectedDistrictGeometry && name) {
-//         displayClassAndAreaByDistrict(name, "Wheat");
-//     } else if (selectedProvinceGeometry && name) {
-//         displayClassAndAreaByProvince(name, "Wheat");
-//     }
-// });
+    const name = getSelectedLevelName();
+    if (selectedTehsilGeometry && name) {
+        displayClassAndAreaByTehsil(name, "Wheat");
+    } else if (selectedDistrictGeometry && name) {
+        displayClassAndAreaByDistrict(name, "Wheat");
+    } else if (selectedProvinceGeometry && name) {
+        displayClassAndAreaByProvince(name, "Wheat");
+    }
+});
 
-// document.getElementById("dropdownSugarcaneFull").addEventListener("click", (event) => {
-//     const geo = drawnPolygon?.toGeoJSON().geometry ||
-//                 selectedMauzaGeometry?.geometry || selectedMauzaGeometry ||
-//                 selectedTehsilGeometry?.geometry || selectedTehsilGeometry ||
-//                 selectedDistrictGeometry?.geometry || selectedDistrictGeometry ||
-//                 selectedProvinceGeometry?.geometry || selectedProvinceGeometry 
-//                 // pakistanBoundaryGeometry; // ✅ fallback to Pakistan boundary
+document.getElementById("dropdownSugarcaneFull").addEventListener("click", (event) => {
+    const geo = drawnPolygon?.toGeoJSON().geometry ||
+                selectedMauzaGeometry?.geometry || selectedMauzaGeometry ||
+                selectedTehsilGeometry?.geometry || selectedTehsilGeometry ||
+                selectedDistrictGeometry?.geometry || selectedDistrictGeometry ||
+                selectedProvinceGeometry?.geometry || selectedProvinceGeometry 
+                // pakistanBoundaryGeometry; // ✅ fallback to Pakistan boundary
 
-//     if (!geo) {
-//         showNotification("error", "Action Required", "Pakistan boundary not loaded yet");
-//         return;
-//     }
+    if (!geo) {
+        showNotification("error", "Action Required", "Pakistan boundary not loaded yet");
+        return;
+    }
 
-//     hideSelectionLayers();
-//     displayClippedRaster("gis:Sugarcane", "Land Cover Classification", event); // Full Pakistan
+    hideSelectionLayers();
+    displayClippedRaster("gis:Sugarcane", "Land Cover Classification", event); // Full Pakistan
 
-//     const name = getSelectedLevelName();
-//     if (selectedTehsilGeometry && name) {
-//         displayClassAndAreaByTehsil(name, "Wheat");
-//     } else if (selectedDistrictGeometry && name) {
-//         displayClassAndAreaByDistrict(name, "Wheat");
-//     } else if (selectedProvinceGeometry && name) {
-//         displayClassAndAreaByProvince(name, "Wheat");
-//     }
-// });
+    const name = getSelectedLevelName();
+    if (selectedTehsilGeometry && name) {
+        displayClassAndAreaByTehsil(name, "Wheat");
+    } else if (selectedDistrictGeometry && name) {
+        displayClassAndAreaByDistrict(name, "Wheat");
+    } else if (selectedProvinceGeometry && name) {
+        displayClassAndAreaByProvince(name, "Wheat");
+    }
+});
 
 
 
@@ -2363,8 +2377,8 @@ document.getElementById("cottonBtn").addEventListener("click", (event) => {
                 selectedMauzaGeometry?.geometry || selectedMauzaGeometry ||
                 selectedTehsilGeometry?.geometry || selectedTehsilGeometry ||
                 selectedDistrictGeometry?.geometry || selectedDistrictGeometry ||
-                selectedProvinceGeometry?.geometry || selectedProvinceGeometry 
-                // pakistanBoundaryGeometry; // ✅ fallback to Pakistan boundary
+                selectedProvinceGeometry?.geometry || selectedProvinceGeometry ||
+                pakistanBoundaryGeometry; // ✅ fallback to Pakistan boundary
 
     if (!geo) {
         showNotification("error", "Action Required", "Pakistan boundary not loaded yet");
@@ -3484,16 +3498,28 @@ async function loadAllBoundaries() {
 
 
 function initializeDropdowns() {
+    const userRole = localStorage.getItem("userRole");
+    const userProvince = localStorage.getItem("userProvince");
+
+    const provinceNames = [...new Set(allProvinces.map(f => f.properties?.PROVINCE_N || "Unknown"))].sort();
     const provinceSelect = document.getElementById("provinceSelect");
+    provinceSelect.innerHTML = '<option value="">-- Select Province --</option>';
 
-    // Always show only Punjab
-    provinceSelect.innerHTML = `
-        <option value="">-- Select Province --</option>
-        <option value="Punjab">Punjab</option>
-    `;
+    provinceNames.forEach(name => {
+        // 🟢 Show all provinces for Super
+        // 🔒 For others, only show their province
+        if (userRole === "Enterprise","Super" || name.toLowerCase() === userProvince?.toLowerCase()) {
+            const option = document.createElement("option");
+            option.value = name;
+            option.textContent = name;
+            provinceSelect.appendChild(option);
+        }
+    });
 
-    // Populate dependent dropdowns
+    // District dropdown - shows all by default
     updateDistrictDropdown();
+
+    // Tehsil dropdown - shows all by default
     updateTehsilDropdown();
 }
 

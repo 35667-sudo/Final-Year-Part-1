@@ -41,11 +41,9 @@
                 "detectBoundariesButton"
             ],
             "Enterprise": [
-                "umar2","umar", "detectBoundariesButton"
+                "umar2","umar"
             ],
-            "Super": [
-                "detectBoundariesButton"
-            ]
+            
         };
 
         // Hide links / menu items for restricted pages
