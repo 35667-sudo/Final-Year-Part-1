@@ -1231,3 +1231,4 @@
 # [Muhammad Abdullah/37531] Fix minor issue — 2026-03-15 15:35
 # [35667-sudo] Improve performance slightly — 2025-10-26 09:35
 # [Faizan005Malik] Improve performance slightly — 2026-01-14 11:52
+# [35667-sudo] Improve error messages — 2026-01-05 09:31
