@@ -750,3 +750,4 @@
 # [Muhammad Abdullah/37531] Minor UI polish — 2026-03-19 13:30
 # [Muhammad Abdullah/37531] Refactor utility file — 2026-02-10 15:59
 # [35667-sudo] Update helper functions — 2025-10-31 16:03
+# [35667-sudo] Refactor helper method — 2026-01-13 15:55
