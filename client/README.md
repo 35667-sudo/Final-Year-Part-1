@@ -798,3 +798,4 @@
 # [Faizan005Malik] Final documentation update — 2025-11-29 16:25
 # [Muhammad Abdullah/37531] Update README formatting — 2026-03-15 14:05
 # [Muhammad Abdullah/37531] Improve code clarity — 2026-03-10 10:41
+# [35667-sudo] Update configuration notes — 2026-01-15 13:18
