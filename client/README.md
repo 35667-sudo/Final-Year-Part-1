@@ -688,3 +688,4 @@
 # [35667-sudo] Update documentation text — 2026-03-21 14:54
 # [Muhammad Abdullah/37531] Improve error handling logic — 2026-01-03 09:50
 # [35667-sudo] Improve error messages — 2025-12-25 16:47
+# [35667-sudo] Update comments — 2026-01-28 14:17
