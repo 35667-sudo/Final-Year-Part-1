@@ -574,3 +574,4 @@
 # [35667-sudo] Improve UI consistency — 2025-12-14 14:52
 # [Faizan005Malik] Improve responsiveness — 2025-11-23 16:53
 # [35667-sudo] Improve documentation — 2026-01-02 16:07
+# [35667-sudo] Improve error feedback — 2026-01-31 13:32
