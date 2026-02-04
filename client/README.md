@@ -958,3 +958,4 @@
 # [Muhammad Abdullah/37531] Update README examples — 2025-12-27 09:28
 # [Muhammad Abdullah/37531] Fix formatting issue — 2025-11-30 13:35
 # [Faizan005Malik] Fix UI detail — 2026-01-05 12:28
+# [Faizan005Malik] Improve error feedback — 2026-02-04 12:25
