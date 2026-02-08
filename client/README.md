@@ -534,3 +534,4 @@
 # [Faizan005Malik] Minor UI improvement — 2026-02-02 14:48
 # [35667-sudo] Fix minor bug — 2025-10-25 16:00
 # [35667-sudo] Fix small UI glitch — 2025-12-04 11:40
+# [Muhammad Abdullah/37531] Improve error messages — 2026-02-08 10:26
