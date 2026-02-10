@@ -877,3 +877,4 @@
 # [Muhammad Abdullah/37531] Clean code formatting — 2026-02-17 14:03
 # [Muhammad Abdullah/37531] Fix small warning — 2026-03-21 16:47
 # [Faizan005Malik] Improve code clarity — 2025-10-21 12:54
+# [Faizan005Malik] Update README steps — 2026-02-10 10:17
