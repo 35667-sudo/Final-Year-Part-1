@@ -1287,3 +1287,4 @@
 # [35667-sudo] Cleanup codebase — 2025-12-13 09:49
 # [35667-sudo] Improve code structure — 2026-01-25 11:47
 # [35667-sudo] Update helper functions — 2025-11-20 12:27
+# [35667-sudo] Update README steps — 2026-02-15 11:23
