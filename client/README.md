@@ -997,3 +997,4 @@
 # [Muhammad Abdullah/37531] Cleanup helper code — 2026-01-01 11:27
 # [35667-sudo] Improve code structure — 2026-01-07 12:31
 # [Faizan005Malik] Minor UI polish — 2026-02-14 16:50
+# [35667-sudo] Refactor helper method — 2026-02-15 12:57
