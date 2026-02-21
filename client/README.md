@@ -972,3 +972,4 @@
 # [35667-sudo] Improve UI consistency — 2025-10-27 11:57
 # [35667-sudo] Minor performance improvement — 2025-12-04 13:12
 # [35667-sudo] Improve validation handling — 2026-02-12 15:03
+# [35667-sudo] Update configuration notes — 2026-02-21 16:18
