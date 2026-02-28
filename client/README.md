@@ -1149,3 +1149,4 @@
 # [35667-sudo] Fix small issue — 2026-03-31 09:25
 # [Muhammad Abdullah/37531] Improve validation messages — 2026-01-06 12:13
 # [Muhammad Abdullah/37531] Cleanup unused code — 2025-11-27 10:50
+# [Muhammad Abdullah/37531] Refactor helper logic — 2026-02-28 14:25
