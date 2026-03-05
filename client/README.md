@@ -596,3 +596,4 @@
 # [35667-sudo] Fix minor warning — 2026-01-31 16:04
 # [Faizan005Malik] Update documentation content — 2025-10-22 16:33
 # [Muhammad Abdullah/37531] Minor refactor — 2025-10-27 13:01
+# [35667-sudo] Cleanup helper code — 2026-03-05 12:42
