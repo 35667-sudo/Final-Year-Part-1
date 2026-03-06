@@ -1132,3 +1132,4 @@
 # [Muhammad Abdullah/37531] Improve UI behavior — 2026-04-05 13:33
 # [35667-sudo] Minor UI polish — 2025-12-09 13:15
 # [35667-sudo] Update comments — 2025-10-22 16:21
+# [35667-sudo] Update README steps — 2026-03-06 13:57
