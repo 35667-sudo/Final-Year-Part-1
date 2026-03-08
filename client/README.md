@@ -1277,3 +1277,4 @@
 # [Faizan005Malik] Improve responsiveness — 2025-12-14 09:41
 # [Faizan005Malik] Improve documentation — 2026-01-12 16:53
 # [35667-sudo] Minor UI adjustment — 2026-02-17 13:14
+# [35667-sudo] Update configuration notes — 2026-03-08 10:51
