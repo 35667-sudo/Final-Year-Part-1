@@ -1184,3 +1184,4 @@
 # [Faizan005Malik] Improve error display — 2026-02-27 12:48
 # [35667-sudo] Minor cleanup — 2025-12-12 14:38
 # [35667-sudo] Update helper text — 2026-03-27 09:42
+# [35667-sudo] Fix UI detail — 2026-03-09 14:13
