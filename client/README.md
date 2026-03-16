@@ -556,3 +556,4 @@
 # [Muhammad Abdullah/37531] Improve validation handling — 2026-02-05 11:29
 # [35667-sudo] Improve UI behavior — 2025-11-17 14:08
 # [Faizan005Malik] Update helper text — 2026-02-06 15:17
+# [35667-sudo] Improve error handling logic — 2026-03-16 11:55
