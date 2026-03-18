@@ -1,0 +1,56 @@
+/* Chat Loading Indicator */
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #16a34a;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes typing {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Chat button states */
+.chat-send:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.chat-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Message loading state */
+.message.loading .message-content {
+    background-color: #f3f4f6;
+    border: 1px dashed #d1d5db;
+}
+
+/* Error message styling */
+.message.bot .message-content p {
+    white-space: pre-line;
+    line-height: 1.5;
+}

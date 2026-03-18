@@ -1,0 +1,590 @@
+#deleteFarmButton {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    transform: translateY(-50%);
+    z-index: 10000;
+    background-color: red;
+    color: white;
+    border: none;
+    width: 50px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+
+.prelegend {
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+    bottom: 10px;
+    right: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+
+    max-height: 50vh;
+    overflow: auto;
+}
+
+#uniqueButtonId {
+
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.color-box {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.location-icon {
+    background: white;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.leaflet-touch .leaflet-control-geocoder {
+    min-width: 30px;
+    min-height: 30px;
+    margin-top: 90px;
+}
+
+
+#deepResButton {
+position: absolute;
+top: 10px;
+left: 145px;
+background-color: #007bff;
+color: white;
+height: 43px;
+border: none;
+padding: 10px 20px;
+font-size: 16px;
+cursor: pointer;
+z-index: 1000; /* Make sure it's on top of other elements */
+border-radius: 5px;
+box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+@media (max-width: 800px) {
+#deepResButton {
+display: block;
+font-size: 13px;
+width: 60px;
+height: 50px;
+padding: 10px;
+ left: 120px;
+
+}
+}
+
+
+#detectBoundariesButton {
+    position: absolute;
+    top: 10px;
+    left: 320px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    height: 43px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1000; /* Make sure it's on top of other elements */
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    @media (max-width: 800px) {
+    #detectBoundariesButton {
+    display: block;
+    font-size: 13px;
+    width: 60px;
+    height: 50px;
+    padding: 10px;
+     left: 230px;
+    
+    }
+    }
+
+
+#deepai {
+position: absolute;
+top: 200px;
+right: 10px;
+width: 50px; /* Adjust the width and height as needed */
+height: 50px;
+cursor: pointer;
+z-index: 1000; /* Ensure it's on top of other elements */
+border-radius: 5px;
+box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+#deepResButton:hover {
+background-color: #0056b3;
+}
+
+/* Base styles for all buttons */
+.save-btn, .download-btn, .select-more-btn, .merge-btn {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+    border: none;
+    width: 100%;
+    display: flex;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+@media (max-width: 800px) {
+    .save-btn, .download-btn, .select-more-btn, .merge-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        margin-top: 8px;
+        width: 30%;
+        height: 40px;
+        display: flex
+;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+}
+
+@media (max-width: 480px) {
+    .save-btn, .download-btn, .select-more-btn, .merge-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+        margin-top: 6px;
+        width: 20%;
+        height: 30px;
+        display: flex
+;
+    }
+}
+
+.save-btn {
+background-color: #007bff; /* Blue */
+color: white;
+}
+
+.save-btn:hover {
+background-color: #0056b3;
+transform: scale(1.05);
+}
+
+.download-btn {
+background-color: #28a745; /* Green */
+color: white;
+}
+
+.download-btn:hover {
+background-color: #1e7e34;
+transform: scale(1.05);
+}
+
+.select-more-btn {
+background-color: #ffc107; /* Yellow */
+color: black;
+}
+
+.select-more-btn:hover {
+background-color: #e0a800;
+transform: scale(1.05);
+}
+
+.merge-btn {
+background-color: #dc3545; /* Red */
+color: white;
+}
+
+.merge-btn:hover {
+background-color: #c82333;
+transform: scale(1.05);
+}
+/* Modal Background */
+/* Modal Background */
+.cwr-modal {
+display: none; /* Hidden by default */
+position: fixed;
+z-index: 1000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.6); /* Darker overlay for better contrast */
+backdrop-filter: blur(8px); /* Blurred background effect */
+display: flex;
+align-items: center;
+justify-content: center;
+animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Content (Centered) */
+.modal-content {
+background: white;
+width: 90%;
+max-width: 400px;
+padding: 25px;
+border-radius: 15px; /* Rounded corners */
+box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Stronger shadow for a "floating" effect */
+text-align: center;
+position: relative;
+animation: slideIn 0.3s ease-in-out;
+border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for contrast */
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+from {
+opacity: 0;
+}
+to {
+opacity: 1;
+}
+}
+
+/* Slide-in Animation */
+@keyframes slideIn {
+from {
+transform: translateY(-20px);
+opacity: 0;
+}
+to {
+transform: translateY(0);
+opacity: 1;
+}
+}
+/* Modal Header */
+.modal-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-bottom: 2px solid #eee;
+padding-bottom: 10px;
+}
+
+.modal-header h2 {
+font-size: 18px;
+color: #333;
+margin: 0;
+}
+
+/* Close Button */
+.close {
+font-size: 24px;
+font-weight: bold;
+cursor: pointer;
+color: #888;
+transition: all 0.3s ease;
+}
+
+.close:hover {
+color: #e74c3c; /* Red color on hover */
+transform: scale(1.1);
+}
+
+/* Modal Body */
+.modal-body {
+padding: 20px 0;
+}
+
+/* Date Picker Input */
+#datepicker {
+width: 50%;
+padding: 10px;
+font-size: 14px;
+border: 1px solid #ccc;
+border-radius: 6px;
+outline: none;
+transition: all 0.3s ease;
+}
+
+#datepicker:focus {
+border-color: #007bff;
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Calculate CWR Button */
+/* Base styles for the button */
+#checkCWR {
+    background-color: #28a745; /* Green */
+    color: white;
+    padding: 12px 18px;
+    font-size: 16px;
+    border: none;
+    width:50%; /* Fixed width for desktop */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 15px;
+}
+
+/* Responsive styles for tablets (e.g., screens less than 768px) */
+@media (max-width: 768px) {
+    #checkCWR {
+        width: 20%; /* Increase width for tablets */
+        padding: 10px 15px; /* Slightly smaller padding */
+        font-size: 14px; /* Smaller font size */
+        height: auto;
+    }
+}
+
+/* Responsive styles for mobile devices (e.g., screens less than 480px) */
+@media (max-width: 480px) {
+    #checkCWR {
+        width: 15%; /* Full width for mobile */
+        padding: 8px 12px; /* Smaller padding for mobile */
+        font-size: 12px; /* Smaller font size for mobile */
+        margin-top: 10px; /* Adjust margin for better spacing */
+        height: auto;
+    }
+}
+
+#checkCWR:hover {
+background-color: #1e7e34;
+transform: scale(1.05);
+}
+
+/* General modal styling */
+.modal-content {
+    top: 100px;
+    background-color: #ffffff;
+    margin: auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 700px;
+    animation: slideIn 0.3s ease-in-out;
+}
+
+/* Modal content box */
+.modal-content {
+background-color: #ffffff;
+margin: auto;
+padding: 25px;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+width: 90%;
+max-width: 1000px;
+animation: slideIn 0.3s ease-in-out;
+}
+
+/* Modal heading */
+.modal-content h4 {
+margin-top: 0;
+font-size: 1.5rem;
+color: #333333;
+text-align: center;
+margin-bottom: 20px;
+}
+
+/* Input fields styling */
+.modal-content label {
+display: block;
+margin-bottom: 8px;
+font-size: 0.9rem;
+color: #555555;
+}
+
+.modal-content input {
+width: 90%;
+padding: 10px;
+margin-bottom: 20px;
+border: 1px solid #dddddd;
+border-radius: 6px;
+font-size: 1rem;
+color: #333333;
+transition: border-color 0.3s ease;
+}
+
+.modal-content input:focus {
+border-color: #007bff;
+outline: none;
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Buttons styling */
+.modal-content button {
+width: 100%;
+padding: 12px;
+border: none;
+border-radius: 6px;
+font-size: 1rem;
+cursor: pointer;
+transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#submitUserData {
+background-color: #007bff;
+color: #ffffff;
+margin-bottom: 10px;
+}
+
+#submitUserData:hover {
+background-color: #0056b3;
+transform: translateY(-2px);
+}
+
+#closeModal {
+background-color: #f0f0f0;
+color: #333333;
+}
+
+#closeModal:hover {
+background-color: #e0e0e0;
+transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+from {
+opacity: 0;
+}
+to {
+opacity: 1;
+}
+}
+
+@keyframes slideIn {
+from {
+transform: translateY(-20px);
+opacity: 0;
+}
+to {
+transform: translateY(0);
+opacity: 1;
+}
+}
+/* Alert Box */
+.alert {
+position: fixed;
+top: 20px;
+right: 20px;
+width: 300px;
+padding: 15px;
+font-size: 16px;
+font-weight: bold;
+border-radius: 8px;
+box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+display: none; /* Initially hidden */
+z-index: 10000;
+animation: fadeInOut 4s ease-in-out;
+}
+
+/* Alert Types */
+.alert.success {
+background-color: #28a745; /* Green */
+color: white;
+}
+
+.alert.error {
+background-color: #dc3545; /* Red */
+color: white;
+}
+
+.alert.warning {
+background-color: #ffc107; /* Yellow */
+color: black;
+}
+
+.alert.info {
+background-color: #17a2b8; /* Blue */
+color: white;
+}
+
+/* Fade-in and fade-out animation */
+@keyframes fadeInOut {
+0% { opacity: 0; transform: translateY(-10px); }
+10% { opacity: 1; transform: translateY(0); }
+90% { opacity: 1; transform: translateY(0); }
+100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Close Button */
+.alert .close-btn {
+position: absolute;
+top: 5px;
+right: 10px;
+font-size: 18px;
+cursor: pointer;
+font-weight: bold;
+color: white;
+}
+
+.alert .close-btn:hover {
+opacity: 0.7;
+}
+
+.leaflet-popup-content {
+    margin: 13px 19px;
+    line-height: 1.4;
+    width: auto;
+}
+
+/* Processing Screen */
+/* Full-screen processing screen */
+.processing-scr {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Darker background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Content Box */
+.processing-content {
+    background: rgba(255, 255, 255, 0.1); /* Slight transparency */
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    width: 80%;
+    max-width: 800px; /* Limit max width for readability */
+}
+
+/* Displayed Text */
+#wordByWordText {
+    font-size: 22px;
+    text-align: left;
+    color: #ffffff; /* Initially white */
+    font-family: Arial;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-y: auto;
+    max-height: 70vh; /* Prevent overflow */
+    padding: 10px;
+    line-height: 1.5;
+}
+
+/* Animation effect: White text turns green like a terminal */
+@keyframes terminalEffect {
+    from { color: #ffffff; }
+    to { color: #00ff00; } /* Green text effect */
+}
+
+/* Apply animation */
+.word-visible {
+    animation: terminalEffect 1s ease-in-out forwards;
+}

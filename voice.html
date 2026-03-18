@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Web Page Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(to right, #f8f9fa, #e9ecef);
+      color: #333;
+    }
+
+    header, footer {
+      background-color: #0077b6;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #023e8a;
+    }
+
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    nav a:hover {
+      background-color: #00b4d8;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+   
+
+    table, th, td {
+      border: 1px solid #A020F0;
+      padding: 10px;
+      text-align: center;
+       width: 10%;
+      border-collapse: collapse;
+    }
+
+   
+
+    form {
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    input, select {
+      padding: 8px;
+      margin-top: 5px;
+      width: 100%;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #023e8a;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌐 My Advanced Web Page</h1>
+  <p>With CSS, JS, and more HTML5 features</p>
+</header>
+
+<nav>
+  <a href="#intro">Intro</a>
+  <a href="#table">Table</a>
+  <a href="#form">Form</a>
+  <a href="#media">Media</a>
+</nav>
+
+<main>
+  <section id="intro">
+    <h2>Welcome Section</h2>
+    <p>This page demonstrates more advanced HTML, CSS, and JavaScript features.</p>
+    <button onclick="alert('Hello! You are aliza 🎉')">Click zeeshan</button>
+  </section>
+
+  <section id="table">
+    <h2>Styled Table</h2>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Skill</th>
+        <th>Level</th>
+      </tr>
+      <tr>
+        <td>Ali</td>
+        <td>HTML</td>
+        <td>Intermediate</td>
+      </tr>
+      <tr>
+        <td>Sara</td>
+        <td>CSS</td>
+        <td>Advanced</td>
+      </tr>
+      <tr>
+        <td>Umar</td>
+        <td>JavaScript</td>
+        <td>Beginner</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="form">
+    <h2>Interactive Form</h2>
+    <form onsubmit="return handleSubmit(event)">
+      <label for="username">Name:</label>
+      <input type="text" id="username" required>
+
+      <label for="favcolor">Favorite Color:</label>
+      <input type="color" id="favcolor">
+
+      <label for="birthday">Birthday:</label>
+      <input type="date" id="birthday">
+
+      <button type="submit">Submit</button>
+    </form>
+    <p id="formResult" style="margin-top:10px; font-weight:bold;"></p>
+  </section>
+
+  <section id="media">
+    <h2>Multimedia</h2>
+    <video width="320" controls>
+      <source src="sample.mp4" type="video/mp4">
+      Your browser doesn’t support video.
+    </video>
+
+    <audio controls>
+      <source src="sample.mp3" type="audio/mpeg">
+      Your browser doesn’t support audio.
+    </audio>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 My Advanced Page. All Rights Reserved.</p>
+</footer>
+
+<script>
+  function handleSubmit(event) {
+    event.preventDefault();
+    const name = document.getElementById("username").value;
+    const color = document.getElementById("favcolor").value;
+    const birthday = document.getElementById("birthday").value;
+    document.getElementById("formResult").innerText =
+      `Thanks, ${name}! 🎨 Your favorite color is ${color} and your birthday is ${birthday}.`;
+    return false;
+  }
+</script>
+
+</body>
+</html>

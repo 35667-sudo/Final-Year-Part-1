@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+
+ <head>
+    <meta charset="UTF-8">
+    <title>Agricultural Land Use Analysis </title>
+  <link rel="stylesheet" href="style.css">
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+<script src="umar/vex/dist/js/vex.combined.min.js"></script>
+<link rel="stylesheet" href="umar/vex/dist/css/vex.css" />
+<link rel="stylesheet" href="umar/vex/dist/css/vex-theme-default.css" />
+<link rel="stylesheet" href="umar/vex/dist/css/vex-theme-os.css" />
+<link rel="stylesheet" href="umar/vex/dist/css/vex-theme-plain.css" />
+<link rel="stylesheet" href="umar/vex/dist/css/vex-theme-wireframe.css" />
+<link rel="stylesheet" href="umar/vex/dist/css/vex-theme-flat-attack.css" />
+<link rel="stylesheet" href="umar/vex/dist/css/vex-theme-top.css" />
+<link rel="stylesheet" href="umar/vex/dist/css/vex-theme-bottom-right-corner.css" />
+
+<link rel="stylesheet" href="umar/noty/noty.css" />
+<link rel="stylesheet" href="umar/noty/themes/mint.css" />
+<link rel="stylesheet" href="umar/noty/themes/sunset.css" />
+<script src="umar/noty/noty.min.js"></script>
+
+<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+<script src="umar/esri-leaflet.js"></script>
+<script src="umar/esri-leaflet-geocode.js"></script>
+<link rel="stylesheet" type="text/css" href="umar/esri-leaflet-geocode.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="stylesheet" href="umar/leaflet-measure.css" />
+<script src="umar/leaflet-measure.js"></script>
+<script src="../logo.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="https://www.cssscript.com/demo/material-design-date-time-picker-in-vanilla-javascript/js/md-date-time-picker.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<style>
+
+.nb-spinner {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto;
+    background: transparent;
+    border-top: 4px solid #ffffff;
+    border-right: 4px solid transparent;
+    border-radius: 50%;
+    -webkit-animation: 1s spin linear infinite;
+    animation: 1s spin linear infinite; 
+    position: absolute;
+    display: inline-block;
+    position: relative;
+    top: 40%;
+    left: 50%;
+}
+    
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+          
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.loader-div{
+    width: 100%;
+    height: 100vh;
+    z-index: 99999999999999;
+    position: relative;
+    background: #28282B;
+}
+    
+</style>
+ <header class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  
+  <div class="header-logo" style="display: flex; align-items: center; gap: 15px;">
+    <img src="../Assets/logo.webp" alt="Logo" style="height: 65px; width: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+    <img id="portalLogo" style="height: 45px; width: auto; border-radius: 8px; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+    <span style="font-size: 22px; font-weight: bold; color: #10b981; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px;">
+  <span id="portalName"></span> (Data Driven Decisions)
+</span>
+
+
+
+  </div>
+
+  <button class="menu-toggle" id="menuToggle" style="background-color: #10b981; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; color: white; font-size: 18px; transition: background-color 0.3s ease;">
+    <i class="fas fa-bars"></i>
+  </button>
+
+</header>
+<body>
+ 
+
+
+    <div class="loader-div">
+        <div class="nb-spinner"></div>
+    </div>
+    
+
+    <!-- <img src="logo.png" style="height: 80px;" /> -->
+    <div class="sidebar open">
+        <div class="logo-details">
+            <!-- <img src="logo_new.png" style="height: 80px;" /> -->
+            <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
+            <!-- <div class="logo_name">LIMS PAKISTAN</div> -->
+            <!-- <i class='bx bx-menu' id="btn"></i> -->
+        </div>
+        <ul class="nav-list">
+            <!-- <li>
+          <i class='bx bx-search' ></i>
+         <input type="text" placeholder="Search...">
+         <span class="tooltip">Search</span>
+      </li>   -->
+
+            <li style="margin-bottom: 1em;" class="uploadMenu">
+                <a href="#" onclick="return false;">
+                    <i class='bx bx-cloud-upload'></i>
+                    <span class="links_name">Upload Field Boundry</span>
+                </a>
+                <span class="tooltip">Upload Field Boundry</span>
+            </li>
+
+            <li style="margin-bottom: 1em;" class="geolocate">
+                <span href="#" onclick="return false;" style="cursor: pointer; display: flex;
+                height: 100%;
+                width: 100%;
+                border-radius: 12px;
+                align-items: center;
+                text-decoration: none;
+                transition: all 0.4s ease; 
+                background: #1f1f1fb5;border: 1px solid;color: white;" >
+                    <i class='bx bx-error-alt' style="color: white;"></i>
+                    <span class="links_name" style="color: white;
+                    word-wrap: break-word; 
+                    word-wrap: break-word;
+                    display: block;
+                    word-wrap: break-word; 
+                    white-space: normal;
+                    font-size: 14px;">Or geo locate / search farm to get information about soil and water</span>
+                </span>
+                <span class="tooltip">Or geo locate / search farm to get information about soil and water</span>
+            </li>
+            <hr class="seperator" />
+            <li class="land_option_eval">
+                <a href="http://www.limspak.com/monitoring/land-evaluation/"   target="_blank" >
+                    <i class='bx bx-hive'></i>
+                    <span class="links_name">Land Evaluation</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                
+                <span class="tooltip">Land Evaluation</span>
+               
+                 
+                
+            </li>
+            
+            <div class ="all_menu_items">
+            <hr class="seperator" />
+
+        
+
+           
+            <li class="land_option">
+                <a href="#" onclick="return false;" >
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Land</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                
+                <span class="tooltip">Land</span>
+               
+                <!-- <ul class="nav-list-sub">
+
+                    <li>
+                        <a href="" onclick="return false;">
+                            <i class='bx bxs-landscape'></i>
+                            <span class="links_name">Soil</span>
+                        </a>
+                        <span class="tooltip">Soil</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="" onclick="return false;">
+                            <i class='bx bx-water' ></i>
+                            <span class="links_name">Water</span>
+                        </a>
+                        <span class="tooltip">Water</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="" onclick="return false;">
+                            <i class='bx bxs-florist' ></i>
+                            <span class="links_name">Crop Profitability</span>
+                        </a>
+                        <span class="tooltip">Crop Profitability</span>
+                         
+                        
+                    </li>
+
+                </ul> -->
+                
+            </li>
+            
+            <hr class="seperator" />
+                <!-- class="main_menu" style="background: grey; " -->
+            <li class="weather_option">
+                <a href="#"  onclick="return false;">
+                    <i class='bx bxs-thermometer'></i>
+                    <span class="links_name">Weather</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                <span class="tooltip">Weather</span>
+
+                <ul class="nav-list-sub">
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-history'></i>
+                            <span class="links_name">Historical</span>
+                        </a>
+                        <span class="tooltip">Historical</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-right-arrow-alt' ></i>
+                            <span class="links_name">Forecast</span>
+                        </a>
+                        <span class="tooltip">Forecast</span>      
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Weather Analytics</span>
+                        </a>
+                        <span class="tooltip">Weather Analytics</span>
+                         
+                        
+                    </li>
+
+                </ul>
+
+
+            </li>
+            
+            <hr class="seperator" />
+
+            <li>
+                <a id="crop_monitoring" href="#" onclick="return false" target="_blank">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Crop Monitoring</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                <span class="tooltip">Crop Monitoring</span>
+
+                <ul class="nav-list-sub"  >
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-history'></i>
+                            <span class="links_name">Crop conditions</span>
+                        </a>
+                        <span class="tooltip">Crop conditions</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-right-arrow-alt' ></i>
+                            <span class="links_name">Crop analytics</span>
+                        </a>
+                        <span class="tooltip">Crop analytics</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Managed Data</span>
+                        </a>
+                        <span class="tooltip">Crop Managment data</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Scouting Data</span>
+                        </a>
+                        <span class="tooltip">Scouting Data</span>
+                         
+                        
+                    </li>
+
+                </ul>
+
+
+            </li>
+
+
+            
+
+            <hr class="seperator" />
+
+            
+            <li>
+                <a id="crop_monitoring_bulk" href="#" onclick="return false" target="_blank">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Bulk Crop Monitoring</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                <span class="tooltip">Bulk Crop Monitoring</span>
+
+                <ul class="nav-list-sub"  >
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-history'></i>
+                            <span class="links_name">Crop conditions</span>
+                        </a>
+                        <span class="tooltip">Crop conditions</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-right-arrow-alt' ></i>
+                            <span class="links_name">Crop analytics</span>
+                        </a>
+                        <span class="tooltip">Crop analytics</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Managed Data</span>
+                        </a>
+                        <span class="tooltip">Crop Managment data</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Scouting Data</span>
+                        </a>
+                        <span class="tooltip">Scouting Data</span>
+                         
+                        
+                    </li>
+
+                </ul>
+
+
+            </li>
+
+
+            <hr class="seperator" />
+
+            <li>
+                <a id="crop_monitoring" href="#" onclick="return false" target="_blank">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Crop Monitoring</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                <span class="tooltip">Crop Monitoring</span>
+
+                <ul class="nav-list-sub"  >
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-history'></i>
+                            <span class="links_name">Crop conditions</span>
+                        </a>
+                        <span class="tooltip">Crop conditions</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-right-arrow-alt' ></i>
+                            <span class="links_name">Crop analytics</span>
+                        </a>
+                        <span class="tooltip">Crop analytics</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Managed Data</span>
+                        </a>
+                        <span class="tooltip">Crop Managment data</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Scouting Data</span>
+                        </a>
+                        <span class="tooltip">Scouting Data</span>
+                         
+                        
+                    </li>
+
+                </ul>
+
+
+            </li>
+
+
+            
+
+            <hr class="seperator" />
+
+            
+            <li>
+                <a id="crop_monitoring_bulk_lims" href="#" onclick="return false" target="_blank">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">LIMS Bulk Crop Monitoring</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                <span class="tooltip">LIMS Bulk Crop Monitoring</span>
+
+                <ul class="nav-list-sub"  >
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-history'></i>
+                            <span class="links_name">Crop conditions</span>
+                        </a>
+                        <span class="tooltip">Crop conditions</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-right-arrow-alt' ></i>
+                            <span class="links_name">Crop analytics</span>
+                        </a>
+                        <span class="tooltip">Crop analytics</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Managed Data</span>
+                        </a>
+                        <span class="tooltip">Crop Managment data</span>
+                         
+                        
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="return false;">
+                            <i class='bx bx-poll' ></i>
+                            <span class="links_name">Scouting Data</span>
+                        </a>
+                        <span class="tooltip">Scouting Data</span>
+                         
+                        
+                    </li>
+
+                </ul>
+
+
+            </li>
+
+
+
+            
+
+            <hr class="seperator" />
+
+            <li>
+                <a id="scouting_task" href="#" onclick="return false" target="_blank">
+                    <i class='bx bx-location-plus'></i>
+                    <span class="links_name">Scouting Tasks</span>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </a>
+                <span class="tooltip">Scouting Tasks</span>
+ 
+
+
+            </li>
+
+
+            <hr class="seperator" />
+            <!-- <li>
+       <a href="#">
+         <i class='bx bx-pie-chart-alt-2' ></i>
+         <span class="links_name">Analytics</span>
+       </a>
+       <span class="tooltip">Analytics</span>
+     </li>
+     <li>
+       <a href="#">
+         <i class='bx bx-folder' ></i>
+         <span class="links_name">File Manager</span>
+       </a>
+       <span class="tooltip">Files</span>
+     </li>
+     <li>
+       <a href="#">
+         <i class='bx bx-cart-alt' ></i>
+         <span class="links_name">Order</span>
+       </a>
+       <span class="tooltip">Order</span>
+     </li>
+     <li>
+       <a href="#">
+         <i class='bx bx-heart' ></i>
+         <span class="links_name">Saved</span>
+       </a>
+       <span class="tooltip">Saved</span>
+     </li> -->
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="links_name">Help Center</span>
+                </a>
+                <span class="tooltip">Help Center</span>
+            </li>
+
+        </div>
+            <!-- <li class="profile">
+         <div class="profile-details">
+           <img src="logo.png" alt="profileImg">
+           <div class="name_job">
+             <div class="name">user name</div>
+             <div class="job">logout</div>
+           </div>
+         </div>
+         <i class='bx bx-log-out' id="log_out" ></i>
+     </li> -->
+        </ul>
+    </div>
+    <section class="home-section">
+        <div id="map"></div>
+    </section>
+
+    <!-- Bottom Sheet HTML -->
+    <div class="bottom-sheet resizable">
+    <!-- <h2>Menu Item Name</h2> -->
+
+    <div class="all_soil_data">
+    <select class="dropdown land-options">
+        <option value="soil" selected>Soil</option>
+        <option value="water">Water</option>
+        <option value="cpd">Crop Profitability</option>
+      </select>
+    <i class='bx bx-chevron-down dropdown-icon'></i>
+    <p>
+
+        <div class="md-chips soil-data-options"></div>
+
+        <div class="row" style="display: none;">
+            <select class="dropdown crop-graphs">
+                <option value="acg" selected>All Crops Graph</option>
+                <option value="rcg">Rabi Crop Graph</option>
+                <option value="kcg">Kharif Crop Graph</option>
+            </select>
+            <div class="chart-container">
+
+                <canvas id="profChart"></canvas>
+
+            </div>
+        </div>
+      
+
+        </p>
+
+    </div>   
+
+    <div class="all_weather_data">
+        <select class="dropdown">
+            <option value="cod" selected>Current Weather</option>
+            <option value="forcasting">Weather Forcast</option>
+            <!-- <option value="cpd">Crop Profitability</option> -->
+          </select>
+
+          <span class="date-selector start-date"> Start Data </span>
+          <input type="date" class="date-selector" placeholder="Start Date"/>
+          <span class="date-selector end-date"> End Data </span>
+          <input type="date" class="date-selector" placeholder="End Date"/>
+
+        <i class='bx bx-chevron-down dropdown-icon'></i>
+        <p>
+    
+            <div class="md-chips weather-data-chips" ></div>
+    
+            <!-- <div class="row" style="display: none;">
+                <select class="dropdown crop-graphs">
+                    <option value="acg" selected>All Crops Graph</option>
+                    <option value="rcg">Rabi Crop Graph</option>
+                    <option value="kcg">Kharif Crop Graph</option>
+                </select>
+                <div class="chart-container">
+    
+                    <canvas id="profChart"></canvas>
+    
+                </div>
+            </div>
+           -->
+    
+            </p>
+    
+        </div> 
+  </div>
+ 
+
+    <script>
+
+          $('.loader-div').fadeOut('slow');
+
+        function showLoader(){
+            $(".loader-div").show();
+            $(".sidebar").hide();
+            $(".home-section").hide();
+        }
+        function hideLoader(){
+            $(".loader-div").hide();
+            $(".sidebar").show();
+            $(".home-section").show();  
+        }
+ var x = new mdDateTimePicker('date');
+ $(".start-date").click(function(){
+    x.toggle();
+ })
+
+ $(".end-date").click(function(){
+    x.toggle();
+    })
+
+
+ $(".all_weather_data").hide();
+
+
+$(".land_option").click(function(){
+ $(".all_soil_data").show();
+  $(".all_weather_data").hide();
+ });
+
+$('.land-options').on('change', function () {
+  //ways to retrieve selected option and text outside handler
+ // console.log('Changed option value ' + this.value);
+  if(this.value == 'water'){
+      showNotificationMessage('info',"data sync is in progress, will be available in future updates")
+  }else if(this.value == 'soil'){
+    $(".md-chips").show();
+    $(".row").hide(); 
+  }else if(this.value == 'cpd'){
+      // Crop Profitability Graphs
+      $(".md-chips").hide(); 
+      $(".row").show(); 
+  }
+ // console.log('Changed option text ' + $(this).find('option').filter(':selected').text());
+});
+    let linkName,latLng;
+
+    
+$(".weather_option").click(function(){
+// all_soil_data all_weather_data
+//$(".all_soil_data").hide();
+//$(".all_weather_data").show();
+//$(".weather-data-chips").empty();
+window.open('http://www.limspak.com/monitoring/weather/app.php?latLng='+latLng+'&file='+localStorage.getItem("file"), '_blank');
+            
+});
+   // weatherData('30.39183032808816', '73.30078125000001'); 
+    // getProfiGraph('30.39183032808816', '73.30078125000001');
+    
+    // getSoilAttr('30.39183032808816','73.30078125000001');
+  
+
+    $("#crop_monitoring_bulk_lims").click(function(){
+
+        window.open('https://ee-limspak8.projects.earthengine.app/view/bulkdata', '_blank');
+
+  
+});
+
+
+    $("#crop_monitoring_bulk").click(function(){
+
+        let firstThreeLetters = linkName.toLowerCase().substring(0, 3);
+           //  console.log(linkName.toLowerCase().substring(3, linkName.length),linkName);
+            if(firstThreeLetters == 'mrk'){
+                window.open('https://mobkhan1.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank');
+            }else if(firstThreeLetters == 'uba'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://ubaidullahikram01.users.earthengine.app/view/bulkdata', '_blank');
+                //window.open('https://ubaidullahikram01.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank');
+            }else if(firstThreeLetters == 'ash'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://ashfaqumar50.users.earthengine.app/view/ashbulkdata', '_blank');
+            }else if (firstThreeLetters == 'mal'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://malikzee95555.users.earthengine.app/view/bulkcode', '_blank'); 
+            }else if (firstThreeLetters == 'uma'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://ashfaqumar50.users.earthengine.app/view/ashbulkdata', '_blank');
+            }else{
+                window.open('https://ubaidullahikram01.users.earthengine.app/view/bulkdata', '_blank');
+             
+            }
+       
+          
+    });
+        $("#crop_monitoring").click(function(){ 
+            let firstThreeLetters = linkName.toLowerCase().substring(0, 3);
+           //  console.log(linkName.toLowerCase().substring(3, linkName.length),linkName);
+            if(firstThreeLetters == 'mrk'){
+                window.open('https://mobkhan1.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank');
+            }else if(firstThreeLetters == 'uba'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://ubaidullahikram01.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank');
+            }else if(firstThreeLetters == 'ash'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://ashfaqumar50.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank');
+            }else if (firstThreeLetters == 'mal'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://malikzee95555.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank'); 
+            }else if (firstThreeLetters == 'uma'){
+                linkName  = linkName.toLowerCase().substring(3, linkName.length);
+                window.open('https://ashfaqumar50.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank');
+            }else{
+                window.open('https://mobkhan.users.earthengine.app/view/'+linkName.toLowerCase(), '_blank');
+            }
+        
+        });
+
+      var bottomSheet = document.querySelector('.bottom-sheet');
+      var handle = document.createElement('div');
+      handle.classList.add('resizable-handle');
+      bottomSheet.appendChild(handle);
+
+      var isResizing = false;
+      var lastY = 0;
+
+      handle.addEventListener('mousedown', function(e) {
+        isResizing = true;
+        lastY = e.clientY;
+      });
+
+      document.addEventListener('mousemove', function(e) {
+        if (!isResizing) return;
+
+        var deltaY = e.clientY - lastY;
+        var newHeight = bottomSheet.clientHeight + deltaY;
+
+        if (newHeight > 100) {
+          bottomSheet.style.height = newHeight + 'px';
+          lastY = e.clientY;
+        }
+      });
+
+      document.addEventListener('mouseup', function() {
+        isResizing = false;
+      });
+    
+
+function showBottomSheet() {
+      var bottomSheet = document.querySelector('.bottom-sheet');
+      bottomSheet.classList.add('show');
+    }
+
+    $(".dropdown-icon").click(function(){
+        
+        hideBottomSheet()
+    })
+    function hideBottomSheet() {
+      var bottomSheet = document.querySelector('.bottom-sheet');
+      bottomSheet.classList.remove('show');
+    }
+
+    function getWeatherInformation(lat, lng){
+        $(".weather-data-chips").empty();
+        $.post("https://mriaz-khan.com/managed-services/weather.php",{ latlng:lat+","+lng },
+          function(data,status){ 
+            var jsn = $.parseJSON(data);
+            console.log("JSN",jsn.data.current_condition[0].temp_C);
+
+            var weatherData =  
+                '<div class="md-chip">Temprature: '+jsn.data.current_condition[0].temp_C+' C</div>'+
+                '<div class="md-chip">humidity: '+jsn.data.current_condition[0].humidity+'%</div>'+
+                '<div class="md-chip">Rain Fall: '+jsn.data.current_condition[0].precipMM+'mm</div>'+
+                '<div class="md-chip">Wind Speed: '+jsn.data.current_condition[0].windspeedMiles+'miles</div>';
+            console.log("weatherData",$(".weather-data-chips").append(weatherData));
+            $(".weather-data-chips").empty();
+            $(".weather-data-chips").append(weatherData);
+           // alert(data)
+        })
+
+    }
+
+    function getProfiGraph(lat, lng) {
+ 
+        var chart ;
+    $.post("https://mriaz-khan.com/LWR036-CWR/swater/surface_water.php?service=4", { latitude: lat, longitude: lng },
+        function (data, status) {
+
+            var returnedjsn = $.parseJSON(data);
+ 
+            var chartData = [{
+                Crop: 'Wheat',
+
+
+                value: returnedjsn[0].profit_whe
+            },
+            {
+                Crop: 'Cotton',
+                value: returnedjsn[0].profit_cot
+            },
+            {
+                Crop: 'Sugarcane',
+                value: returnedjsn[0].profit_sug
+            },
+            {
+                Crop: 'Maize',
+                value: returnedjsn[0].profit_mai
+            },
+            {
+                Crop: 'Rice',
+                value: returnedjsn[0].profit_ric
+            },
+            {
+                Crop: 'Bitter gourd',
+                value: returnedjsn[0].profit_bgo
+            },
+            {
+                Crop: 'Brinjal',
+                value: returnedjsn[0].profit_bri
+            },
+            {
+                Crop: 'Calflower',
+                value: returnedjsn[0].profit_cal
+            },
+            {
+                Crop: 'Garlic',
+                value: returnedjsn[0].profit_gar
+            },
+            {
+                Crop: 'Ladyfinger',
+                value: returnedjsn[0].profit_lad
+            },
+            {
+                Crop: 'Onion',
+                value: returnedjsn[0].profit_oni
+            },
+            {
+                Crop: 'Peas',
+                value: returnedjsn[0].profit_pea
+            },
+            {
+                Crop: 'Patato',
+                value: returnedjsn[0].profit_pat
+            },
+            {
+                Crop: 'Tomato',
+                value: returnedjsn[0].profit_tom
+            },
+            {
+                Crop: 'Mong',
+                value: returnedjsn[0].profit_mon
+            },
+            {
+                Crop: 'Mash',
+                value: returnedjsn[0].profit_mas
+            },
+            {
+                Crop: 'Canola',
+                value: returnedjsn[0].profit_can
+            },
+            {
+                Crop: 'Grapes',
+                value: returnedjsn[0].profit_gra
+            },
+            {
+                Crop: 'Rapseed',
+                value: returnedjsn[0].profit_rap
+            },
+            {
+                Crop: 'Sunflower',
+                value: returnedjsn[0].profit_sun
+            },
+            {
+                Crop: 'Tinda',
+                value: returnedjsn[0].profit_tin
+            },
+            {
+                Crop: 'Chilli',
+                value: returnedjsn[0].profit_chi
+            },
+            {
+                Crop: 'Mustard',
+                value: returnedjsn[0].profit_mus
+            }
+            ];
+            var cropNames = chartData.map(item => item.Crop);
+var cropValues = chartData.map(item => item.value);
+ 
+// Initialize the chart
+var ctx = document.getElementById('profChart').getContext('2d');
+var existingChart = Chart.getChart(ctx);
+if (existingChart) {
+  // If a chart exists, destroy it
+  existingChart.destroy();
+}
+
+chart = new Chart(ctx , {
+type: 'bar',
+data: {
+  labels: cropNames,
+  datasets: [{
+    label: 'Rs / Ha',
+    data: cropValues,
+    backgroundColor: 'rgb(85, 203, 232)',
+    borderColor: 'rgb(85, 203, 232)',
+    textColor:'#fff',
+    barPercentage: 0.2,         // Decrease bar width
+categoryPercentage: 0.8     // Adjust spacing between bars
+  }]
+},
+options: {
+    options: {
+        scales: {
+xAxes: [{
+    barPercentage: 0.95
+}]
+},
+        responsive: true,
+maintainAspectRatio: false
+},
+  plugins: {
+    title: {
+      display: true,
+      text: 'Crop Pofitability (Rs / Ha)',
+      color:'white',
+    },
+    legend: {
+      display: false
+    }, 
+    datalabels: {
+        anchor: 'end',
+        align: 'top',
+        formatter: function(value) {
+          return value;
+        },
+        font: {
+          weight: 'bold'
+        }
+      },
+    tooltip: {
+      enabled: true,
+      mode: 'index',
+      intersect: false,
+      displayColors: false,
+      callbacks: {
+        label: function(context) {
+          return cropNames[context.dataIndex] + ': ' + context.formattedValue +" (Rs/Ha)";
+        }
+      }
+    }
+  },
+  scales: {
+    x: {
+      grid: {
+        display: false
+      },
+      ticks: {
+        autoSkip: false,
+        maxRotation: 90,
+        minRotation: 90,
+        color:'white',
+        fontFamily:'Roboto',
+        size:'12',
+        style:'normal'
+      },font: {
+                weight: 'normal'
+            }
+    },
+    y: {
+      display: true,
+      grid: {
+        display: true
+      },ticks: {
+        
+        color:'white',
+        fontFamily:'Roboto',
+      }
+    }
+  }
+}
+});  
+
+
+
+            // Season wise data
+
+ $('.crop-graphs').on('change', function () {
+  //ways to retrieve selected option and text outside handler
+  console.log('Changed option value ' + this.value);
+  if(this.value == 'acg'){
+    var chartData = [{
+                Crop: 'Wheat',
+                value: returnedjsn[0].profit_whe
+            },
+            {
+                Crop: 'Cotton',
+                value: returnedjsn[0].profit_cot
+            },
+            {
+                Crop: 'Sugarcane',
+                value: returnedjsn[0].profit_sug
+            },
+            {
+                Crop: 'Maize',
+                value: returnedjsn[0].profit_mai
+            },
+            {
+                Crop: 'Rice',
+                value: returnedjsn[0].profit_ric
+            },
+            {
+                Crop: 'Bitter gourd',
+                value: returnedjsn[0].profit_bgo
+            },
+            {
+                Crop: 'Brinjal',
+                value: returnedjsn[0].profit_bri
+            },
+            {
+                Crop: 'Calflower',
+                value: returnedjsn[0].profit_cal
+            },
+            {
+                Crop: 'Garlic',
+                value: returnedjsn[0].profit_gar
+            },
+            {
+                Crop: 'Ladyfinger',
+                value: returnedjsn[0].profit_lad
+            },
+            {
+                Crop: 'Onion',
+                value: returnedjsn[0].profit_oni
+            },
+            {
+                Crop: 'Peas',
+                value: returnedjsn[0].profit_pea
+            },
+            {
+                Crop: 'Patato',
+                value: returnedjsn[0].profit_pat
+            },
+            {
+                Crop: 'Tomato',
+                value: returnedjsn[0].profit_tom
+            },
+            {
+                Crop: 'Mong',
+                value: returnedjsn[0].profit_mon
+            },
+            {
+                Crop: 'Mash',
+                value: returnedjsn[0].profit_mas
+            },
+            {
+                Crop: 'Canola',
+                value: returnedjsn[0].profit_can
+            },
+            {
+                Crop: 'Grapes',
+                value: returnedjsn[0].profit_gra
+            },
+            {
+                Crop: 'Rapseed',
+                value: returnedjsn[0].profit_rap
+            },
+            {
+                Crop: 'Sunflower',
+                value: returnedjsn[0].profit_sun
+            },
+            {
+                Crop: 'Tinda',
+                value: returnedjsn[0].profit_tin
+            },
+            {
+                Crop: 'Chilli',
+                value: returnedjsn[0].profit_chi
+            },
+            {
+                Crop: 'Mustard',
+                value: returnedjsn[0].profit_mus
+            }
+            ];
+            var cropNames = chartData.map(item => item.Crop);
+var cropValues = chartData.map(item => item.value);
+ 
+  
+        // Update the chart's data
+ chart.data.labels = cropNames;
+ chart.data.datasets[0].data = cropValues;
+
+     
+        // Update the chart
+ chart.update();
+  }else if(this.value == 'kcg'){
+      
+    var chartData = [{
+                    Crop: 'Cotton',
+
+
+                    value: returnedjsn[0].profit_cot
+                },
+
+                {
+                    Crop: 'Rice',
+                    value: returnedjsn[0].profit_ric
+                },
+
+                {
+                    Crop: 'Mong',
+                    value: returnedjsn[0].profit_mon
+                },
+                {
+                    Crop: 'Canola',
+                    value: returnedjsn[0].profit_can
+                },
+
+                {
+                    Crop: 'Mash',
+                    value: returnedjsn[0].profit_mas
+                },
+                {
+                    Crop: 'Sugercane',
+                    value: returnedjsn[0].profit_sug
+                }
+                ];
+ 
+
+// Extract the crop names and values from the new data
+var cropNames = chartData.map(item => item.Crop);
+ var cropValues = chartData.map(item => item.value);
+
+        // Update the chart's data
+ chart.data.labels = cropNames;
+ chart.data.datasets[0].data = cropValues;
+
+        // Update the chart
+ chart.update();
+  }else if(this.value == 'rcg'){
+    var chartData = [{
+        Crop: 'Wheat',
+         
+				
+        value: returnedjsn[0].profit_whe
+    },
+     
+    {
+        Crop: 'Sugarcane',
+        value:  returnedjsn[0].profit_sug
+    },
+      
+    {
+        Crop: 'Peas',
+        value:  returnedjsn[0].profit_pea
+    },  
+    {
+        Crop: 'Canola',
+        value:  returnedjsn[0].profit_can
+    },
+     
+    {
+        Crop: 'Rapseed',
+        value:  returnedjsn[0].profit_rap
+    },
+    {
+        Crop: 'Garlic',
+        value:  returnedjsn[0].profit_gar
+    },
+    {
+        Crop: 'Mustard',
+        value:  returnedjsn[0].profit_mus
+    }
+];
+
+// Extract the crop names and values from the new data
+var cropNames = chartData.map(item => item.Crop);
+ var cropValues = chartData.map(item => item.value);
+
+        // Update the chart's data
+ chart.data.labels = cropNames;
+ chart.data.datasets[0].data = cropValues;
+
+        // Update the chart
+ chart.update();
+
+  }
+ 
+});
+            $("#springSeasonCrops").on("click", function () {
+
+
+                var chartData = [{
+                    Crop: 'Maize',
+
+
+                    value: returnedjsn[0].profit_mai
+                },
+
+                {
+                    Crop: 'Sunflower',
+                    value: returnedjsn[0].profit_sun
+                },
+
+                {
+                    Crop: 'Patato',
+                    value: returnedjsn[0].profit_pat
+                },
+                {
+                    Crop: 'Tomato',
+                    value: returnedjsn[0].profit_tom
+                }
+                ];
+
+
+                // update chart data source with new data
+                chart.dataSource.data(chartData);
+
+                // rebind chart to update it with new data
+                chart.refresh();
+            });
+
+            $("#kharifSeasonCrops").on("click", function () {
+
+              
+            });
+
+
+            $("#rabiSeasonCrops").on("click", function () {
+            
+            });
+
+
+
+        });
+}
+
+ 
+    //   $('.resizable').resizable({
+    //     handles: 'n',
+    //     minHeight: 100, // Set a minimum height for the bottom sheet
+    //     stop: function(event, ui) {
+    //       var bottomSheet = ui.element;
+    //       var newHeight = bottomSheet.height();
+    //       bottomSheet.css('max-height', newHeight);
+    //     }
+    //   });
+    
+
+         var bottomSheet = document.querySelector('.bottom-sheet');
+        // bottomSheet.classList.add('show');
+        var allowFileUpload = false;
+        var showPrompt = true;
+        let form_data = new FormData();
+        $(".uploadMenu").on("click", function () {
+            vex.defaultOptions.className = 'vex-theme-default'
+            vex.dialog.prompt({
+                message: 'Upload Field Boundy by selecting KML File',
+                input: [
+
+                    '<div class="label_container"><div class="fileUploadInput"><label id="msg"></label><input type="file" id="upload"   accept=".kml,.kmz"/><button>+</button></div></div>',
+
+                ].join(''),
+                buttons: [
+                    $.extend({}, vex.dialog.buttons.YES, { text: 'Upload' }),
+                    $.extend({}, vex.dialog.buttons.NO, { text: 'Close' })
+                ],
+                callback: function (data) {
+
+                    if (allowFileUpload) {
+                        uploadFiletoServer(form_data)
+
+                    } else {
+
+                        if (showPrompt) {
+
+                            showNotificationMessage('error', 'Only Kml / Kmz is allowed')
+
+                        }
+
+                    }
+
+                }
+            })
+
+            const inputElement = document.getElementById("upload");
+            inputElement.addEventListener("change", handleFiles, false);
+            function handleFiles() {
+                const fileList = this.files;  /* now you can work with the file list */
+                if (fileList.length > 0) {
+
+                    showPrompt = false
+
+                    form_data.append('file', fileList[0]);
+                    var files = fileList;
+                    var filename = files[0].name
+                    var extension = filename.split('.')[1];
+                    if (extension.toUpperCase() == "KML" || extension.toUpperCase() == "KMZ") {
+                        allowFileUpload = true;
+
+                    }
+                    console.log("FILE", fileList, filename, "EXT", extension.toUpperCase())
+                } else {
+                    showPrompt = true
+                }
+            }
+        })
+
+
+
+
+        let sidebar = document.querySelector(".sidebar");
+        let closeBtn = document.querySelector("#btn");
+
+        $(".main_menu").on("click",function(){
+                if($(".main_menu").children('.nav-list-sub').css("display") == "none"){
+
+                $(".main_menu").children('.nav-list-sub').stop().css('display','block').hide().slideDown();
+            
+            }else{
+
+                $(".main_menu").children('.nav-list-sub').stop().css('display','none').show().slideUp();
+            
+            } 
+        })
+
+
+
+        function getSoilAttr(lat,lng){
+        $.post("https://mriaz-khan.com/managed-services/includes/soilDataScript.php",{ latitude:lat,longitude:lng },
+          function(data,status){
+            
+            $(".soil-data-options").empty()
+
+            var jsn = $.parseJSON(data);
+            
+            if(jsn.length>0){
+                for (var i = 0; i < jsn.length; i++) {
+            if(Number(jsn[i].soil_om).toFixed(2) == 0.00  &&
+            Number(jsn[i].soil_k).toFixed(2) == 0.00   && 
+            Number(jsn[i].soil_ph).toFixed(2) == 0.00   &&  
+            jsn[i].soil_p == "0"   &&  
+            jsn[i].soil_ec == "0"    ){
+                var soilData =  
+                '<div class="md-chip">Soil OM: N/A</div>'+
+                '<div class="md-chip">Soil K: N/A</div>'+
+                '<div class="md-chip">Soil pH: N/A</div>'+
+                '<div class="md-chip">Soil P: N/A</div>'+
+                '<div class="md-chip">Soil Type: N/A</div>'+
+                '<div class="md-chip">Soil EC: N/A</div>' ;
+                
+                $(".soil-data-options").append(soilData);
+             
+            }else{
+              
+                var soilData = 
+                '<div class="md-chip">Soil OM: '+Number(jsn[i].soil_om).toFixed(2)+' %</div>'+
+                '<div class="md-chip">Soil K: '+ Number(jsn[i].soil_k).toFixed(2)+' ppm</div>'+
+                '<div class="md-chip">Soil pH: '+ Number(jsn[i].soil_ph).toFixed(2)+'</div>'+
+                '<div class="md-chip">Soil P: '+jsn[i].soil_p+' ppm</div>'+
+                '<div class="md-chip">Soil Type: '+jsn[i].soil_type+'</div>'+
+                '<div class="md-chip">Soil EC: '+jsn[i].soil_ec+' dS/m</div>'+
+                '<div class="md-chip">Salinity: '+jsn[i].salinity_type+'</div>'+
+                '<div class="md-chip">Recommendations: '+jsn[i].salinity_rec+'</div>';
+                //salinity_rec: "Salt sensitive crops; conventional management"
+                //salinity_type: "Non Saline to Moderate Saline"
+
+                //  console.log(jsn[i].salinity_rec,soilData)
+
+                $(".soil-data-options").empty();
+                $(".soil-data-options").append(soilData);
+            }
+
+            }
+
+            showBottomSheet()
+            }else{
+                showNotificationMessage('warning',"No data available at provided location")
+            }
+            
+        }
+        )}
+
+
+
+    
+        // let main_menu = document.querySelectorAll(".main_menu");
+        // main_menu.addEventListener("click",()=>{        
+        //  console.log("main_menu",  $(".main_menu").children('.nav-list-sub').css("display"))
+        //     if($(".main_menu").children('.nav-list-sub').css("display") == "none"){
+        //         $(".main_menu").children('.nav-list-sub').stop().css('display','block').hide().slideDown();
+        //     }else{
+        //         $(".main_menu").children('.nav-list-sub').stop().css('display','none').show().slideUp();
+        //     }
+      
+        // });
+
+        //  let searchBtn = document.querySelector(".bx-search");
+
+        // closeBtn.addEventListener("click", () => {
+        //     sidebar.classList.toggle("open");
+        //     menuBtnChange();//calling the function(optional)
+        // });
+
+        //   searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
+        //     sidebar.classList.toggle("open");
+        //     menuBtnChange(); //calling the function(optional)
+        //   });
+
+        // following are the code to change sidebar button(optional)
+        function menuBtnChange() {
+            if (sidebar.classList.contains("open")) {
+                closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+            } else {
+                closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");//replacing the iocns class
+            }
+        }
+
+
+
+        var map = L.map('map', {
+            // Set latitude and longitude of the map center (required)
+            center: [30.33084, 71.24750],
+            // Set the initial zoom level, values 0-18, where 0 is most zoomed-out (required)
+            zoom: 6,
+            zoomControl: true,
+             
+        });
+
+          // Show scouting Data
+   // getScoutingData();
+   $("#scouting_task").click(function (){
+       showLoader()
+    getScoutingData()
+   })
+    function colorMarker(color) {
+        const svgTemplate = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="marker">
+      <path fill-opacity=".25" d="M16 32s1.427-9.585 3.761-12.025c4.595-4.805 8.685-.99 8.685-.99s4.044 3.964-.526 8.743C25.514 30.245 16 32 16 32z"/>
+      <path stroke="#fff" fill="${color}" d="M15.938 32S6 17.938 6 11.938C6 .125 15.938 0 15.938 0S26 .125 26 11.875C26 18.062 15.938 32 15.938 32zM16 6a4 4 0 100 8 4 4 0 000-8z"/>
+    </svg>`;
+
+  const icon = L.divIcon({
+    className: "marker",
+    html: svgTemplate,
+    iconSize: [40, 40],
+    iconAnchor: [12, 24],
+    popupAnchor: [7, -16],
+  });
+
+  return icon;
+}
+
+
+ 
+
+
+// specify popup options
+
+
+
+ 
+
+function getScoutingData(){
+  $.post("https://mriaz-khan.com/managed-services/includes/scoutingData.php",{ OP:"GET_ALL_DATA" },
+          function(data,status){ 
+          //  var jsn = $.parseJSON(data);
+            console.log("getScoutingData",data.data);
+
+            data.data.forEach(function(element) { 
+                const customOptions = {
+                minWidth: "120", // set max-width
+                keepInView: true, // Set it to true if you want to prevent users from panning the popup off of the screen while it is open.
+                };
+               
+                const customPopup =
+                `<div class="customPopup"><figure><img style="display: block;width: 300px;height: 350px;" src="${$.parseJSON(element.additional_fields).image_link}">
+                <figcaption>Data uploaded by: <strong>${element.data_by}</strong> <br/> </figcaption></figure><div>Pest: ${element.pest}, Water Related Issues: ${element.water}, Soil Related Issues: ${$.parseJSON(element.additional_fields).soil}, Weed: ${$.parseJSON(element.additional_fields).weed} </div></div>`;
+
+                L.marker([element.location.split(",")[0],element.location.split(",")[1]],{
+                    draggable:'true',
+                icon: colorMarker("#fe6c58"),
+                })
+                .bindPopup(customPopup, customOptions)
+                .on("click", clickZoom)
+                .addTo(map);
+               
+            
+            });
+            // var weatherData =  
+            //     '<div class="md-chip">Temprature: '+jsn.data.current_condition[0].temp_C+' C</div>'+
+            //     '<div class="md-chip">humidity: '+jsn.data.current_condition[0].humidity+'%</div>'+
+            //     '<div class="md-chip">Rain Fall: '+jsn.data.current_condition[0].precipMM+'mm</div>'+
+            //     '<div class="md-chip">Wind Speed: '+jsn.data.current_condition[0].windspeedMiles+'miles</div>';
+            // console.log("weatherData",$(".weather-data-chips").append(weatherData));
+            // $(".weather-data-chips").empty();
+            // $(".weather-data-chips").append(weatherData);
+           // alert(data)
+        })
+        showNotificationMessage("info","Data has been rendered, zoom out to view scouting data")
+        hideLoader()
+}
+
+function clickZoom(e) {
+    const zoom = 15;
+  map.setView(e.target.getLatLng(), zoom);
+}
+
+
+// End Scouting Data
+
+        var measureControl = L.control.measure({ position: 'topleft' });
+        measureControl.addTo(map);
+        googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(map);
+    
+        var searchControl = new L.esri.Controls.Geosearch({
+        position: "topleft",
+        placeholder: "Enter an address or place"}).addTo(map);
+        // searchControl.on('results', function(data){
+        // results.clearLayers();
+        // for (var i = data.results.length - 1; i >= 0; i--) {
+        // results.addLayer(L.marker(data.results[i].latlng));
+        // }
+        // });
+ 
+
+  var results = new L.LayerGroup().addTo(map);
+  //var featureGroup = L.featureGroup().addTo(map);
+  searchControl.on('results', function(data){
+    results.clearLayers();
+    for (var i = data.results.length - 1; i >= 0; i--) {
+        marker = new L.marker(data.results[i].latlng,{draggable:'true'});
+        marker.on('dragend', function(event){
+        var marker = event.target;
+        var position = marker.getLatLng();
+        marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+        map.panTo(new L.LatLng(position.lat, position.lng))
+
+        latLng = position.lat+","+position.lng;
+        getSoilAttr(position.lat,position.lng)           
+        getProfiGraph(position.lat,position.lng)
+    });
+      results.addLayer(marker);
+
+   //   console.log(data.results[i].latlng.lat)
+   //   latLng = data.results[i].latlng;
+        latLng = data.results[i].latlng.lat+","+data.results[i].latlng.lng;
+        getSoilAttr(data.results[i].latlng.lat,data.results[i].latlng.lng)           
+        getProfiGraph(data.results[i].latlng.lat, data.results[i].latlng.lat.lng)
+        
+    }
+  });
+
+  var marker;
+map.on('click', function(e) {
+     
+    if (marker) { // check
+         map.removeLayer(marker); // remove old layers
+    }
+    marker = new L.Marker(e.latlng,{draggable:"true"}).addTo(map); // set New Layer
+    latLng = e.latlng.lat+","+e.latlng.lng;
+        getSoilAttr(e.latlng.lat,e.latlng.lng)           
+        getProfiGraph(e.latlng.lat,e.latlng.lng)
+
+        marker.on('dragend', function(event){
+        var marker = event.target;
+        var position = marker.getLatLng();
+        marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+        map.panTo(new L.LatLng(position.lat, position.lng))
+
+        latLng = position.lat+","+position.lng;
+        getSoilAttr(position.lat,position.lng)           
+        getProfiGraph(position.lat,position.lng)
+    });
+    //alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+
+});
+
+        // Attribution options
+        var attrOptions = {
+            prefix: 'attribution sample'
+        };
+
+        // Creating an attribution
+        $('.leaflet-control-attribution').hide()
+
+        
+function showNotificationMessage(type,text){
+      //alert, success, warning, error, info/information       
+    new Noty({
+    theme: 'sunset',
+    layout: 'topLeft',
+    type:type,
+    text:text,
+    killer : true,timeout: 3000
+}).show();
+}
+
+
+        function uploadFiletoServer(formData) {
+            showLoader();
+
+            console.log("FORM", formData)
+           // showLoader()
+            $.ajax({
+                xhr: function () {
+                    var xhr = new window.XMLHttpRequest();
+                    //Upload progress
+                    xhr.upload.addEventListener("progress", function (evt) {
+
+                    }, false);
+                    //Download progress
+                    xhr.addEventListener("progress", function (evt) {
+
+                    }, false);
+                    return xhr;
+                },
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                url: "raw/upload.php",
+                data: formData,
+
+            }).done(function (result) {
+
+               // console.log("RESULT",result);
+                  linkName = result.split("uploads/index.html")[1].split(".kml")[0];
+                  document.cookie = "kml=http://www.limspak.com/monitoring/"+result
+                    localStorage.setItem("file",linkName)
+                   localStorage.setItem("kml","http://www.limspak.com/monitoring/"+result)
+                var layerTest = null;
+                var runLayer = omnivore.kml(result)
+               
+
+                    .on('ready', function () {
+
+                        map.fitBounds(runLayer.getBounds());
+                        runLayer.eachLayer(function (layer) { 
+                            $(".all_menu_items").show()
+                            var area = turf.area(layer.feature); 
+                            area = (area / 4047).toFixed(2);
+                            // This can be passed to Sattelite Data.
+                            layer.bindPopup('<center>' + layer.feature.properties.name + '<br><center> Area: ' + area + " Acres<br>");
+                            layerTest = layer 
+                           // console.log("layr",layerTest)
+                        });
+ 
+                    })
+                    .addTo(map);
+
+                    hideLoader();
+                runLayer.on('click', function (e) { 
+
+               //  getWeatherInformation(e.latlng.lat, e.latlng.lng)
+                latLng = e.latlng.lat+","+e.latlng.lng;
+                 getSoilAttr(e.latlng.lat, e.latlng.lng)
+                 
+                 getProfiGraph(e.latlng.lat, e.latlng.lng)
+
+                });
+
+               // hideLoader()
+
+            }).fail(function (error) {// hideLoader(); console.log("FILEUPLOAD", error) 
+        });
+
+
+        }
+
+    </script>
+</body>
+
+
+<!-- Mirrored from 54.252.2.55/monitoring/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 17 Jul 2025 16:19:35 GMT -->
+</html>

@@ -1,0 +1,2808 @@
+<!DOCTYPE html>
+<html lang="en" style="margin: 0;
+padding: 0;
+height: 100%;
+width: 100%;">
+
+<head>
+   
+    <meta charset="UTF-8">
+    <title>SAF Monitoring</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="/static/lims.png"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/7.0.0-alpha.111/turf.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+    <script src="https://unpkg.com/leaflet-image/leaflet-image.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+    
+     <!-- Include jQuery -->
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.2/proj4.js"></script>
+    <script src="https://unpkg.com/leaflet-proj4@0.3.3/leaflet-proj4.js"></script>
+
+
+
+     <!-- Include moment.js -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+ 
+     <!-- Include flatpickr CSS -->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  
+
+     <!-- Include flatpickr JS -->
+     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+ 
+     <!-- Include Noty CSS -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css" />
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+     <!-- Include Noty JS -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+     <!-- Link to Bootstrap's CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+   
+     <link rel="stylesheet" href="sentinel.css" />
+     <link rel="stylesheet" href="sentinel2.css" />
+    <link rel="stylesheet" href="weather.css" />
+          <link rel="stylesheet" href="styles/search.css">
+
+<script src="auth.js"></script>
+<script src="logo.js"></script>
+    
+     
+
+    <style>
+       
+       @media (max-width: 800px) {
+    #menuButton {
+        display: block;
+        font-size: 13px;
+        width: 60px;
+        height: 50px;
+        padding: 10px;
+    }
+}
+.btn-primary {
+    color: #fff;
+    background-color: white;
+    border-color: black;
+    color: black;
+}
+
+
+    </style>
+    
+</head>
+
+<body>
+ <header class="header">
+         
+
+
+
+              <div class="header-logo" style="display: flex; align-items: center; gap: 15px;">
+  <button style="
+      background-color: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s ease;"
+    onmouseover="this.style.backgroundColor='#0e9e6e'"
+    onmouseout="this.style.backgroundColor='#10b981'"
+    onclick="window.location.href='map.html';">
+    <i class="fas fa-arrow-left" style="font-size: 16px;"></i> Go Back
+  </button>
+               <img src="Assets/logo.webp" alt="Logo" style="height: 65px; width: auto; border-radius: 8px;">
+     <img id="portalLogo" style="height: 45px; width: auto; border-radius: 8px; display: none;">
+<!-- <span id="portalName" style="font-size: 22px; font-weight: bold; color: #10b981;"></span> -->
+        </div>
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+       
+        <div class="sidebar-content">
+
+            <!-- Analysis Controls -->
+            <div class="menu-section">
+                <div class="menu-section-title">Analysis Tools</div>
+                <div class="controls-section">
+                    <select id="dateDropdown" class="form-control">
+                        <option value="">Select Date</option>
+                    </select>
+                    <select id="indexDropdown" class="form-control">
+                        <option>Select Indice</option>
+                        <option value="11" disabled>True Color</option>
+                        <option value="12" disabled>Crop Stress Insects and Diseases</option>
+                        <option value="13" disabled>Crop Moisture</option>
+                        <option value="14" disabled>Weeds</option>
+                        <option value="15" disabled>Weeds and Early Fertilizer</option>
+                        <option value="16" disabled>Nitrogen</option>
+                    </select>
+                    <button id="zoneButton" class="btn btn-primary">
+                        <i class="fas fa-map-marked-alt"></i> Zoning Analysis
+                    </button>
+                    <button id="weatherReport" class="btn btn-primary">Weather Report</button>
+
+                    <button id="scoutingButton" class="btn btn-success">
+                        <i class="fas fa-search-location"></i> Scouting Mode
+                    </button>
+                    <button id="vegetationReportButton" class="btn btn-info"style="display: none;">
+                        <i class="fas fa-leaf"></i> Vegetation Report
+                    </button>
+                    <button id="generatePdf" class="btn btn-primary" disabled style="display: none;">
+                        <i class="fas fa-file-pdf"></i> Generate PDF
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    
+<!-- Scouting Active Indicator -->
+    <div id="scoutingActive" class="scouting-active" style="display: none;">
+        Scouting Mode Active - Draw a polygon on the map
+    </div>
+     <!-- Vegetation Report Modal -->
+    <div id="vegetationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeVegetationModal">&times;</span>
+            <h2>Vegetation Indices </h2>
+            <div class="pdf-container">
+                <iframe id="pdfViewer" src="" width="100%" height="100%" style="border: none;">
+                    <p>Your browser does not support PDFs. <a href="Vegetation_Indices.pdf" target="_blank">Download the PDF</a> instead.</p>
+                </iframe>
+            </div>
+            <button class="download-btn" id="downloadVegetationReport" style="display: none;">
+                <i class="fa fa-download"></i> Download Vegetation Report
+            </button>
+        </div>
+    </div>
+
+    <!-- <button id="waterReport" class="btn btn-primary" disabled>Water Report</button> -->
+
+    <div class="chart-overlay" id="chart-overlay"></div>
+
+    <div class="chartcontainer" id="chart-container">
+        <div id="cross-button-weather" style="position: absolute;
+            right: 20px;
+            display: flex;
+            align-items: start;
+            font-size: 50px; 
+            cursor: pointer;
+            top: 0;">
+            &times;</div>
+        <canvas id="weatherChart"></canvas>
+
+    </div>
+    
+    <div id="image-container"></div>
+
+    <div class="map-container" id="mapContainer">
+    <div id="map">
+        <div id="prelegend" class="prelegend"></div>
+    </div>
+
+    </div>
+    <div id="suggestions"></div>
+    <div class="modal fade" id="limitModal" tabindex="-1" role="dialog" aria-labelledby="limitModalLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div id="MyModal">
+                <div class="modal-content custom-modal">
+                    <div id="cross-button-modal" style="position: absolute;
+                        right: 20px;
+                        display: flex;
+                        align-items: start;
+                        font-size: 50px; 
+                        cursor: pointer;">
+                        &times;</div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="limitModalLabel">Farm Area Limit Reached</h5>
+                    </div>
+                    <div class="modal-body">
+                        You have reached your farm area limit. Please contact LIMS to increase it.
+                        <div id="remainingAreaInfo"></div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="ContactButton" class="btn btn-primary" onclick="contactLIMS()">Contact
+                            LIMS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <img id="first-image" style="display: none;">
+    <img id="second-image" style="display: none;">
+    
+  
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    
+<script>
+  
+        // Store the token in localStorage for use
+       const apiUrl = 'http://127.0.0.1:8000/fetch-token/';  // Your Django API endpoint for fetching the token
+async function fetchTokenFromApi() {
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.token) {
+            // Store the fetched token in localStorage without altering other data
+            localStorage.setItem("token", data.token);
+            console.log('Token fetched from API and stored in localStorage:', data.token);
+            return data.token;
+        } else {
+            console.error('No token found in API response:', data);
+        }
+    } catch (error) {
+        console.error('Error fetching token from API:', error);
+    }
+}
+fetchTokenFromApi();
+// Call the function to fetch and store the token every 10 seconds
+setInterval(fetchTokenFromApi, 30 * 60 * 1000); // 30 minutes = 30 * 60 * 1000 ms
+
+    
+</script>
+    <script>
+           // Fixed sidebar management
+        let isMobileView = false;
+        let sidebarWasOpenBeforeProcessing = false;
+
+        function updateViewState() {
+            isMobileView = window.innerWidth <= 1024;
+        }
+
+        function isSidebarVisible() {
+            const sidebar = document.getElementById('sidebar');
+            if (isMobileView) {
+                return sidebar.classList.contains('open');
+            } else {
+                return !sidebar.classList.contains('mobile-hidden');
+            }
+        }
+
+        function setSidebarVisibility(visible) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const menuToggle = document.getElementById('menuToggle');
+
+            if (isMobileView) {
+                if (visible) {
+                    sidebar.classList.add('open');
+                    sidebar.classList.remove('mobile-hidden');
+                    overlay.classList.add('active');
+                    menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                } else {
+                    sidebar.classList.remove('open');
+                    sidebar.classList.add('mobile-hidden');
+                    overlay.classList.remove('active');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            } else {
+                // Desktop behavior
+                if (visible) {
+                    sidebar.classList.remove('mobile-hidden');
+                    overlay.classList.remove('active');
+                } else {
+                    sidebar.classList.add('mobile-hidden');
+                    overlay.classList.remove('active');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateViewState();
+            
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            menuToggle.addEventListener('click', function () {
+                toggleSidebar();
+            });
+
+            sidebarOverlay.addEventListener('click', function () {
+                if (isMobileView) {
+                    setSidebarVisibility(false);
+                }
+            });
+
+            // Close sidebar on escape key (mobile only)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isMobileView) {
+                    setSidebarVisibility(false);
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                updateViewState();
+                
+                if (!isMobileView) {
+                    // Desktop: ensure sidebar is visible and overlay is hidden
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('sidebarOverlay');
+                    
+                    sidebar.classList.remove('open');
+                    sidebar.classList.remove('mobile-hidden');
+                    overlay.classList.remove('active');
+                } else {
+                    // Mobile: ensure sidebar follows mobile behavior
+                    const sidebar = document.getElementById('sidebar');
+                    if (!sidebar.classList.contains('open')) {
+                        sidebar.classList.add('mobile-hidden');
+                    }
+                }
+            });
+
+            // Initial setup based on screen size
+            if (isMobileView) {
+                setSidebarVisibility(false);
+            } else {
+                setSidebarVisibility(true);
+            }
+        });
+
+        function toggleSidebar() {
+            const currentlyVisible = isSidebarVisible();
+            setSidebarVisibility(!currentlyVisible);
+        }
+
+        // Processing screen functions with sidebar state preservation
+        let streamingActive = false;
+        let currentTimeouts = [];
+
+        function showProcessing() {
+            // Store current sidebar state before showing processing screen
+            sidebarWasOpenBeforeProcessing = isSidebarVisible();
+            
+            document.querySelector('.processing-screen').style.display = 'flex';
+            resetAndStartStream(limsText);
+        }
+
+        function hideProcessingScreen() {
+            document.querySelector('.processing-screen').style.display = 'none';
+            
+            // Restore sidebar state after processing screen is hidden
+            // Only restore if we're on desktop and sidebar was visible before
+            if (!isMobileView && sidebarWasOpenBeforeProcessing) {
+                setSidebarVisibility(true);
+            }
+        }
+
+        async function streamTextEffect(text, speed = 50) {
+            const textBox = document.getElementById('wordByWordText');
+            textBox.innerHTML = "";
+            streamingActive = true;
+
+            for (let i = 0; i < text.length; i++) {
+                if (!streamingActive) {
+                    textBox.innerHTML = "";
+                    return;
+                }
+
+                textBox.innerHTML += text[i];
+                textBox.scrollTop = textBox.scrollHeight;
+
+                await new Promise(resolve => {
+                    const timeout = setTimeout(resolve, speed);
+                    currentTimeouts.push(timeout);
+                });
+            }
+
+            setTimeout(hideProcessingScreen, 5000);
+        }
+
+        function resetAndStartStream(text) {
+            streamingActive = false;
+            currentTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            currentTimeouts = [];
+
+            document.getElementById('wordByWordText').innerHTML = "";
+
+            setTimeout(() => {
+                streamingActive = true;
+                streamTextEffect(text, 80);
+            }, 100);
+        }
+
+        // Example LIMS Text
+        let limsText = `Smart Agro Farms is a forward-looking initiative powered by a dynamic team of experienced professionals, united by a shared mission to strengthen sustainable agriculture and food security. Our expertise spans multiple disciplines—including agronomy, data science, remote sensing, artificial intelligence, and software engineering—allowing us to approach agricultural challenges from a truly integrated perspective.
+
+By combining advanced technology with deep agricultural knowledge, Smart Agro Farms delivers intelligent, data-driven solutions that support farmers, agronomists, and decision-makers. We don’t just analyze farms—we enable smarter decisions, improve productivity, optimize resources, and build resilience for the future of agriculture.
+
+Together, we are not only addressing today’s agricultural challenges, but also shaping a smarter, more sustainable tomorrow.`;
+
+        function removeAllLayers(map) {
+            map.eachLayer(function (layer) {
+                if (!(layer instanceof L.TileLayer)) {
+                    map.removeLayer(layer);
+                }
+            });
+        }
+
+        function removeAllLayers(map) {
+            map.eachLayer(function (layer) {
+                if (!(layer instanceof L.TileLayer)) {
+                    map.removeLayer(layer);
+                }
+            });
+        }
+
+
+    </script>
+  
+   
+    <script>
+          // Global variables
+        let isScoutingMode = false;
+        let scoutingPolygon = null;
+
+            // Declare global variables for center coordinates
+let centerLat = 30.34674661477255;
+let centerLon = 71.97376680232665;
+
+
+// Initialize map with attribution disabled
+const map = L.map('map', {
+    attributionControl: false
+}).setView([30.34674661477255, 71.97376680232665], 19); // default center if no bbox
+
+// Add Google Maps satellite + hybrid tiles
+L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    minZoom: 4,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+}).addTo(map);
+
+
+// ✅ Load bbox from localStorage and fit map to it
+const savedBBox = localStorage.getItem("polygonBBox");
+if (savedBBox) {
+    try {
+        const parsedBBox = JSON.parse(savedBBox);
+        const bounds = L.latLngBounds(parsedBBox);
+        map.fitBounds(bounds); // <-- this will zoom to saved bbox
+    } catch (err) {
+        console.error("Error parsing bbox:", err);
+    }
+}
+
+
+        map.attributionControl = L.control.attribution({ prefix: false }).addTo(map);
+        map.attributionControl.setPrefix('');
+        map.attributionControl.addAttribution('Powered by SAF');
+        // Custom control for search input
+      // Mapbox search function only
+async function searchLocationWithMapbox(query, signal) {
+  if (!query || query.length < 3) return []
+
+  // Validate token first
+  if (!MAPBOX_ACCESS_TOKEN || MAPBOX_ACCESS_TOKEN === "YOUR_MAPBOX_ACCESS_TOKEN_HERE") {
+    throw new Error("Please configure your Mapbox access token")
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(query)}&proximity=ip&access_token=${MAPBOX_ACCESS_TOKEN}`,
+      {
+        headers: {
+          "accept-language": "en-US",
+        },
+        signal: signal, // Use the passed signal
+      },
+    )
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("Invalid Mapbox access token")
+      } else if (response.status === 429) {
+        throw new Error("Rate limit exceeded. Please try again later")
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+    }
+
+    const data = await response.json()
+    return data.features.map((feature) => ({
+      id: feature.id,
+      name: feature.properties.full_address || feature.properties.name,
+      latitude: feature.geometry.coordinates[1],
+      longitude: feature.geometry.coordinates[0],
+      place_type: feature.properties.feature_type,
+      context: feature.properties.context,
+    }))
+  } catch (error) {
+    if (error.name === "AbortError") {
+      console.log("Search request was aborted")
+    } else {
+      console.error("Failed to fetch geocoding data from Mapbox:", error)
+    }
+    throw error
+  }
+}
+
+// Add responsive search control to map
+function addResponsiveSearchControl() {
+  const searchControl = L.Control.extend({
+    options: {
+      position: "topright",
+    },
+    onAdd: function (map) {
+      this.map = map
+
+      const container = L.DomUtil.create("div", "leaflet-control-search")
+
+      container.innerHTML = `
+                <div class="search-container" id="searchContainer">
+                    <div class="search-icon" id="searchIcon" tabindex="0" role="button" aria-label="Open search">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </div>
+                    <input 
+                        type="text"
+                        class="search-input"
+                        id="locationSearch"
+                        placeholder="Search for places, addresses..."
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        aria-label="Search for locations"
+                    >
+                    <button class="search-clear" id="searchClear" aria-label="Clear search" tabindex="-1">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                    <div class="search-loading" id="searchLoading" aria-hidden="true"></div>
+                </div>
+                <div class="suggestions-container" id="suggestions" role="listbox" aria-label="Search suggestions"></div>
+            `
+
+      L.DomEvent.disableClickPropagation(container)
+      L.DomEvent.disableScrollPropagation(container)
+
+      this.initializeSearch(container)
+
+      return container
+    },
+
+    initializeSearch: function (container) {
+      const searchContainer = container.querySelector("#searchContainer")
+      const searchIcon = container.querySelector("#searchIcon")
+      const searchInput = container.querySelector("#locationSearch")
+      const searchClear = container.querySelector("#searchClear")
+      const searchLoading = container.querySelector("#searchLoading")
+      const suggestionsContainer = container.querySelector("#suggestions")
+
+      this.searchContainer = searchContainer
+      this.searchIcon = searchIcon
+      this.searchInput = searchInput
+      this.searchClear = searchClear
+      this.searchLoading = searchLoading
+      this.suggestionsContainer = suggestionsContainer
+      this.isExpanded = false
+      this.currentRequest = null
+      this.loadingTimeout = null // ✅ Add loading timeout tracking
+
+      let searchTimeout
+
+      // ✅ Improved debounced search function
+      const debouncedSearch = debounce((query) => {
+        this.handleLocationSearch(query)
+      }, 300)
+
+      const toggleSearch = () => {
+        if (this.isExpanded) {
+          this.collapseSearch()
+        } else {
+          this.expandSearch()
+        }
+      }
+
+      searchIcon.addEventListener("click", toggleSearch)
+      searchIcon.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          toggleSearch()
+        }
+      })
+
+      const clearSearch = () => {
+        searchInput.value = ""
+        searchClear.style.display = "none"
+        suggestionsContainer.classList.remove("show")
+        searchInput.focus()
+        this.hideLoading() // ✅ Ensure loading is hidden
+      }
+
+      searchClear.addEventListener("click", clearSearch)
+      searchClear.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          clearSearch()
+        }
+      })
+
+      // ✅ Improved input handling with better loading management
+      searchInput.addEventListener("input", (e) => {
+        const query = e.target.value.trim()
+
+        // Show/hide clear button
+        searchClear.style.display = query ? "flex" : "none"
+        searchClear.tabIndex = query ? "0" : "-1"
+
+        // ✅ Cancel previous request and clear loading
+        if (this.currentRequest) {
+          this.currentRequest.abort()
+          this.currentRequest = null
+        }
+
+        // ✅ Clear any pending loading timeout
+        if (this.loadingTimeout) {
+          clearTimeout(this.loadingTimeout)
+          this.loadingTimeout = null
+        }
+
+        // ✅ Hide loading immediately when clearing or short query
+        if (!query || query.length < 3) {
+          suggestionsContainer.classList.remove("show")
+          this.hideLoading()
+          return
+        }
+
+        // ✅ Show loading with delay, but track the timeout
+        this.loadingTimeout = setTimeout(() => {
+          // Only show loading if the query hasn't changed and is still valid
+          if (searchInput.value.trim() === query && query.length >= 3 && !this.currentRequest) {
+            this.showLoading()
+          }
+          this.loadingTimeout = null
+        }, 150)
+
+        // Debounce search
+        debouncedSearch(query)
+      })
+
+      // Handle keyboard events
+      searchInput.addEventListener("keydown", (e) => {
+        const suggestions = suggestionsContainer.querySelectorAll(".suggestion-item")
+        const activeSuggestion = suggestionsContainer.querySelector(".suggestion-item.active")
+
+        switch (e.key) {
+          case "Escape":
+            this.collapseSearch()
+            break
+          case "ArrowDown":
+            e.preventDefault()
+            this.navigateSuggestions(suggestions, activeSuggestion, "down")
+            break
+          case "ArrowUp":
+            e.preventDefault()
+            this.navigateSuggestions(suggestions, activeSuggestion, "up")
+            break
+          case "Enter":
+            e.preventDefault()
+            if (activeSuggestion) {
+              activeSuggestion.click()
+            }
+            break
+          case "Tab":
+            if (!e.shiftKey && activeSuggestion) {
+              e.preventDefault()
+              activeSuggestion.click()
+            }
+            break
+        }
+      })
+
+      searchInput.addEventListener("focus", () => {
+        if (searchInput.value.trim().length >= 3) {
+          suggestionsContainer.classList.add("show")
+        }
+      })
+
+      document.addEventListener("click", (e) => {
+        if (!container.contains(e.target) && this.isExpanded) {
+          this.collapseSearch()
+        }
+      })
+
+      window.addEventListener(
+        "resize",
+        debounce(() => {
+          if (this.isExpanded && isMobileDevice()) {
+            this.adjustMobileLayout()
+          }
+        }, 250),
+      )
+    },
+
+    expandSearch: function () {
+      this.searchContainer.classList.add("expanded")
+      this.searchInput.classList.add("show")
+      this.searchIcon.setAttribute("aria-label", "Close search")
+
+      setTimeout(() => {
+        this.searchInput.focus()
+      }, 100)
+
+      this.isExpanded = true
+
+      if (isMobileDevice()) {
+        this.adjustMobileLayout()
+      }
+    },
+
+    collapseSearch: function () {
+      this.searchContainer.classList.remove("expanded")
+      this.searchInput.classList.remove("show")
+      this.suggestionsContainer.classList.remove("show")
+      this.searchClear.style.display = "none"
+      this.searchClear.tabIndex = "-1"
+      this.searchIcon.setAttribute("aria-label", "Open search")
+      this.hideLoading() // ✅ Always hide loading when collapsing
+      this.isExpanded = false
+
+      // ✅ Cancel any pending requests and timeouts
+      if (this.currentRequest) {
+        this.currentRequest.abort()
+        this.currentRequest = null
+      }
+
+      if (this.loadingTimeout) {
+        clearTimeout(this.loadingTimeout)
+        this.loadingTimeout = null
+      }
+    },
+
+    adjustMobileLayout: function () {
+      const viewport = window.visualViewport
+      if (viewport) {
+        const keyboardHeight = window.innerHeight - viewport.height
+        if (keyboardHeight > 150) {
+          this.suggestionsContainer.style.maxHeight = `${Math.max(200, viewport.height * 0.3)}px`
+        } else {
+          this.suggestionsContainer.style.maxHeight = ""
+        }
+      }
+    },
+
+    // ✅ Improved loading management
+    showLoading: function () {
+      this.searchLoading.style.display = "block"
+      this.searchClear.style.display = "none"
+      this.searchContainer.classList.add("loading")
+    },
+
+    hideLoading: function () {
+      this.searchLoading.style.display = "none"
+      this.searchContainer.classList.remove("loading")
+
+      // ✅ Only show clear button if there's text
+      if (this.searchInput.value.trim()) {
+        this.searchClear.style.display = "flex"
+        this.searchClear.tabIndex = "0"
+      }
+    },
+
+    // ✅ Improved search handling with better loading management
+    handleLocationSearch: async function (query) {
+      try {
+        // ✅ Create abort controller for this specific request
+        this.currentRequest = new AbortController()
+
+        // ✅ Clear any pending loading timeout since we're starting a real request
+        if (this.loadingTimeout) {
+          clearTimeout(this.loadingTimeout)
+          this.loadingTimeout = null
+        }
+
+        // ✅ Show loading immediately when starting actual search
+        this.showLoading()
+
+        // ✅ Pass the abort signal to the search function
+        const suggestions = await searchLocationWithMapbox(query, this.currentRequest.signal)
+
+        // ✅ Check if request was aborted before processing results
+        if (this.currentRequest && this.currentRequest.signal.aborted) {
+          return
+        }
+
+        // ✅ Hide loading before displaying results
+        this.hideLoading()
+        this.displaySuggestions(suggestions, query)
+      } catch (error) {
+        // ✅ Always hide loading on error (unless aborted)
+        if (error.name !== "AbortError") {
+          console.error("Search error:", error)
+          this.hideLoading()
+          this.showSearchError(error.message)
+        }
+        // ✅ Don't hide loading for AbortError as it's handled elsewhere
+      } finally {
+        // ✅ Clean up current request reference
+        if (this.currentRequest && !this.currentRequest.signal.aborted) {
+          this.currentRequest = null
+        }
+      }
+    },
+
+    displaySuggestions: function (suggestions, query) {
+      this.suggestionsContainer.innerHTML = ""
+      this.suggestionsContainer.setAttribute("aria-live", "polite")
+
+      if (suggestions.length === 0) {
+        const noResults = document.createElement("div")
+        noResults.className = "no-results"
+        noResults.innerHTML = `
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <div class="no-results-text">No locations found</div>
+                    <div class="no-results-subtext">Try a different search term</div>
+                `
+        this.suggestionsContainer.appendChild(noResults)
+        this.suggestionsContainer.classList.add("show")
+        return
+      }
+
+      suggestions.forEach((suggestion, index) => {
+        const suggestionItem = document.createElement("div")
+        suggestionItem.className = "suggestion-item"
+        suggestionItem.setAttribute("role", "option")
+        suggestionItem.setAttribute("tabindex", "-1")
+        suggestionItem.setAttribute("aria-label", `${suggestion.name}, ${suggestion.place_type}`)
+
+        const icon = this.getPlaceIcon(suggestion.place_type)
+
+        suggestionItem.innerHTML = `
+                    <div class="suggestion-icon" aria-hidden="true">
+                        <i class="fa ${icon}"></i>
+                    </div>
+                    <div class="suggestion-content">
+                        <div class="suggestion-name">${this.highlightQuery(suggestion.name, query)}</div>
+                        <div class="suggestion-type">${suggestion.place_type || "location"}</div>
+                    </div>
+                `
+
+        suggestionItem.addEventListener("click", () => {
+          this.selectLocation(suggestion)
+        })
+
+        suggestionItem.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            this.selectLocation(suggestion)
+          }
+        })
+
+        suggestionItem.addEventListener("mouseenter", () => {
+          this.setActiveSuggestion(suggestionItem)
+        })
+
+        this.suggestionsContainer.appendChild(suggestionItem)
+      })
+
+      this.suggestionsContainer.classList.add("show")
+
+      const resultCount = suggestions.length
+      this.suggestionsContainer.setAttribute(
+        "aria-label",
+        `${resultCount} search result${resultCount !== 1 ? "s" : ""} available`,
+      )
+    },
+
+    showSearchError: function (errorMessage) {
+      this.suggestionsContainer.innerHTML = `
+                <div class="search-error">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <div class="error-text">${errorMessage}</div>
+                </div>
+            `
+      this.suggestionsContainer.classList.add("show")
+    },
+
+    highlightQuery: (text, query) => {
+      if (!query || query.length < 2) return text
+
+      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi")
+      return text.replace(regex, "<mark>$1</mark>")
+    },
+
+    setActiveSuggestion: function (suggestionItem) {
+      this.suggestionsContainer.querySelectorAll(".suggestion-item").forEach((item) => {
+        item.classList.remove("active")
+        item.setAttribute("tabindex", "-1")
+      })
+      suggestionItem.classList.add("active")
+      suggestionItem.setAttribute("tabindex", "0")
+    },
+
+    selectLocation: function (suggestion) {
+      if (navigator.vibrate && isMobileDevice()) {
+        navigator.vibrate(50)
+      }
+
+      this.map.setView([suggestion.latitude, suggestion.longitude], 15)
+
+      this.map.eachLayer((layer) => {
+        if (layer.options && layer.options.searchMarker) {
+          this.map.removeLayer(layer)
+        }
+      })
+
+      const marker = L.marker([suggestion.latitude, suggestion.longitude], {
+        searchMarker: true,
+      }).addTo(this.map)
+
+      marker
+        .bindPopup(`
+                    <div style="text-align: center; min-width: 200px; font-family: 'Inter', sans-serif;">
+                        <div style="font-weight: 600; color: #1f2937; margin-bottom: 8px; font-size: 16px;">
+                            ${suggestion.name}
+                        </div>
+                        <div style="color: #6b7280; font-size: 12px; margin-bottom: 8px; text-transform: capitalize;">
+                            ${suggestion.place_type || "Location"}
+                        </div>
+                        <div style="color: #9ca3af; font-size: 11px; font-family: monospace;">
+                            ${suggestion.latitude.toFixed(6)}, ${suggestion.longitude.toFixed(6)}
+                        </div>
+                    </div>
+                `)
+        .openPopup()
+
+      this.searchInput.value = ""
+      this.collapseSearch()
+
+      const announcement = `Selected ${suggestion.name}`
+      const ariaLive = document.createElement("div")
+      ariaLive.setAttribute("aria-live", "polite")
+      ariaLive.setAttribute("aria-atomic", "true")
+      ariaLive.style.position = "absolute"
+      ariaLive.style.left = "-10000px"
+      ariaLive.textContent = announcement
+      document.body.appendChild(ariaLive)
+      setTimeout(() => document.body.removeChild(ariaLive), 1000)
+    },
+
+    getPlaceIcon: (placeType) => {
+      const iconMap = {
+        address: "fa-home",
+        poi: "fa-map-marker-alt",
+        place: "fa-map-pin",
+        locality: "fa-city",
+        neighborhood: "fa-building",
+        street: "fa-road",
+        country: "fa-flag",
+        region: "fa-map",
+        postcode: "fa-mail-bulk",
+        district: "fa-map-marked-alt",
+        restaurant: "fa-utensils",
+        hospital: "fa-hospital",
+        school: "fa-school",
+        park: "fa-tree",
+        hotel: "fa-bed",
+        gas_station: "fa-gas-pump",
+        bank: "fa-university",
+        shop: "fa-shopping-cart",
+      }
+
+      return iconMap[placeType] || "fa-map-marker-alt"
+    },
+
+    navigateSuggestions: (suggestions, activeSuggestion, direction) => {
+      if (suggestions.length === 0) return
+
+      if (activeSuggestion) {
+        activeSuggestion.classList.remove("active")
+        activeSuggestion.setAttribute("tabindex", "-1")
+      }
+
+      let nextIndex = 0
+      if (activeSuggestion) {
+        const currentIndex = Array.from(suggestions).indexOf(activeSuggestion)
+        if (direction === "down") {
+          nextIndex = (currentIndex + 1) % suggestions.length
+        } else {
+          nextIndex = currentIndex === 0 ? suggestions.length - 1 : currentIndex - 1
+        }
+      }
+
+      const nextSuggestion = suggestions[nextIndex]
+      nextSuggestion.classList.add("active")
+      nextSuggestion.setAttribute("tabindex", "0")
+      nextSuggestion.scrollIntoView({ block: "nearest", behavior: "smooth" })
+
+      const announcement = nextSuggestion.getAttribute("aria-label")
+      nextSuggestion.setAttribute("aria-live", "polite")
+      setTimeout(() => nextSuggestion.removeAttribute("aria-live"), 100)
+    },
+  })
+
+  return new searchControl()
+}
+
+// ✅ Utility function for debouncing
+function debounce(func, wait) {
+  let timeout
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
+
+// ✅ Utility function to detect mobile devices
+function isMobileDevice() {
+  return window.innerWidth <= 768
+}
+
+   const searchControl = addResponsiveSearchControl()
+map.addControl(searchControl)   
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+
+
+        var LocationControl = L.Control.extend({
+            options: {
+                position: 'topright'
+            },
+            onAdd: function (map) {
+                var container = L.DomUtil.create('div', 'location-icon');
+                container.innerHTML = '<img style="height:50px;width:50px; "src="https://www.iconpacks.net/icons/2/free-location-icon-2955-thumb.png" alt="Location Icon"/>';
+                container.style.backgroundColor = 'rgba(0,0,0,0)';
+                container.style.padding = '2px';
+                container.style.cursor = 'pointer';
+
+                L.DomEvent.on(container, 'click', function () {
+                    map.flyTo(polygonCenter, 15);
+                });
+
+                return container;
+            }
+        });
+
+
+        map.addControl(new LocationControl());
+        var ndviLegend = `
+        <div class="item"><div class="color-box" style="background-color: rgb(0, 127, 71);"></div>0.95 - 1.00 Use NDRE & RECI</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(6, 150, 84);"></div>0.90 - 0.95 Dense vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(21, 169, 97);"></div>0.85 - 0.90 Dense vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(85, 190, 107);"></div>0.80 - 0.85 Dense vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(119, 202, 112);"></div>0.75 - 0.80 Dense vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(155, 215, 116);"></div>0.70 - 0.75 Dense vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(186, 225, 130);"></div>0.65 - 0.70 Dense vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(212, 239, 150);"></div>0.60 - 0.65 Dense vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(235, 247, 173);"></div>0.55 - 0.60 Moderate vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(254, 254, 195);"></div>0.50 - 0.55 Moderate vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 237, 171);"></div>0.45 - 0.50 Moderate vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(253, 199, 127);"></div>0.40 - 0.45 Moderate vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 172, 103);"></div>0.35 - 0.40 Sparse vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 139, 87);"></div>0.30 - 0.35 Sparse vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 107, 74);"></div>0.25 - 0.30 Sparse vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(237, 78, 60);"></div>0.20 - 0.25 Sparse vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(226, 43, 45);"></div>0.15 - 0.20 Open soil</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(197, 18, 39);"></div>0.10 - 0.15 Open soil</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(171, 0, 41);"></div>-1.00 - 0.05 Open soil</div>
+    `;
+        var reclLegend = `
+       <div class="item"><div class="color-box" style="background-color: rgb(0, 127, 71);"></div>9.50 - 10.00 Healthy vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(6, 150, 84);"></div>9.00 - 9.50 Healthy vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(21, 169, 97);"></div>8.50 - 9.00 Healthy vegetation</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(85, 190, 107);"></div>8.00 - 8.50 High amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(119, 202, 112);"></div>7.50 - 8.00 High amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(155, 215, 116);"></div>7.00 - 7.50 High amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(186, 225, 130);"></div>6.50 - 7.00 High amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(212, 239, 150);"></div>6.00 - 6.50 Moderate amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(235, 247, 173);"></div>5.50 - 6.00 Moderate amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(254, 254, 195);"></div>5.00 - 5.50 Moderate amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 237, 171);"></div>4.50 - 5.00 Moderate amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(253, 199, 127);"></div>4.00 - 4.50 Low amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 172, 103);"></div>3.50 - 4.00 Low amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 139, 87);"></div>3.00 - 3.50 Low amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(255, 107, 74);"></div>2.50 - 3.00 Low amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(237, 78, 60);"></div>2.00 - 2.50 Low amount of chlorophyll</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(226, 43, 45);"></div>1.50 - 2.00 Open soil</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(197, 18, 39);"></div>1.00 - 1.50 Open soil</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(171, 0, 41);"></div>0.50 - 1.00 Open soil</div>
+        <div class="item"><div class="color-box" style="background-color: rgb(171, 0, 41);"></div>0.00 - 0.50 Open soil</div>
+
+    `;
+        var saviLegend = `
+        <div class="item"><div class="color-box" style="background-color: rgb(0, 127, 71);"></div>0.70 - 1.00 Better to use NDVI</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(6, 150, 84);"></div>0.60 - 0.70 Dense vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(21, 169, 97);"></div>0.50 - 0.60 Dense vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(85, 190, 107);"></div>0.40 - 0.50 Dense vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(119, 202, 112);"></div>0.35 - 0.40 Dense vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(155, 215, 116);"></div>0.30 - 0.35 Moderate vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(186, 225, 130);"></div>0.27 - 0.30 Moderate vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(212, 239, 150);"></div>0.25 - 0.27 Moderate vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(235, 247, 173);"></div>0.22 - 0.25 Moderate vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(235, 247, 173);"></div>0.20 - 0.22 Moderate vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(254, 254, 195);"></div>0.17 - 0.20 Low vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(255, 237, 171);"></div>0.15 - 0.17 Low vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(253, 199, 127);"></div>0.12 - 0.15 Low vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(255, 172, 103);"></div>0.10 - 0.12 Sparse vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(255, 139, 87);"></div>0.08 - 0.10 Sparse vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(255, 107, 74);"></div>0.06 - 0.08 Sparse vegetation</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(237, 78, 60);"></div>0.04 - 0.06 Sprouts</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(226, 43, 45);"></div>0.02 - 0.04 Sprouts</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(197, 18, 39);"></div>0.00 - 0.02 Emerging</div>
+    <div class="item"><div class="color-box" style="background-color: rgb(171, 0, 41);"></div>-1.00 - 0.00 Bare soil</div>
+    `;
+        var ndmilegend = `<div class="item"><div class="color-box" style="background-color: rgb(85, 102, 215);"></div>0.8 - 1.0 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(136, 137, 221);"></div>0.6 - 0.8 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(137, 136, 219);"></div>0.4 - 0.6 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(166, 158, 210);"></div>0.2 - 0.4 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(186, 171, 209);"></div>0.0 - 0.2 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(211, 186, 194);"></div>-0.2 - 0.0 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(194, 182, 180);"></div>-0.4 - -0.2 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(183, 166, 159);"></div>-0.6 - -0.4 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(182, 156, 149);"></div>-0.8 - -0.6 </div>
+    <div class="item"><div class="color-box" style="background-color: rgb(181, 156, 144);"></div>-1.0 - -0.8 </div>`;
+
+        var legends = {
+            '12': "<h2>Vegitation Index</h2><div class='legend-content'>" + ndviLegend + "</div>",
+            '13': "<h2>Canopy Moisture</h2><div class='legend-content'>" + ndmilegend + "</div>",
+            '14': "<h2>Weed</h2><div class='legend-content'>" + saviLegend + "</div>",
+            '15': "<h2>Early Fertilizer</h2><div class='legend-content'>" + saviLegend + "</div>",
+            '16': "<h2>Fertilizer Requirment</h2><div class='legend-content'>" + ndviLegend + "</div>",
+            '17': "<h2>Crop Growth</h2><div class='legend-content'>" + reclLegend + "</div>"
+        };
+
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems,
+                edit: false,  // Disable the edit control
+                remove: false
+            },
+            draw: {
+                polygon: {
+                    shapeOptions: {
+                        color: 'blue',
+                        fillOpacity: 0
+                    }
+                },
+                polyline: false,
+                rectangle: false,
+                circle: false,
+                circlemarker: false,
+                marker: false
+            }
+        });
+        map.addControl(drawControl);
+ map.on('draw:created', function (e) {
+    const layer = e.layer;
+    drawnItems.addLayer(layer);
+
+   if (isScoutingMode) {
+    localStorage.setItem("fromScouting", "true");
+
+    drawnItems.addLayer(layer);        // still add for export
+    generateAndDownloadKML(layer);     // export to KML
+    exitScoutingMode();
+
+    // ✅ Remove scouting layer (guaranteed)
+    setTimeout(() => {
+        drawnItems.clearLayers();
+    }, 500); // or 0 for instant
+    return;
+}
+else {
+        fromScouting = false;
+        localStorage.removeItem('fromScouting');
+
+       setTimeout(() => {
+    if (drawnItems.hasLayer(scoutingPolygon)) {
+        drawnItems.removeLayer(scoutingPolygon);
+    }
+}, 0);
+        exitScoutingMode();
+    }
+});
+
+       
+        // Scouting functionality
+        document.getElementById('scoutingButton').addEventListener('click', function() {
+            if (!isScoutingMode) {
+                enterScoutingMode();
+            } else {
+                exitScoutingMode();
+            }
+        });
+
+        function enterScoutingMode() {
+    isScoutingMode = true;
+    const btn = document.getElementById('scoutingButton');
+    btn.innerHTML = '<i class="fas fa-times"></i> Exit Scouting';
+    btn.classList.add('scouting-mode');
+    document.getElementById('scoutingActive').style.display = 'block';
+
+    // Clear any existing polygons
+    drawnItems.clearLayers();
+
+    // Automatically start drawing polygon
+    new L.Draw.Polygon(map, drawControl.options.draw.polygon).enable();
+}
+
+
+        function exitScoutingMode() {
+            isScoutingMode = false;
+            
+            document.getElementById('scoutingButton').textContent = 'Scouting';
+            document.getElementById('scoutingButton').classList.remove('scouting-mode');
+            document.getElementById('scoutingActive').style.display = 'none';
+        }
+
+        function generateAndDownloadKML(layer) {
+            const coordinates = layer.getLatLngs()[0];
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            
+            let kmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Scouting Area - ${timestamp}</name>
+    <description>Scouting polygon created with LIMS</description>
+    <Style id="scoutingStyle">
+      <LineStyle>
+        <color>ff0000ff</color>
+        <width>3</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d0000ff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <Placemark>
+      <name>Scouting Area</name>
+      <description>Area marked for scouting on ${new Date().toLocaleDateString()}</description>
+      <styleUrl>#scoutingStyle</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>`;
+
+            // Add coordinates
+            coordinates.forEach(coord => {
+                kmlContent += `${coord.lng},${coord.lat},0 `;
+            });
+            
+            // Close the polygon by adding the first coordinate again
+            kmlContent += `${coordinates[0].lng},${coordinates[0].lat},0`;
+
+            kmlContent += `
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>`;
+
+            // Create and download the KML file
+            const blob = new Blob([kmlContent], { type: 'application/vnd.google-earth.kml+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `scouting-area-${timestamp}.kml`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            // Show success message
+            alert('KML file has been generated and downloaded successfully!');
+        }
+
+
+         // Vegetation Report functionality
+        document.getElementById('vegetationReportButton').addEventListener('click', function() {
+            showVegetationReport();
+        });
+
+        function showVegetationReport() {
+            // Use the existing vegetation_indices.pdf file
+            const pdfUrl = 'Vegetation_Indices.pdf'; // Assuming the PDF is in the same directory
+            document.getElementById('pdfViewer').src = pdfUrl;
+            document.getElementById('vegetationModal').style.display = 'block';
+        }
+
+        // Remove the generateVegetationPDF function entirely since we're using an existing file
+
+        // Download vegetation report
+        document.getElementById('downloadVegetationReport').addEventListener('click', function() {
+            // Create a download link for the existing PDF
+            const link = document.createElement('a');
+            link.href = 'Vegetation_Indices.pdf';
+            link.download = 'Vegetation_Indices.pdf';
+            link.target = '_blank'; // Open in new tab as fallback
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Modal close functionality
+        document.getElementById('closeVegetationModal').addEventListener('click', function() {
+            document.getElementById('vegetationModal').style.display = 'none';
+        });
+
+        // Download vegetation report
+        document.getElementById('downloadVegetationReport').addEventListener('click', function() {
+            const pdfUrl = document.getElementById('pdfViewer').src;
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = `vegetation_indices_report_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('vegetationModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+
+        function getCoordinatesFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            // const swappedCoordinates =JSON.parse(urlParams.get('coordinates'));
+            //                         console.log(swappedCoordinates);
+
+            //             const coordinates = swappedCoordinates.map((coord) => [coord[1], coord[0]]);
+
+            const coordinates = JSON.parse(urlParams.get('coordinates'));
+
+
+            // console.log(coordinates)
+            if (coordinates) {
+                // return JSON.parse(coordinates);
+                document.getElementById('dropdown').style.display = 'none';
+
+                return coordinates[0];
+            }
+            return null;
+        }
+
+        var polygonData = { date: null, data: [], polygons: [] }
+        var ZoningData = { date: null, data: [], polygons: [] }
+
+        var bbox;
+        var polygonCoordinates;
+        var currentImageLayer;
+        var ndviData = null;
+        var polygonLayer = null;
+        var polygonCenter;
+        var legendElement;
+        var legendminimize;
+        var polygonAreaAcres;
+
+
+
+
+
+        function calculateBoundingBox(polygonCoords) {
+            const lats = polygonCoords.map(coord => coord[1]);
+            const lngs = polygonCoords.map(coord => coord[0]);
+            const minLat = Math.min(...lats);
+            const maxLat = Math.max(...lats);
+            const minLng = Math.min(...lngs);
+            const maxLng = Math.max(...lngs);
+            return [[minLat, minLng], [maxLat, maxLng]];
+        }
+
+        let fromScouting = false; // default
+
+        function initializePolygonFromURL() {
+   const skip = localStorage.getItem('fromScouting') === 'true';
+
+    if (skip) {
+        console.log('⏭ Skipping polygon init due to scouting mode');
+        localStorage.removeItem('fromScouting'); // clear after skipping
+        return;
+    }
+
+    // rest of your full logic remains unchanged
+    polygonData = { date: null, data: [], polygons: [] };
+    ZoningData = { date: null, data: [], polygons: [] };
+
+    var coordinates = getCoordinatesFromURL();
+    var selectedFarmCoordinates = localStorage.getItem("selectedFarmCoordinates");
+
+    if (selectedFarmCoordinates) {
+        if (selectedFarmCoordinates.startsWith('[') || selectedFarmCoordinates.startsWith('{')) {
+            coordinates = JSON.parse(selectedFarmCoordinates);
+        } else {
+            coordinates = selectedFarmCoordinates.split(',').map(coord => parseFloat(coord));
+        }
+    }
+
+    if (coordinates) {
+        polygonCoordinates = coordinates[0];
+        var latLngs = polygonCoordinates.map(coord => L.latLng(coord[1], coord[0]));
+        var polygon = L.polygon(latLngs, { color: 'blue', fillOpacity: 0 }).addTo(map);
+        drawnItems.clearLayers();
+        drawnItems.addLayer(polygon);
+        polygonLayer = polygon;
+
+        polygonCoordinates.push(polygonCoordinates[0]);
+        bbox = calculateBoundingBox(polygonCoordinates);
+
+        var geoJsonPolygon = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [polygonCoordinates]
+            }
+        };
+
+        var bboxarea = turf.bbox(geoJsonPolygon);
+        var bboxPolygon = turf.bboxPolygon(bboxarea);
+        var polygonAreaSqMeters = turf.area(geoJsonPolygon);
+        var bboxAreaSqMeters = turf.area(bboxPolygon);
+
+        var sqMetersToAcres = 4046.85642;
+        polygonAreaAcres = polygonAreaSqMeters / sqMetersToAcres;
+        var bboxAreaAcres = bboxAreaSqMeters / sqMetersToAcres;
+
+        fetchAvailableDates(bbox);
+
+        let sumLng = 0, sumLat = 0;
+        polygonCoordinates.forEach(coord => {
+            sumLng += coord[0];
+            sumLat += coord[1];
+        });
+
+        polygonCenter = [sumLat / polygonCoordinates.length, sumLng / polygonCoordinates.length];
+        localStorage.setItem("polygoncoord", polygonCenter);
+        map.flyTo(polygonCenter, 15);
+
+        document.getElementById('indexDropdown').addEventListener('change', function () {
+            const selectedValue = this.value;
+            const legendText = legends[selectedValue] || 'Select an option';
+            const legendElement = document.getElementById('prelegend');
+
+            legendElement.innerHTML = '';
+
+            const legendDiv = document.createElement('div');
+            legendDiv.id = 'legend-' + selectedValue;
+            legendDiv.innerHTML = legendText;
+
+            const button = document.createElement('button');
+            button.id = 'uniqueButtonId';
+            button.innerHTML = '-';
+            button.onclick = function () { toggleLegend(selectedValue); };
+            button.style.width = '20px';
+
+            legendDiv.appendChild(button);
+            legendElement.appendChild(legendDiv);
+            legendElement.style.display = 'block';
+        });
+    }
+}
+
+       map.on('draw:created', function (event) {
+    const layer = event.layer;
+    drawnItems.addLayer(layer);
+
+    if (isScoutingMode) {
+        // ✅ Set flag and handle scouting polygon
+        localStorage.setItem("fromScouting", "true");
+        scoutingPolygon = layer;
+
+        generateAndDownloadKML(layer);
+        exitScoutingMode();
+
+        // ✅ Remove scouting layer after drawing
+      setTimeout(() => {
+    if (drawnItems.hasLayer(scoutingPolygon)) {
+        drawnItems.removeLayer(scoutingPolygon);
+    }
+}, 0);
+// optional delay for visual feedback
+
+        return; // ⛔ Skip rest of the logic
+    }
+
+    // ✅ Skip processing if it came from scouting
+    const skip = localStorage.getItem("fromScouting") === "true";
+    if (skip) {
+        localStorage.removeItem("fromScouting");
+        console.log("⏭ Skipped polygon logic due to scouting draw");
+        return;
+    }
+
+    // ✅ Full polygon logic below
+    showProcessing();
+    polygonData = { date: null, data: [], polygons: [] };
+    ZoningData = { date: null, data: [], polygons: [] };
+
+    document.getElementById('weatherReport').disabled = false;
+
+    polygonCoordinates = layer.getLatLngs()[0].map(latlng => [latlng.lng, latlng.lat]);
+    localStorage.setItem("NewFarmCoordinates", JSON.stringify(polygonCoordinates));
+    bbox = calculateBoundingBox(polygonCoordinates);
+    polygonLayer = layer;
+
+    const geoJsonPolygon = {
+        type: "Feature",
+        geometry: {
+            type: "Polygon",
+            coordinates: [polygonCoordinates]
+        }
+    };
+
+    const bboxarea = turf.bbox(geoJsonPolygon);
+    const bboxPolygon = turf.bboxPolygon(bboxarea);
+    const polygonAreaSqMeters = turf.area(geoJsonPolygon);
+    const bboxAreaSqMeters = turf.area(bboxPolygon);
+
+    const sqMetersToAcres = 4046.85642;
+    polygonAreaAcres = polygonAreaSqMeters / sqMetersToAcres;
+    const bboxAreaAcres = bboxAreaSqMeters / sqMetersToAcres;
+    localStorage.setItem("NewFarmAreaAcres", polygonAreaAcres);
+
+    polygonCoordinates.push(polygonCoordinates[0]);
+
+    fetchAvailableDates(bbox);
+    console.log(bbox);
+
+    let sumLng = 0, sumLat = 0;
+    const numVertices = polygonCoordinates.length;
+    polygonCoordinates.forEach(coord => {
+        sumLng += coord[0];
+        sumLat += coord[1];
+    });
+
+    const centroidLng = sumLng / numVertices;
+    const centroidLat = sumLat / numVertices;
+
+    polygonCenter = [centroidLat, centroidLng];
+    localStorage.setItem("polygoncoord", JSON.stringify(polygonCenter));
+    map.flyTo(polygonCenter, 15);
+
+    document.getElementById('indexDropdown').addEventListener('change', function () {
+        var selectedValue = this.value;
+        var legendText = legends[selectedValue] || 'Select an option';
+        var legendElement = document.getElementById('prelegend');
+
+        legendElement.innerHTML = '';
+
+        var legendDiv = document.createElement('div');
+        legendDiv.id = 'legend-' + selectedValue;
+        legendDiv.innerHTML = legendText;
+
+        var button = document.createElement('button');
+        button.id = 'uniqueButtonId';
+        button.innerHTML = '-';
+        button.onclick = function () { toggleLegend(selectedValue); };
+        button.style.width = '20px';
+
+        legendDiv.appendChild(button);
+        legendElement.appendChild(legendDiv);
+        legendElement.style.display = 'block';
+    });
+
+    downloadMapImage(bbox);
+    loadWeatherChart();
+});
+
+
+        initializePolygonFromURL();
+        function toggleLegend(id) {
+            var legendElement = document.getElementById('legend-' + id);
+            var content = legendElement.querySelector('.legend-content');
+            var button = legendElement.querySelector('button');
+
+
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                button.innerHTML = '-';
+                button.classList.remove('minimized');
+            } else {
+                content.style.display = 'none';
+                button.innerHTML = '+';
+                button.classList.add('minimized');
+            }
+        }
+
+        function calculateBoundingBox(coordinates) {
+           
+            var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+            coordinates.forEach(function (coord) {
+                var lon = coord[0], lat = coord[1];
+                minX = Math.min(minX, lon);
+                minY = Math.min(minY, lat);
+                maxX = Math.max(maxX, lon);
+                maxY = Math.max(maxY, lat);
+            });
+
+            return [[minY, minX], [maxY, maxX]];
+        }
+
+       async function fetchAvailableDates(bbox) {
+    console.log("Fetching available dates for bbox:", bbox);
+
+    const authToken = localStorage.getItem("token");
+    if (!authToken) {
+        console.error("❌ No auth token found.");
+        return;
+    }
+
+    const catalogUrl = "https://services.sentinel-hub.com/api/v1/catalog/1.0.0/search";
+
+    const requestBody = {
+        bbox: [bbox[0][1], bbox[0][0], bbox[1][1], bbox[1][0]],  // [minLon, minLat, maxLon, maxLat]
+        datetime: "2020-01-01T00:00:00Z/" + new Date().toISOString(),
+        limit: 100,
+        collections: ["sentinel-2-l1c"],
+        "filter-lang": "cql2-text",
+        filter: "eo:cloud_cover < 30"
+    };
+
+    try {
+        const response = await fetch(catalogUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/geo+json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error('❌ Error fetching available dates (raw):', text);
+            return [];
+        }
+
+        const data = await response.json();
+
+        const dates = data.features.map(f => f.properties.datetime.split('T')[0]);
+        const uniqueDates = [...new Set(dates)];
+
+        populateDateDropdown(uniqueDates, bbox);
+    } catch (error) {
+        console.error('❌ Error fetching available dates:', error);
+        return [];
+    }
+}
+      function populateDateDropdown(dates, bbox) {
+
+    const role = localStorage.getItem("userRole");
+    const dropdown = document.getElementById('dateDropdown');
+    dropdown.innerHTML = '';
+
+    // ✅ If Community → limit to 5 dates
+    let filteredDates = dates;
+    if (role === "Community") {
+        filteredDates = dates.slice(0, 5); // first 5 dates only
+    }
+    if (role === "Progressive") {
+        filteredDates = dates.slice(0, 36); // first 36 dates only
+    }
+
+    // Populate dropdown
+    filteredDates.forEach(date => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        dropdown.appendChild(option);
+    });
+
+    dropdown.addEventListener('change', () => {
+        if (currentImageLayer) {
+            map.removeLayer(currentImageLayer);
+        }
+
+        polygonData = { date: null, data: [], polygons: [] };
+        ZoningData = { date: null, data: [], polygons: [] };
+
+        selectedDate = dropdown.value;
+        const indexesValues = [11, 12, 13, 14, 15, 16];
+
+        polygonData.date = selectedDate;
+        ZoningData.date = selectedDate;
+
+        indexesValues.forEach(index => {
+            fetchAndOverlaySentinelImage(bbox, selectedDate, index);
+            fetchAndOverlayZoningSentinelImage(bbox, selectedDate, index);
+        });
+    });
+
+    const indexDropdown = document.getElementById('indexDropdown');
+    indexDropdown.addEventListener('change', () => {
+
+        if (currentImageLayer) {
+            map.removeLayer(currentImageLayer);
+        }
+
+        if (legend) {
+            legend.style.display = "none";
+        }
+
+        const selectedDate = dropdown.value;
+        const selectedIndex = indexDropdown.value;
+
+        if (selectedDate === polygonData.date) {
+            const selectedPolygonData = polygonData.polygons.find(
+                polygon => polygon.id == selectedIndex
+            );
+
+            if (selectedPolygonData) {
+                clipImageLayerToPolygon(
+                    polygonData.data[0],
+                    selectedPolygonData.polygon,
+                    false
+                );
+            } else {
+                console.log("No polygon found with the selected index.");
+            }
+        } else {
+            console.log("Date is not matched.");
+        }
+    });
+
+    // ✅ Load FIRST date automatically
+    if (filteredDates.length > 0) {
+
+        const indexesValues = [11, 12, 13, 14, 15, 16];
+        const firstDate = filteredDates[0];
+
+        polygonData.date = firstDate;
+        ZoningData.date = firstDate;
+
+        if (currentImageLayer) {
+            map.removeLayer(currentImageLayer);
+        }
+
+        indexesValues.forEach(index => {
+            fetchAndOverlaySentinelImage(bbox, firstDate, index);
+            fetchAndOverlayZoningSentinelImage(bbox, firstDate, index);
+        });
+    }
+}
+
+
+
+        var currentImageLayer;
+        var ndviData = null;
+
+
+
+        async function fetchAndOverlaySentinelImage(bbox, date, index) {
+            // console.log(`${index} = ${date} ------ ${currentImageLayer}`)
+            
+            if (currentImageLayer) {
+                map.removeLayer(currentImageLayer);
+
+            }
+            if (legend) {
+                // console.log(legend)
+                legend.style.display = "none";
+            }
+            
+            var authToken = localStorage.getItem("token");
+            var apiUrl = `https://services.sentinel-hub.com/api/v1/process`;
+
+            var evalscript = `
+                function setup() {
+                if(${index}==11){
+                return {
+                        input: [{
+                            bands: ["B02","B03","B04"]
+                        }],
+                        output: {
+                            bands: 3
+                        }
+                    };}  
+                    else{  
+                return {
+                        input: [{
+                            bands: ["B03","B04","B05", "B08","B11"]
+                        }],
+                        output: {
+                            id: "default",
+                            bands: 3,
+                            sampleType: SampleType.UINT8
+                        }
+                    };
+                    }
+                }
+                function colorBlendndmi(value, min, max) {
+    if (value >= 0.8 && value <= max) {
+        return [85, 102, 215];  // rgb(85, 102, 215)
+    } else if (value >= 0.6 && value < 0.8) {
+        return [136, 137, 221];  // rgb(136, 137, 221)
+    } else if (value >= 0.4 && value < 0.6) {
+        return [137, 136, 219];  // rgb(137, 136, 219)
+    } else if (value >= 0.2 && value < 0.4) {
+        return [166, 158, 210];  // rgb(166, 158, 210)
+    } else if (value >= 0.0 && value < 0.2) {
+        return [186, 171, 209];  // rgb(186, 171, 209)
+    } else if (value >= -0.2 && value < 0.0) {
+        return [211, 186, 194];  // rgb(211, 186, 194)
+    } else if (value >= -0.4 && value < -0.2) {
+        return [194, 182, 180];  // rgb(194, 182, 180)
+    } else if (value >= -0.6 && value < -0.4) {
+        return [183, 166, 159];  // rgb(183, 166, 159)
+    } else if (value >= -0.8 && value < -0.6) {
+        return [182, 156, 149];  // rgb(182, 156, 149)
+    } else if (value >= -1.0 && value < -0.8) {
+        return [181, 156, 144];  // rgb(181, 156, 144)
+    } else {
+        return [0, 0, 0]; // Default color (black) for out of range values
+    }
+}
+                function colorBlend(value, min, max) {
+    if (value >= 0.95 && value <= max) {
+        return [0, 127, 71];
+    } else if (value >= 0.90 && value < 0.95) {
+        return [6, 150, 84];
+    } else if (value >= 0.85 && value < 0.90) {
+        return [21, 169, 97];
+    } else if (value >= 0.80 && value < 0.85) {
+        return [85, 190, 107];
+    } else if (value >= 0.75 && value < 0.80) {
+        return [119, 202, 112];
+    } else if (value >= 0.70 && value < 0.75) {
+        return [155, 215, 116];
+    } else if (value >= 0.65 && value < 0.70) {
+        return [186, 225, 130];
+    } else if (value >= 0.60 && value < 0.65) {
+        return [212, 239, 150];
+    } else if (value >= 0.55 && value < 0.60) {
+        return [235, 247, 173];
+    } else if (value >= 0.50 && value < 0.55) {
+        return [235, 247, 173];
+    } else if (value >= 0.45 && value < 0.50) {
+        return [254, 254, 195];
+    } else if (value >= 0.40 && value < 0.45) {
+        return [255, 237, 171];
+    } else if (value >= 0.35 && value < 0.40) {
+        return [253, 199, 127];
+    } else if (value >= 0.30 && value < 0.35) {
+        return [255, 172, 103];
+    } else if (value >= 0.25 && value < 0.30) {
+        return [255, 139, 87];
+    } else if (value >= 0.20 && value < 0.25) {4
+        return [255, 107, 74];
+    } else if (value >= 0.15 && value < 0.20) {
+        return [259, 129, 83];
+    } else if (value >= 0.10 && value < 0.15) {
+        return [254, 107, 74];
+    }  else if (value >= 0.08 && value < 0.10) {
+        return [255, 139, 87];
+    } else if (value >= 0.06 && value < 0.08) {
+        return [255, 107, 74];
+    } else if (value >= 0.04 && value < 0.06) {
+        return [237, 78, 60];
+    } else if (value >= 0.02 && value < 0.04) {
+        return [226, 43, 45];
+    } else if (value >= 0.00 && value < 0.02) {
+        return [197, 18, 39];
+    } else if (value >= min && value < 0.00) {
+        return [171, 0, 41];
+    } else {
+        return [255, 255, 255]; // Default to white if no range is matched
+    }
+}
+
+function colorBlendsavi(value, min, max) {
+    if (value >= 0.70 && value <= 1.00) {
+        return [0, 127, 71];
+    } else if (value >= 0.60 && value < 0.70) {
+        return [6, 150, 84];
+    } else if (value >= 0.50 && value < 0.60) {
+        return [21, 169, 97];
+    } else if (value >= 0.40 && value < 0.50) {
+        return [85, 190, 107];
+    } else if (value >= 0.35 && value < 0.40) {
+        return [119, 202, 112];
+    } else if (value >= 0.30 && value < 0.35) {
+        return [155, 215, 116];
+    } else if (value >= 0.27 && value < 0.30) {
+        return [186, 225, 130];
+    } else if (value >= 0.25 && value < 0.27) {
+        return [212, 239, 150];
+    } else if (value >= 0.22 && value < 0.25) {
+        return [235, 247, 173];
+    } else if (value >= 0.20 && value < 0.22) {
+        return [254, 254, 195];
+    } else if (value >= 0.17 && value < 0.20) {
+        return [255, 237, 171];
+    } else if (value >= 0.15 && value < 0.17) {
+        return [253, 199, 127];
+    } else if (value >= 0.12 && value < 0.15) {
+        return [255, 172, 103];
+    } else if (value >= 0.10 && value < 0.12) {
+        return [255, 139, 87];
+    } else if (value >= 0.08 && value < 0.10) {
+        return [255, 107, 74];
+    } else if (value >= 0.06 && value < 0.08) {
+        return [237, 78, 60];
+    } else if (value >= 0.04 && value < 0.06) {
+        return [226, 43, 45];
+    } else if (value >= 0.02 && value < 0.04) {
+        return [197, 18, 39];
+    } else if (value >= 0.00 && value < 0.02) {
+        return [171, 0, 41];
+    } else if (value >= min && value < 0.00) {
+        return [255, 255, 255];
+    } else {
+        return [255, 255, 255];
+    }
+}
+
+
+          
+                function evaluatePixel(sample) {
+   
+        let L = 0.428;
+        let indices = [            
+            (sample.B08 - sample.B04) / (sample.B08 + sample.B04),         // NDVI
+            (sample.B08 - sample.B11) / (sample.B08 + sample.B11),         // NDMI
+            (sample.B08 - sample.B04) / (sample.B08 + sample.B04 + L) * (1.0 + L), // SAVI
+            (2.0 * sample.B08 + 1.0 - Math.sqrt(Math.pow((2.0 * sample.B08 + 1.0), 2.0) - 8.0 * (sample.B08 - sample.B04))) / 2.0, // MSAVI
+            (sample.B08 - sample.B05) / (sample.B08 + sample.B05),         // NDRE
+            (sample.B08 / sample.B04) - 1                                   // RECL
+           // (sample.B04 * 2),(sample.B03 * 2),(sample.B02 * 2)         // RGB
+        ];
+
+        let indexValue = indices[${index - 12}];
+ if (${index} == 11) {
+                     return [sample.B04 *2, sample.B03*2, sample.B02*2];
+
+    } 
+        if (${index} == 13) {
+            return colorBlendndmi(indexValue, -1, 1);
+        } else if (${index} == 14) {
+            return colorBlendsavi(indexValue, -1, 1);
+        } else if (${index} == 15) {
+            return colorBlendsavi(indexValue, -1, 1);
+        } else {
+            return colorBlend(indexValue, -1, 1);
+        }
+    
+}
+            `;
+
+
+
+            polygonCoordinates.push(polygonCoordinates[0]);
+
+            // console.log(polygonCoordinates);
+
+            var geoJsonPolygon = {
+                type: "Polygon",
+                coordinates: [polygonCoordinates]  // Note the double array for GeoJSON structure
+            };
+
+            var requestBody = {
+                input: {
+                    bounds: {
+                        geometry: geoJsonPolygon
+                    },
+                    data: [{
+                        type: "sentinel-2-l2a",
+                        dataFilter: {
+                            timeRange: {
+                                from: date + "T00:00:00Z",
+                                to: date + "T23:59:59Z"
+                            },
+                            maxCloudCoverage: 100
+                        }
+                    }]
+                },
+                output: {
+                    width: 1000,
+                    height: 1000,
+                    responses: [{
+                        identifier: "default",
+                        format: {
+                            type: "image/png"
+                        }
+                    }]
+                },
+                evalscript: evalscript
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error fetching Sentinel image:', errorData);
+                    return;
+                }
+
+
+                const imageUrl = URL.createObjectURL(await response.blob());
+
+                const image = new Image();
+
+                image.src = imageUrl;
+
+                image.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+
+                    ctx.drawImage(image, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+
+
+                    ctx.putImageData(imageData, 0, 0);
+
+                    const transparentImage = L.imageOverlay(canvas.toDataURL(), bbox);
+
+                    currentImageLayer = transparentImage;
+
+                    const polygon = turf.polygon([polygonCoordinates]);
+
+                    polygonData.data.push(polygon)
+                    polygonData.polygons.push({ id: index, polygon: currentImageLayer })
+                    // console.log('polygonData = ', polygonData)
+                    updateDropdownOptions();
+                   
+                };
+            } catch (error) {
+                console.error('Error fetching Sentinel image:', error);
+            }
+        }
+        async function fetchAndOverlayZoningSentinelImage(bbox, date, index) {
+            if (currentImageLayer) {
+                map.removeLayer(currentImageLayer);
+
+            }
+            if (legend) {
+                // console.log(legend)
+                legend.style.display = "none";
+            }
+
+
+            var authToken = localStorage.getItem("token");
+            var apiUrl = `https://services.sentinel-hub.com/api/v1/process`;
+
+            var evalscript = `
+                function setup() {
+                    return {
+                        input: ["B04","B05","B08","B11"],
+                        output: { bands: 1, sampleType: "UINT8" }
+                    };
+                }
+
+                function evaluatePixel(sample) {
+                    let L = 0.428;
+                    let indices = [
+                    (sample.B08 - sample.B04) / (sample.B08 + sample.B04),         // NDVI
+                        (sample.B08 - sample.B11) / (sample.B08 + sample.B11),         // NDMI
+                        (sample.B08 - sample.B04) / (sample.B08 + sample.B04 + L) * (1.0 + L), // SAVI
+                        (2 * sample.B08 + 1 - Math.sqrt((2 * sample.B08 + 1) ** 2 - 8 * (sample.B08 - sample.B04))) / 2, // MSAVI
+                        (sample.B08 - sample.B05) / (sample.B08 + sample.B05),         // NDRE
+                        (sample.B08 / sample.B04) - 1                             ];
+                    
+                        let ndvi = (indices[${index - 12}] + 1) / 2 * 255; // Normalize NDVI to [0, 255]
+                    return [ndvi];
+                }
+            `;
+
+            var requestBody = {
+                input: {
+                    bounds: {
+                        bbox: [bbox[0][1], bbox[0][0], bbox[1][1], bbox[1][0]]
+                    },
+                    data: [{
+                        type: "sentinel-2-l1c",
+                        dataFilter: {
+                            timeRange: {
+                                from: date + "T00:00:00Z",
+                                to: date + "T23:59:59Z"
+                            },
+                            maxCloudCoverage: 30
+                        }
+                    }]
+                },
+                output: {
+                    width: 1000,
+                    height: 1000,
+                    responses: [{
+                        identifier: "default",
+                        format: {
+                            type: "image/png"
+                        }
+                    }]
+                },
+                evalscript: evalscript
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error fetching Sentinel image:', errorData);
+                    return;
+                }
+
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+
+                const img = new Image();
+                img.src = imageUrl;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const pixelData = imageData.data;
+                    ndviData = new Float32Array(canvas.width * canvas.height);
+
+                    for (let i = 0; i < pixelData.length; i += 4) {
+                        const r = pixelData[i];
+                        ndviData[i / 4] = (r / 255) * 2 - 1;
+                    }
+                    ZoningData
+                    // console.log('NDVI Data:', ndviData);
+                    ZoningData.polygons.push({ id: index, polygon: ndviData })
+                  
+                };
+            } catch (error) {
+                console.error('Error fetching Sentinel image:', error);
+            }
+        }
+        function updateDropdownOptions() {
+            const dropdown = document.getElementById('indexDropdown');
+            const polygonIds = polygonData.polygons.map(p => p.id.toString());
+
+            for (let i = 0; i < dropdown.options.length; i++) {
+                const option = dropdown.options[i];
+                if (polygonIds.includes(option.value)) {
+                    option.disabled = false;
+                  if (option.value == "11") {
+    const selectedPolygonData = polygonData.polygons.find(polygon => polygon.id == option.value);
+    document.getElementById("indexDropdown").selectedIndex = 1;
+
+    // ✅ Add this here:
+    const polygon = turf.polygon([polygonCoordinates]);
+    const areaInMeters = turf.area(polygon);
+    polygonAreaAcres = areaInMeters * 0.000247105;
+
+    hideProcessingScreen();
+
+    clipImageLayerToPolygon(polygonData.data[0], selectedPolygonData.polygon, false);
+
+    var indexesss = [11, 12, 13, 14, 15, 16];
+    indexesss.forEach(index => {
+        var selectedPolygonDat = polygonData.polygons.find(polygon => polygon.id == index);
+        var selectZoningDat = ZoningData.polygons.find(polygon => polygon.id == index);
+
+        performZoning(selectZoningDat.polygon, true, index);
+        clipImageLayerToPolygon(polygonData.data[0], selectedPolygonDat.polygon, true, index);
+    });
+}
+                } else {
+                    option.disabled = false;
+                    
+                }
+            }
+
+        }
+        document.getElementById('zoneButton').addEventListener('click', () => {
+    if (ndviData) {
+        var indexDropdown = document.getElementById('indexDropdown');
+        indexvalue = indexDropdown.value;
+        var selectZoningData = ZoningData.polygons.find(polygon => polygon.id == indexvalue);
+
+        // ✅ Add area calculation before zoning:
+        const polygon = turf.polygon([polygonCoordinates]);
+        const areaInMeters = turf.area(polygon);
+        polygonAreaAcres = areaInMeters * 0.000247105;
+
+        performZoning(selectZoningData.polygon, false);
+    } else {
+        showAlert('Please select any indice first data first.');
+    }
+});
+
+
+        let initialImageData = null; // Variable to store initial image data
+
+        function performZoning(ndviData, PdfCheck, index) {
+
+
+            document.getElementById("prelegend").style.display = "none";
+
+
+            let minNDVI = ndviData[0];
+            let maxNDVI = ndviData[0];
+
+            for (let i = 1; i < ndviData.length; i++) {
+                if (ndviData[i] < minNDVI) {
+                    minNDVI = ndviData[i];
+                }
+                if (ndviData[i] > maxNDVI) {
+                    maxNDVI = ndviData[i];
+                }
+            }
+
+            const k = 4;
+            const clusters = kmeans(ndviData, k);
+            clusters.sort((a, b) => a.centroid - b.centroid);
+            // console.log(clusters)
+            const colors = ['#8400A8', '#fee08b', '#98E600', '#4C7300'];
+            const rgbColors = colors.map(hexToRgb);
+
+            const width = 1000;
+            const height = 1000;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            const clusterAreas = new Array(k).fill(0);
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const ndviValue = ndviData[y * width + x];
+                    const clusterIndex = findClosestCluster(ndviValue, clusters);
+                    const color = rgbColors[clusterIndex];
+
+                    ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                    ctx.fillRect(x, y, 1, 1);
+
+                    clusterAreas[clusterIndex]++;
+                }
+            }
+
+            const totalPixels = width * height;
+            const pixelAreaAcres = polygonAreaAcres / totalPixels;
+
+            for (let i = 0; i < clusterAreas.length; i++) {
+                clusterAreas[i] = clusterAreas[i] * pixelAreaAcres;
+            }
+
+            initialImageData = ctx.getImageData(0, 0, width, height); // Store the initial image data
+
+            const imageUrl = canvas.toDataURL('image/png');
+            if (currentImageLayer) {
+                map.removeLayer(currentImageLayer);
+            }
+            currentImageLayer = L.imageOverlay(imageUrl, bbox);
+            const polygon = turf.polygon([polygonCoordinates]);
+            // ZoningData.data.push(polygon)
+            // ZoningData.polygons.push({ id: index, polygon: currentImageLayer })
+            // console.log('polygonData = ', polygonData)
+            clipImageZoningLayerToPolygon(polygon, PdfCheck, index);
+            console.log(clusterAreas)
+           const exists = zoningArea.areas.some(area => area.id === index);
+
+if (!exists) {
+    zoningArea.areas.push({ id: index, area: clusterAreas });
+}
+
+
+            console.log("zoning Area of all ", zoningArea)
+            if (PdfCheck == false) {
+
+                createLegend(clusters, colors, clusterAreas, ctx, canvas, width, height);
+            }
+        }
+
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            return {
+                r: (bigint >> 16) & 255,
+                g: (bigint >> 8) & 255,
+                b: bigint & 255
+            };
+        }
+        var mapContainer;
+        var legend;
+        var legendItems = [];
+
+        function createLegend(clusters, colors, areas, ctx, canvas, width, height) {
+            legend = document.createElement('div');
+            legend.style.position = 'absolute';
+            legend.style.bottom = '10px';
+            legend.style.right = '10px';
+            legend.style.backgroundColor = 'white';
+            legend.style.padding = '10px';
+            legend.style.border = '1px solid #ccc';
+            legend.style.zIndex = '1000';
+
+            const title = document.createElement('h4');
+            title.innerText = `Total Area in acres: ${polygonAreaAcres.toFixed(2)} `;
+            legend.appendChild(title);
+            const grades = ['D', 'C', 'B', 'A'];
+            legendItems = []
+
+            clusters.forEach((cluster, index) => {
+                const item = document.createElement('div');
+                item.style.display = 'flex';
+                item.style.alignItems = 'center';
+                item.style.marginBottom = '5px';
+
+                const colorBox = document.createElement('div');
+                colorBox.style.display = 'flex';
+                colorBox.style.alignItems = 'center';
+                colorBox.style.justifyContent = 'center';
+                colorBox.style.width = '30px';
+                colorBox.style.height = '30px';
+                colorBox.style.backgroundColor = colors[index];
+                colorBox.style.marginRight = '10px';
+                colorBox.style.position = 'relative';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = true;
+                checkbox.style.position = 'absolute';
+                checkbox.style.opacity = '0'; // Hide the default checkbox appearance
+                checkbox.style.width = '100%';
+                checkbox.style.height = '100%';
+                checkbox.style.cursor = 'pointer'; // Change cursor to pointer when hovering over the color box
+                checkbox.addEventListener('change', () => toggleClusterVisibility(index, ctx, canvas, width, height, colors, checkbox.checked));
+
+                colorBox.appendChild(checkbox);
+
+                const label = document.createElement('span');
+                label.innerText = ` ${areas[index].toFixed(2)} acres (${cluster.centroid.toFixed(2)}) Grade ${grades[index]}`;
+
+                item.appendChild(colorBox);
+                item.appendChild(label);
+                // legend.appendChild(item);
+                legendItems.push(item);
+
+            });
+
+            legendItems.reverse().forEach(item => {
+                legend.appendChild(item);
+            });
+            mapContainer = document.getElementById('map');
+            mapContainer.appendChild(legend);
+        }
+
+        function toggleClusterVisibility(clusterIndex, ctx, canvas, width, height, colors, isVisible) {
+            if (!initialImageData) return;
+
+            const currentImageData = ctx.getImageData(0, 0, width, height);
+            const data = currentImageData.data;
+            const initialData = initialImageData.data;
+            const clusterRgb = hexToRgb(colors[clusterIndex]);
+
+            for (let i = 0; i < data.length; i += 4) {
+                if (initialData[i] === clusterRgb.r && initialData[i + 1] === clusterRgb.g && initialData[i + 2] === clusterRgb.b) {
+                    data[i] = initialData[i];
+                    data[i + 1] = initialData[i + 1];
+                    data[i + 2] = initialData[i + 2];
+                    data[i + 3] = isVisible ? 255 : 0;
+                }
+            }
+
+            ctx.putImageData(currentImageData, 0, 0);
+            const newImageUrl = canvas.toDataURL('image/png');
+            if (currentImageLayer) {
+                map.removeLayer(currentImageLayer);
+            }
+            currentImageLayer = L.imageOverlay(newImageUrl, bbox);
+            const polygon = turf.polygon([polygonCoordinates]);
+            clipImageLayerToPolygon(polygon);
+        }
+
+        // Function to find the index of the closest cluster for a given value
+        function findClosestCluster(value, clusters) {
+            let minDistance = Math.abs(value - clusters[0].centroid);
+            let closestClusterIndex = 0;
+
+            for (let i = 1; i < clusters.length; i++) {
+                const distance = Math.abs(value - clusters[i].centroid);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestClusterIndex = i;
+                }
+            }
+
+            return closestClusterIndex;
+        }
+
+        function kmeans(data, k, maxIterations = 100) {
+            let centroids = [];
+            for (let i = 0; i < k; i++) {
+                centroids.push(data[Math.floor(Math.random() * data.length)]);
+            }
+
+            let clusters = Array.from({ length: k }, () => ({ points: [], centroid: null }));
+
+            // Assign each data point to the nearest centroid
+            const assignPoints = () => {
+                clusters.forEach(cluster => {
+                    cluster.points = [];
+                });
+
+                data.forEach(point => {
+                    const nearestCentroid = centroids.reduce((nearest, centroid, index) => {
+                        const distance = Math.abs(point - centroid);
+                        return distance < Math.abs(point - centroids[nearest]) ? index : nearest;
+                    }, 0);
+
+                    clusters[nearestCentroid].points.push(point);
+                });
+            };
+
+            // Update centroids based on the mean of assigned points
+            const updateCentroids = () => {
+                clusters.forEach((cluster, index) => {
+                    if (cluster.points.length > 0) {
+                        const sum = cluster.points.reduce((acc, val) => acc + val, 0);
+                        centroids[index] = sum / cluster.points.length;
+                    }
+                });
+            };
+
+            // Iterate until convergence or maximum iterations reached
+            let iter = 0;
+            while (iter < maxIterations) {
+                const prevCentroids = centroids.slice();
+
+                assignPoints();
+                updateCentroids();
+
+                if (centroids.every((centroid, index) => centroid === prevCentroids[index])) {
+                    break;
+                }
+
+                iter++;
+            }
+
+            // Finalize clusters
+            clusters.forEach((cluster, index) => {
+                cluster.centroid = centroids[index];
+            });
+
+            return clusters;
+        }
+      
+
+        var imageUrls = { polygons: [] }
+        function clipImageLayerToPolygon(polygon, imageLayer, PdfCheck, index) {
+            if (imageLayer) {
+                map.removeLayer(imageLayer);
+            }
+
+            const canvas = document.createElement('canvas');
+            const img = new Image();
+            img.src = imageLayer._url;
+            const check = img.src
+            // localStorage.setItem("BASE64IMAGE2",check)
+
+            if (PdfCheck == false) {
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const newImageData = ctx.createImageData(imageData.width, imageData.height);
+
+                    const coordinates = polygon.geometry.coordinates[0];
+                    const latLngs = coordinates.map(coord => L.latLng(coord[1], coord[0]));
+
+                    const bounds = L.latLngBounds(latLngs);
+                    const topLeft = map.latLngToContainerPoint(bounds.getNorthWest());
+                    const bottomRight = map.latLngToContainerPoint(bounds.getSouthEast());
+
+                    const scaleX = img.width / (bottomRight.x - topLeft.x);
+                    const scaleY = img.height / (bottomRight.y - topLeft.y);
+
+                    for (let x = 0; x < canvas.width; x++) {
+                        for (let y = 0; y < canvas.height; y++) {
+                            const latLng = map.containerPointToLatLng(L.point(x / scaleX + topLeft.x, y / scaleY + topLeft.y));
+                            const i = (y * canvas.width + x) * 4;
+
+                            if (turf.booleanPointInPolygon([latLng.lng, latLng.lat], polygon)) {
+                                newImageData.data[i] = imageData.data[i];
+                                newImageData.data[i + 1] = imageData.data[i + 1];
+                                newImageData.data[i + 2] = imageData.data[i + 2];
+                                newImageData.data[i + 3] = imageData.data[i + 3];
+                            } else {
+                                newImageData.data[i + 3] = 0; // Set alpha to 0 (transparent)
+                            }
+                        }
+                    }
+
+                    ctx.putImageData(newImageData, 0, 0);
+                    const clippedImageUrl = canvas.toDataURL();
+                    // localStorage.setItem("Current image layer",clippedImageUrl)
+                    // newlayer=localStorage.getItem("Current image layer")
+                    imageLayer = L.imageOverlay(clippedImageUrl, bounds);
+                    map.addLayer(imageLayer);
+                }
+            }
+
+            if (PdfCheck == true) {
+
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const newImageData = ctx.createImageData(imageData.width, imageData.height);
+
+                    const coordinates = polygon.geometry.coordinates[0];
+                    const latLngs = coordinates.map(coord => L.latLng(coord[1], coord[0]));
+
+                    const bounds = L.latLngBounds(latLngs);
+                    const expandedBounds = expandBoundingBox(bounds, 1.5); // Expand bounding box by 50%
+                    const topLeft = map.latLngToContainerPoint(expandedBounds.getNorthWest());
+                    const bottomRight = map.latLngToContainerPoint(expandedBounds.getSouthEast());
+
+                    const scaleX = img.width / (bottomRight.x - topLeft.x);
+                    const scaleY = img.height / (bottomRight.y - topLeft.y);
+
+                    for (let x = 0; x < canvas.width; x++) {
+                        for (let y = 0; y < canvas.height; y++) {
+                            const latLng = map.containerPointToLatLng(L.point(x / scaleX + topLeft.x, y / scaleY + topLeft.y));
+                            const i = (y * canvas.width + x) * 4;
+
+                            if (turf.booleanPointInPolygon([latLng.lng, latLng.lat], polygon)) {
+                                newImageData.data[i] = imageData.data[i];
+                                newImageData.data[i + 1] = imageData.data[i + 1];
+                                newImageData.data[i + 2] = imageData.data[i + 2];
+                                newImageData.data[i + 3] = imageData.data[i + 3];
+                            } else {
+                                newImageData.data[i + 3] = 0; // Set alpha to 0 (transparent)
+                            }
+                        }
+                    }
+
+                    ctx.putImageData(newImageData, 0, 0);
+                    const clippedImageUrl = canvas.toDataURL();
+
+                    imageLayer = L.imageOverlay(clippedImageUrl, expandedBounds);
+                    // Automatically download the image
+                    const existingIndex = imageUrls.polygons.findIndex(polygon => polygon.id === index);
+
+                    if (existingIndex !== -1) {
+                        // If it exists, overwrite the existing entry
+                        imageUrls.polygons[existingIndex].url = clippedImageUrl;
+                    } else {
+                        // If it doesn't exist, push a new entry and proceed with the download
+                        imageUrls.polygons.push({ id: index, url: clippedImageUrl });
+
+                    }
+
+                    console.log(imageUrls);
+                }
+                checkConditions()
+
+            };
+        }
+        var zoningArea = { areas: [] }
+
+        var zoningimageUrls = { polygons: [] }
+        function clipImageZoningLayerToPolygon(polygon, PdfCheck, index) {
+            if (currentImageLayer) {
+                map.removeLayer(currentImageLayer);
+            }
+
+            const canvas = document.createElement('canvas');
+            const img = new Image();
+            img.src = currentImageLayer._url;
+            if (PdfCheck == false) {
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const newImageData = ctx.createImageData(imageData.width, imageData.height);
+
+                    const coordinates = polygon.geometry.coordinates[0];
+                    const latLngs = coordinates.map(coord => L.latLng(coord[1], coord[0]));
+
+                    const bounds = L.latLngBounds(latLngs);
+                    const topLeft = map.latLngToContainerPoint(bounds.getNorthWest());
+                    const bottomRight = map.latLngToContainerPoint(bounds.getSouthEast());
+
+                    const scaleX = img.width / (bottomRight.x - topLeft.x);
+                    const scaleY = img.height / (bottomRight.y - topLeft.y);
+
+                    for (let x = 0; x < canvas.width; x++) {
+                        for (let y = 0; y < canvas.height; y++) {
+                            const latLng = map.containerPointToLatLng(L.point(x / scaleX + topLeft.x, y / scaleY + topLeft.y));
+                            const i = (y * canvas.width + x) * 4;
+
+                            if (turf.booleanPointInPolygon([latLng.lng, latLng.lat], polygon)) {
+                                newImageData.data[i] = imageData.data[i];
+                                newImageData.data[i + 1] = imageData.data[i + 1];
+                                newImageData.data[i + 2] = imageData.data[i + 2];
+                                newImageData.data[i + 3] = imageData.data[i + 3];
+                            } else {
+                                newImageData.data[i + 3] = 0; // Set alpha to 0 (transparent)
+                            }
+                        }
+                    }
+
+                    ctx.putImageData(newImageData, 0, 0);
+                    const clippedImageUrl = canvas.toDataURL();
+                    // localStorage.setItem("Current image layer",clippedImageUrl)
+                    // newlayer=localStorage.getItem("Current image layer")
+                    imageLayer = L.imageOverlay(clippedImageUrl, bounds);
+
+                    map.addLayer(imageLayer);
+
+                };
+            }
+            if (PdfCheck == true) {
+
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const newImageData = ctx.createImageData(imageData.width, imageData.height);
+
+                    const coordinates = polygon.geometry.coordinates[0];
+                    const latLngs = coordinates.map(coord => L.latLng(coord[1], coord[0]));
+
+                    const bounds = L.latLngBounds(latLngs);
+                    const expandedBounds = expandBoundingBox(bounds, 1.5); // Expand bounding box by 50%
+                    const topLeft = map.latLngToContainerPoint(expandedBounds.getNorthWest());
+                    const bottomRight = map.latLngToContainerPoint(expandedBounds.getSouthEast());
+
+                    const scaleX = img.width / (bottomRight.x - topLeft.x);
+                    const scaleY = img.height / (bottomRight.y - topLeft.y);
+
+                    for (let x = 0; x < canvas.width; x++) {
+                        for (let y = 0; y < canvas.height; y++) {
+                            const latLng = map.containerPointToLatLng(L.point(x / scaleX + topLeft.x, y / scaleY + topLeft.y));
+                            const i = (y * canvas.width + x) * 4;
+
+                            if (turf.booleanPointInPolygon([latLng.lng, latLng.lat], polygon)) {
+                                newImageData.data[i] = imageData.data[i];
+                                newImageData.data[i + 1] = imageData.data[i + 1];
+                                newImageData.data[i + 2] = imageData.data[i + 2];
+                                newImageData.data[i + 3] = imageData.data[i + 3];
+                            } else {
+                                newImageData.data[i + 3] = 0; // Set alpha to 0 (transparent)
+                            }
+                        }
+                    }
+
+                    ctx.putImageData(newImageData, 0, 0);
+                    const clippedImageUrl = canvas.toDataURL();
+
+                    imageLayer = L.imageOverlay(clippedImageUrl, expandedBounds);
+                    // Automatically download the image
+                    const existingIndex = imageUrls.polygons.findIndex(polygon => polygon.id === index + 6);
+
+                    if (existingIndex !== -1) {
+                        imageUrls.polygons[existingIndex].url = clippedImageUrl;
+                    } else {
+                        // If it doesn't exist, push a new entry and proceed with the download
+                        imageUrls.polygons.push({ id: index + 6, url: clippedImageUrl });
+
+                 
+                    }
+
+                    console.log(imageUrls);
+                }
+                checkConditions()
+            };
+
+
+        }
+
+
+
+        function checkConditions() {
+            const button = document.getElementById('generatePdf');
+
+            if (imageUrls.length === 12 && zoningArea.areas.length === 6) {
+                button.disabled = false;
+            } else {
+                button.disabled = false;
+            }
+        }
+    </script>
+   
+
+<!-- Processing screen (only one!) -->
+<div class="processing-screen" id="processingScreen" style="display: none;">
+  <div class="processing-content">
+    <h3>Processing ...</h3>
+    <div id="wordByWordText" style="max-height: 300px; overflow-y: auto;"></div>
+  </div>
+</div>
+
+<!-- Button to trigger processing (optional) -->
+
+<script src="generatePdf.js"></script>
+<script src="weather.js"></script>
+   </body>
+</html>
