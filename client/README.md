@@ -840,3 +840,4 @@
 # [35667-sudo] Minor UI improvement — 2025-11-26 12:26
 # [35667-sudo] Update configuration notes — 2025-11-06 14:52
 # [35667-sudo] Improve layout consistency — 2026-02-28 13:08
+# [35667-sudo] Update README formatting — 2026-03-19 10:57
