@@ -680,3 +680,4 @@
 # [35667-sudo] Improve layout consistency — 2025-11-02 13:46
 # [Faizan005Malik] Update documentation style — 2025-12-09 10:03
 # [35667-sudo] Small refactor — 2025-12-24 16:32
+# [Faizan005Malik] Update helper text — 2026-03-19 14:59
