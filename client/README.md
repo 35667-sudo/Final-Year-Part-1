@@ -583,3 +583,4 @@
 # [Muhammad Abdullah/37531] Improve component readability — 2025-11-22 16:59
 # [35667-sudo] Clean code formatting — 2025-11-27 11:18
 # [Faizan005Malik] Improve UI consistency — 2026-03-22 10:49
+# [35667-sudo] Improve validation logic — 2026-03-22 15:49
