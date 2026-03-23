@@ -720,3 +720,4 @@
 # [35667-sudo] Update README examples — 2026-03-05 13:52
 # [35667-sudo] Fix minor bug — 2025-12-28 14:35
 # [35667-sudo] Update README notes — 2026-02-12 13:54
+# [35667-sudo] Update comments — 2026-03-23 14:34
