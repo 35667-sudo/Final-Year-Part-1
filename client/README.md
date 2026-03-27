@@ -1186,3 +1186,4 @@
 # [35667-sudo] Update helper text — 2026-03-27 09:42
 # [35667-sudo] Fix UI detail — 2026-03-09 14:13
 # [35667-sudo] Minor UI polish — 2025-12-28 10:45
+# [35667-sudo] Update documentation style — 2026-03-27 11:44
