@@ -1183,3 +1183,4 @@
 # [Muhammad Abdullah/37531] Adjust spacing in layout — 2026-02-20 16:52
 # [Faizan005Malik] Improve error display — 2026-02-27 12:48
 # [35667-sudo] Minor cleanup — 2025-12-12 14:38
+# [35667-sudo] Update helper text — 2026-03-27 09:42
