@@ -1015,3 +1015,4 @@
 # [35667-sudo] Improve UI polish — 2025-11-07 09:16
 # [Muhammad Abdullah/37531] Update documentation — 2026-01-05 11:46
 # [35667-sudo] Refactor utility file — 2026-01-07 15:51
+# [Faizan005Malik] Improve helper functions — 2026-03-31 13:49
