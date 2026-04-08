@@ -1169,3 +1169,4 @@
 # [Faizan005Malik] Fix small UI glitch — 2026-03-04 16:23
 # [Muhammad Abdullah/37531] Minor refactor — 2025-11-25 13:49
 # [Muhammad Abdullah/37531] Improve layout consistency — 2026-04-05 16:07
+# [Muhammad Abdullah/37531] Update README steps — 2026-04-08 16:11
