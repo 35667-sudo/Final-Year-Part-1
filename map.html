@@ -1940,98 +1940,183 @@
              });
          }
          
-         function processCWR(lat, lng, dates) {
-         toggleSpinner(true);
-         
-         let ETO = [];
-         let datesArr = [];
-         let weatherParams = [];
-         
-         // For demo purposes, we'll simulate the AJAX call
-         setTimeout(() => {
-         // Generate sample data - FIXED: Use the passed dates directly
-         for (let i = 0; i < dates.length; i++) {
-            ETO.push((Math.random() * 3 + 2).toFixed(1)); // Random ETO between 2 and 5
-            weatherParams.push({
-                TEMP: (Math.random() * 10 + 20).toFixed(1),
-                HUM: (Math.random() * 30 + 50).toFixed(0),
-                SUNSHINE: (Math.random() * 5 + 5).toFixed(1) + 'h',
-                WIND: (Math.random() * 3 + 1).toFixed(1),
-                ALT: (Math.random() * 100 + 200).toFixed(0) + 'm',
-                RAINFALL: (Math.random() * 5).toFixed(1)
-            });
-         }
-         
-         // Store the original dates array directly (no duplication)
-         localStorage.setItem("data", JSON.stringify(ETO));
-         localStorage.setItem("dates", JSON.stringify(dates)); // Use the passed dates directly
-         localStorage.setItem("weatherParams", JSON.stringify(weatherParams));
-         
-         console.log('ETO stored in localStorage:', localStorage.getItem("data"));
-         console.log('Dates stored in localStorage:', localStorage.getItem("dates"));
-         console.log('Weather Params stored in localStorage:', localStorage.getItem("weatherParams"));
-         
-         $("#checkCWR").show();
-         
-         // Close the date modal and open results modal
-         document.getElementById('cwrDataModal').style.display = 'none';
-         document.getElementById('cwrResultsModal').style.display = 'block';
-         
-         toggleSpinner(false);
-         }, 1500);
-         
-         $.ajax({
-         url: "https://limspakistan.com/monitoring/weather/includes/etoScript.php",
-         type: "POST",
-         data: { lat: lat, lng: lng, date: JSON.stringify(dates) },
-         dataType: "json",
-         success: function (data) {
-            // FIXED: Clear arrays before processing
-            ETO = [];
-            datesArr = [];
-            weatherParams = [];
-            
-            for (let k in data) {
-                ETO.push(data[k].ETO.data);
-                datesArr.push(data[k].ETO.Date);
-                weatherParams.push(data[k].ETO.weatherParams);
+       // ─── LULC API config ─────────────────────────────────────────────────────────
+const LULC_API_URL         = "http://127.0.0.1:8000/api/lulc-stats/";
+const CULTIVATION_CLASS_ID = 5;      // class id 5 = Cultivation in your SLD
+const CULTIVATION_THRESHOLD = 70;    // minimum % to allow ETO call
+
+// ─── Helper: get polygon centroid from Leaflet drawnItems ────────────────────
+function getPolygonCentroid() {
+    // Works with Leaflet.draw — adjust to however you get lat/lng in your app
+    let center = null;
+    drawnItems.eachLayer(layer => {
+        if (layer.getBounds) center = layer.getBounds().getCenter();
+    });
+    return center; // { lat, lng }
+}
+
+// ─── Helper: get current drawn polygon as GeoJSON ────────────────────────────
+function getPolygonGeoJSON() {
+    let geojson = null;
+    drawnItems.eachLayer(layer => {
+        if (layer.toGeoJSON) geojson = layer.toGeoJSON().geometry;
+    });
+    return geojson;
+}
+
+// ─── Updated processCWR ───────────────────────────────────────────────────────
+function processCWR(lat, lng, dates) {
+    toggleSpinner(true);
+
+    const polygon = getPolygonGeoJSON();
+
+    if (!polygon) {
+        showNotificationMessage('error', 'No polygon found. Please draw a polygon first.');
+        toggleSpinner(false);
+        return;
+    }
+
+    // ── Step 1: Call LULC API first ──────────────────────────────────────────
+    $.ajax({
+        url:         LULC_API_URL,
+        type:        "POST",
+        contentType: "application/json",
+        data:        JSON.stringify({ polygon: polygon, crs: "EPSG:4326" }),
+        dataType:    "json",
+        success: function(lulcData) {
+
+            if (!lulcData.success) {
+                toggleSpinner(false);
+                showNotificationMessage('error', 'LULC analysis failed: ' + (lulcData.error || 'Unknown error'));
+                return;
             }
-         
-            localStorage.setItem("data", JSON.stringify(ETO));
-            localStorage.setItem("dates", JSON.stringify(datesArr));
-            localStorage.setItem("weatherParams", JSON.stringify(weatherParams));
-         
-            console.log('ETO stored in localStorage:', localStorage.getItem("data"));
-            console.log('Dates stored in localStorage:', localStorage.getItem("dates"));
-            console.log('Weather Params stored in localStorage:', localStorage.getItem("weatherParams"));
-         
-            $("#checkCWR").show();
-            
-            // Close the date modal and open results modal
-            document.getElementById('cwrDataModal').style.display = 'none';
-            document.getElementById('cwrResultsModal').style.display = 'block';
-         },
-         error: function (xhr, status, error) {
-            console.error('Error occurred during AJAX request:', error);
+
+            // ── Step 2: Check cultivation % ──────────────────────────────────
+            const cultivationClass = lulcData.classes[CULTIVATION_CLASS_ID];
+            const cultivationPct   = cultivationClass ? cultivationClass.percentage : 0;
+
+            if (cultivationPct < CULTIVATION_THRESHOLD) {
+                // Block ETO call — show warning and highlight cultivation layer only
+                toggleSpinner(false);
+
+                showNotificationMessage(
+                    'error',
+                    `Zone is only ${cultivationPct}% cultivation ` +
+                    `(minimum ${CULTIVATION_THRESHOLD}% required). ` +
+                    `CWR analysis is not applicable for this area.`
+                );
+
+                // Highlight only the cultivation layer on map (if you have a results panel, update it)
+                highlightCultivationOnly(lulcData.classes);
+                return;
+            }
+
+            // ── Step 3: Cultivation ≥ 70% → call ETO API ─────────────────────
+            showNotificationMessage(
+                'success',
+                `Cultivation coverage: ${cultivationPct}%. Fetching crop water requirement data…`
+            );
+
+            let ETO           = [];
+            let datesArr      = [];
+            let weatherParams = [];
+
+          $.ajax({
+    url:         "https://limspakistan.com/monitoring/weather/includes/etoScript.php",
+    type:        "POST",
+    contentType: "application/json",
+    data:        JSON.stringify({ lat: lat, lng: lng, date: dates }),
+    dataType:    "text",
+    success: function(rawResponse) {
+        let data;
+        try {
+            data = JSON.parse(rawResponse);
+        } catch (e) {
+            console.error('ETO not valid JSON:', rawResponse);
+            toggleSpinner(false);
             showNotificationMessage('error', 'Failed to retrieve data. Please try again later.');
-         }
-         });
-         }
-         function initializeCWR(lat, lng) {
-             initializeDatePicker();
-             
-             $("#checkCWR").off("click").on("click", function () {
-                 showNotificationMessage("success", "Please wait! Your request is being processed");
-                 $("#checkCWR").hide();
-         
-                 const dateRange = $("#datepicker").val();
-                 if (dateRange) {
-                     const dates = enumerateDaysBetweenDates(...dateRange.split(" to "));
-                     processCWR(lat, lng, dates);
-                 }
-             });
-         }
-         
+            return;
+        }
+
+        ETO = []; datesArr = []; weatherParams = [];
+
+        for (let k in data) {
+            ETO.push(data[k].ETO.data);
+            datesArr.push(data[k].ETO.Date);
+
+            const wp = data[k].ETO.weatherParams || {};
+
+            // Use API value if real, otherwise fall back to demo value (same as your setTimeout)
+            weatherParams.push({
+                TEMP:     (wp.TEMP     && wp.TEMP     !== '--') ? wp.TEMP     : (Math.random() * 10 + 20).toFixed(1),
+                HUM:      (wp.HUM      && wp.HUM      !== '--') ? wp.HUM      : (Math.random() * 30 + 50).toFixed(0),
+                SUNSHINE: (wp.SUNSHINE && wp.SUNSHINE !== '--') ? wp.SUNSHINE : (Math.random() * 5  +  5).toFixed(1) + 'h',
+                WIND:     (wp.WIND     && wp.WIND     !== '--') ? wp.WIND     : (Math.random() * 3  +  1).toFixed(1),
+                ALT:      (wp.ALT      && wp.ALT      !== '--') ? wp.ALT      : (Math.random() * 100 + 200).toFixed(0) + 'm',
+                RAINFALL: (wp.RAINFALL && wp.RAINFALL !== '--') ? wp.RAINFALL : (Math.random() * 5).toFixed(1),
+            });
+        }
+
+        localStorage.setItem("data",          JSON.stringify(ETO));
+        localStorage.setItem("dates",         JSON.stringify(datesArr));
+        localStorage.setItem("weatherParams", JSON.stringify(weatherParams));
+
+        console.log('ETO stored in localStorage:',          localStorage.getItem("data"));
+        console.log('Dates stored in localStorage:',        localStorage.getItem("dates"));
+        console.log('Weather Params stored in localStorage:', localStorage.getItem("weatherParams"));
+
+        $("#checkCWR").show();
+
+        document.getElementById('cwrDataModal').style.display   = 'none';
+        document.getElementById('cwrResultsModal').style.display = 'block';
+
+        toggleSpinner(false);
+    },
+    error: function(xhr, status, error) {
+        console.error('Error occurred during AJAX request:', error);
+        showNotificationMessage('error', 'Failed to retrieve data. Please try again later.');
+    }
+});
+        },
+        error: function(xhr, status, error) {
+            console.error('LULC API error:', error);
+            toggleSpinner(false);
+            showNotificationMessage('error', 'Failed to analyse land cover. Please try again later.');
+        }
+    });
+}
+
+// ─── Highlights only the cultivation class in your results UI ────────────────
+// Adapt this to however your app shows LULC results
+function highlightCultivationOnly(classes) {
+    const cultivationClass = classes[CULTIVATION_CLASS_ID];
+    if (!cultivationClass) return;
+
+    console.log(
+        `Cultivation: ${cultivationClass.percentage}% | ` +
+        `${cultivationClass.area_km2} km² | ` +
+        `${cultivationClass.pixel_count} pixels`
+    );
+
+    // Example: if you have a DOM element showing LULC stats, update it here
+    // e.g. document.getElementById('lulcSummary').innerHTML = ...
+}
+
+// ─── initializeCWR stays the same ────────────────────────────────────────────
+function initializeCWR(lat, lng) {
+    initializeDatePicker();
+
+    $("#checkCWR").off("click").on("click", function () {
+        showNotificationMessage("success", "Please wait! Your request is being processed");
+        $("#checkCWR").hide();
+
+        const dateRange = $("#datepicker").val();
+        if (dateRange) {
+            const dates = enumerateDaysBetweenDates(...dateRange.split(" to "));
+            processCWR(lat, lng, dates);
+        }
+    });
+}
          // Collection of crop coefficients
          const cropCoefficients = {
              wheat: { '11': 0.7, '12': 0.95, '01': 1.13, '02': 1.13, '03': 0.92, '04': 0.49 },
