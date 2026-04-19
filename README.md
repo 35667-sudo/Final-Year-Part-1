@@ -92,10 +92,7 @@ The system follows a **Three-Tier Architecture**:
 - Custom `UserPortal` model for white-label portal name and logo
 - Session persisted in localStorage on frontend
 
-### 🤖 AI Advisory Chat
-- Local LLM integration via LM Studio (`deepseek-r1-distill-llama-8b`)
-- POST to `localhost:1234/v1/chat/completions`
-- Returns structured `{ question, answer }` JSON
+
 
 ### 📦 Farm Data Management
 - Save farm KML polygon coordinates linked to CNIC + farm name
@@ -121,7 +118,7 @@ The system follows a **Three-Tier Architecture**:
 | Auth | DRF Token Authentication |
 | Weather | OpenWeather API |
 | Crop Rates | AIMS (Punjab Government API) |
-| AI Chat | LM Studio (deepseek-r1-distill-llama-8b) |
+
 
 ---
 
