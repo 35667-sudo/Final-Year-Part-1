@@ -51,7 +51,7 @@ The system follows a **Three-Tier Architecture**:
                          │ Fetch API / REST
 ┌────────────────────────▼────────────────────────────────────┐
 │                   APPLICATION LAYER                         │
-│   Django Backend  ·  Django REST Framework  ·  SAM ViT-L   │
+│   Django Backend  ·  Django REST Framework  ·  SAM ViT   │
 │   Sentinel Hub API  ·  OpenWeather API  ·  GeoServer WMS   │
 │   Rasterio / Mercantile  ·  GeoPandas  ·  Shapely          │
 └────────────────────────┬────────────────────────────────────┘
@@ -238,9 +238,7 @@ GeoServer will be available at: `http://localhost:8080/geoserver`
 python manage.py runserver
 ```
 
-### 9. (Optional) Start LM Studio for AI chat
 
-Download [LM Studio](https://lmstudio.ai/), load `deepseek-r1-distill-llama-8b`, and start the local server on port `1234`.
 
 ---
 
@@ -320,13 +318,7 @@ MEDIA_ROOT=/path/to/media/
 | POST | `/get-kml/` | Fetch all farm polygons by CNIC |
 | POST | `/update-kml/` | Update or delete farm coordinates |
 
-### Advisory Chat
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/ask/` | Ask agricultural question to local LLM |
-
----
 
 ## Database Models
 
