@@ -315,8 +315,7 @@ MEDIA_ROOT=/path/to/media/
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/save-user-data/` | Save farmer CNIC + farm name + KML coordinates |
-| POST | `/get-kml/` | Fetch all farm polygons by CNIC |
-| POST | `/update-kml/` | Update or delete farm coordinates |
+
 
 
 
