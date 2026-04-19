@@ -30,7 +30,7 @@
 
 - **Sentinel-2 satellite imagery** via Sentinel Hub OAuth API
 - **Vegetation indices** (NDVI, NDMI, SAVI, MSAVI, NDRE)
-- **Segment Anything Model (SAM ViT-L)** for AI-based field boundary detection
+- **Segment Anything Model (SAM ViT)** for AI-based field boundary detection
 - **PostGIS spatial database** for LULC, agro-ecological zones, and crop layers
 - **GeoServer** (Docker-based) for tile-based WMS layer serving
 - **OpenWeather API** for 16-day weather forecasting
