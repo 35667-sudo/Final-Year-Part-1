@@ -244,7 +244,7 @@ python manage.py runserver
 
 ## Environment Variables
 
-Create a `.env` file in the project root:
+Create a `env` file in the project root:
 
 ```env
 # Sentinel Hub credentials
